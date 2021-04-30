@@ -3,8 +3,8 @@
 * VUOTO 
 * OHJELMISTOTUOTANTO 1
 * R19
-* VERSIONUMERO: v1.4.1 (päivitetty 29.4.2021)
-* Korvaa version v1.4!
+* VERSIONUMERO: v1.5 (päivitetty 30.4.2021)
+* Korvaa version v1.4.1!
 * 
 ********************************************************************************/
 package vuoto.aloitus;
