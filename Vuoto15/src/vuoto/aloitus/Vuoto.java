@@ -39,7 +39,7 @@ public class Vuoto extends Application {
     public static void main(String[] args) {
         launch(args);
               
-        // Saulin kommentti
+        // testikommentti
         
     }
     
