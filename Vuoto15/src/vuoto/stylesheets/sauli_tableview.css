@@ -1,0 +1,38 @@
+/*
+Toi linear-gradient on mun mielestä ihan hauska väri. Toi toimii jotenkin silleen et
+siihen tulee sellanen värifeidi noiden kahden värin välille mitkä valitsee.
+Väri copy-pastailin tuolta: https://www.w3schools.com/colors/colors_picker.asp
+*/
+
+* {
+/*-fx-default-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%);*/
+  -fx-default-background-color: linear-gradient(#ebfafa 0%, #adebeb 100%);
+}
+
+.table-view {
+	-fx-background-radius:5;
+	/*-fx-background-color:linear-gradient(#d6f5f5 0%, #70dbdb 100%);*/
+	-fx-background-color: -fx-default-background-color;
+	/*-fx-border-color: #5cd6d6;
+	-fx-effect: innershadow(one-pass-box, rgba(10, 10, 10, 0.5), 2, 2, 0, 0);*/
+	-fx-border-color:  linear-gradient(#d6f5f5 80%, #70dbdb 100%);
+	
+	
+	
+}
+.table-view .column-header {
+	-fx-background-color:linear-gradient(#d6f5f5 0%, #70dbdb 100%);
+	-fx-border-color:lightblue;
+
+}
+
+.table-view .column-header-background .label{
+	-fx-text-fill:black;
+	-fx-font-family: System;
+
+	
+}
+
+.table-view .column-header-background .table-cell {
+	
+}

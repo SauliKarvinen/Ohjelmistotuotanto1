@@ -1,0 +1,9 @@
+.button {
+	-fx-background-radius: 30;
+	-fx-pref-width:150;
+	-fx-pref-height: 20;
+	-fx-max-width: 105;
+	-fx-effect: innershadow(one-pass-box, rgba(20, 20, 20, 0.5), 10, 0, 0, 0);
+	-fx-background-color: linear-gradient(#ebfafa 0%, #adebeb 100%);
+	
+}

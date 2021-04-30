@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="851.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.varaukset.HaeToimitilaaController">
+   <top>
+      <VBox prefHeight="155.0" prefWidth="835.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" prefHeight="55.0" prefWidth="835.0" style="-fx-font-size: 22; -fx-background-color: grey; -fx-text-fill: white; -fx-border-style: dotted;" text="Hae toimitilaa" VBox.vgrow="SOMETIMES">
+               <opaqueInsets>
+                  <Insets top="10.0" />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <effect>
+                  <Glow level="0.05" />
+               </effect>
+            </Label>
+            <Separator prefHeight="28.0" prefWidth="399.0">
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Separator>
+            <GridPane prefHeight="31.0" prefWidth="409.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.0" minWidth="10.0" prefWidth="291.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="467.0" minWidth="10.0" prefWidth="463.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <TextField fx:id="txtToimipiste" editable="false" prefHeight="31.0" prefWidth="230.0" text="Toimipiste" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="15.0" top="15.0" />
+                     </GridPane.margin>
+                     <opaqueInsets>
+                        <Insets bottom="10.0" />
+                     </opaqueInsets>
+                  </TextField>
+                  <Label fx:id="lblToimipisteValinta" alignment="CENTER" contentDisplay="RIGHT" prefHeight="30.0" prefWidth="268.0" text="Toimipiste:   " textAlignment="CENTER" />
+               </children>
+            </GridPane>
+            <Pane prefHeight="31.0" prefWidth="409.0">
+               <children>
+                  <Separator layoutX="7.0" layoutY="-7.0" prefHeight="49.0" prefWidth="827.0">
+                     <padding>
+                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                     </padding>
+                  </Separator>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+   </top>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@../stylesheets/sauli_button.css" />
+      <URL value="@../stylesheets/sauli_background_color(gradient).css" />
+      <URL value="@../stylesheets/sauli_textfield.css" />
+      <URL value="@../stylesheets/sauli_tableview.css" />
+   </stylesheets>
+   <bottom>
+      <Pane prefHeight="70.0" prefWidth="748.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox layoutX="287.0" layoutY="15.0" prefHeight="40.0" prefWidth="262.0" spacing="40.0">
+               <children>
+                  <Button fx:id="btnTakaisin" mnemonicParsing="false" onAction="#btnTakaisinPainettu" text="Takaisin" />
+                  <Button fx:id="btnValitse" mnemonicParsing="false" onAction="#btnValitsePainettu" text="Valitse" textAlignment="CENTER" />
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+   </bottom>
+   <center>
+      <Pane prefHeight="308.0" prefWidth="835.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="6.0" layoutY="4.0" text="Valitse toimitila" />
+            <TableView fx:id="tbvToimitilat" layoutY="26.0" prefHeight="275.0" prefWidth="832.0">
+               <columns>
+                  <TableColumn fx:id="tbcTilaId" prefWidth="78.0" text="Tila ID" />
+                  <TableColumn fx:id="tbcLahiosoite" prefWidth="127.0" text="Lähiosoite" />
+                  <TableColumn fx:id="tbcPostinumero" prefWidth="102.0" text="Postinumero" />
+                  <TableColumn fx:id="tbcHuonekoko" prefWidth="91.0" text="Huonekoko" />
+                  <TableColumn fx:id="tbcHintaPvm" prefWidth="106.0" text="Hinta/vrk" />
+                  <TableColumn fx:id="tbcKuvaus" prefWidth="145.0" text="Kuvaus" />
+                  <TableColumn fx:id="tbcToimitilaNimi" prefWidth="181.0" text="Toimitilan nimi" />
+               </columns>
+            </TableView>
+         </children>
+      </Pane>
+   </center>
+</BorderPane>

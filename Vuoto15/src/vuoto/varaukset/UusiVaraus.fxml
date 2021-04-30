@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="954.0" prefWidth="770.0" style="-fx-background-color: lightblue;;" stylesheets="@../stylesheets/sauli_button.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.varaukset.UusiVarausController">
+   <top>
+      <VBox prefHeight="219.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+               <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Edit">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <VBox prefHeight="58.0" prefWidth="754.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="53.0" prefWidth="836.0" text="VuoTo - ToTiVaRa" textAlignment="CENTER">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <GridPane alignment="CENTER" prefHeight="0.0" prefWidth="775.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.4285888671875" minWidth="10.0" prefWidth="285.71429443359375" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.28570556640625" minWidth="10.0" prefWidth="457.28570556640625" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="lblToimipisteValinta" alignment="CENTER" contentDisplay="RIGHT" maxWidth="150.0" prefHeight="30.0" prefWidth="268.0" style="-fx-font-size: 16;" text="Toimipiste:   " textAlignment="CENTER" GridPane.halignment="RIGHT" />
+                  <TextField fx:id="txtToimipiste" editable="false" text="Toimipiste" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="15.0" top="15.0" />
+                     </GridPane.margin>
+                     <opaqueInsets>
+                        <Insets bottom="10.0" />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+            </GridPane>
+            <Label alignment="CENTER" prefHeight="55.0" prefWidth="754.0" style="-fx-font-size: 22; -fx-background-color: grey; -fx-text-fill: white; -fx-border-style: dotted; -fx-background-radius: 10px;" text="Uusi varaus" VBox.vgrow="SOMETIMES">
+               <opaqueInsets>
+                  <Insets top="10.0" />
+               </opaqueInsets>
+            </Label>
+            <Separator prefHeight="33.0" prefWidth="754.0">
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Separator>
+         </children>
+      </VBox>
+   </top>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane prefHeight="186.0" prefWidth="755.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.4285888671875" minWidth="10.0" prefWidth="229.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="535.0" minWidth="10.0" prefWidth="526.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Toimitila:" textAlignment="RIGHT" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets left="50.0" />
+                     </GridPane.margin></Label>
+                  <Label alignment="CENTER" text="Asiakas:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets left="50.0" />
+                     </GridPane.margin></Label>
+                  <Label alignment="CENTER" text="Aloituspäivä:" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets left="50.0" />
+                     </GridPane.margin></Label>
+                  <Label alignment="CENTER" layoutX="117.0" layoutY="97.0" text="Lopetuspäivä:" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets left="50.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1">
+                     <children>
+                        <TextField fx:id="txtToimitila" editable="false" prefHeight="31.0" prefWidth="273.0" promptText="Valitse Toimitila tai lisää uusi">
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#btnHaeToimitilaaPainettu" text="Valitse">
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="btnLisaaToimitila" mnemonicParsing="false" onAction="#btnLisaaToimitilaPainettu" text="Lisää uusi">
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <TextField fx:id="txtAsiakas" editable="false" prefHeight="31.0" prefWidth="273.0" promptText="Valitse Asiakas tai lisää uusi">
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button mnemonicParsing="false" onAction="#btnHaeAsiakastaPainettu" text="Valitse">
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#btnLisaaUusiAsiakasPainettu" text="Lisää uusi">
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <children>
+                        <DatePicker fx:id="dpLopetuspvm" prefHeight="31.0" prefWidth="273.0" promptText="Lopetuspäivämäärä" style="-fx-background-color: white;">
+                           <effect>
+                              <InnerShadow blurType="ONE_PASS_BOX" color="#0000006a" />
+                           </effect>
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </DatePicker>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <DatePicker fx:id="dpAloituspvm" prefWidth="273.0" promptText="Aloituspäivämäärä">
+                           <HBox.margin>
+                              <Insets top="6.0" />
+                           </HBox.margin>
+                        </DatePicker>
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+            <HBox layoutX="14.0" layoutY="243.0" prefHeight="317.0" prefWidth="727.0" spacing="5.0">
+               <children>
+                  <VBox fx:id="palvelutIkkuna" prefHeight="317.0" prefWidth="362.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
+                     <effect>
+                        <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
+                     </effect></VBox>
+                  <VBox fx:id="laitteetIkkuna" layoutX="10.0" layoutY="10.0" prefHeight="317.0" prefWidth="362.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
+                     <effect>
+                        <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
+                     </effect></VBox>
+               </children>
+            </HBox>
+            <Label layoutX="14.0" layoutY="222.0" text="Valitse palvelut" />
+            <Label layoutX="378.0" layoutY="222.0" text="Valitse laitteet" />
+            <Button fx:id="btnLisaaAsiakas1" layoutX="636.0" layoutY="635.0" mnemonicParsing="false" onAction="#LisaaToimipiste" text="Luo varaus" textAlignment="CENTER" />
+            <Label layoutX="17.0" layoutY="574.0" text="Varauksen loppusumma:" />
+            <TextField fx:id="txtLoppusumma" alignment="CENTER_RIGHT" layoutX="191.0" layoutY="569.0" prefHeight="31.0" prefWidth="184.0" stylesheets="@../stylesheets/sauli_textfield.css" text="0" />
+            <Label layoutX="377.0" layoutY="577.0" text="€" />
+            <Button fx:id="btnTakaisin" layoutX="14.0" layoutY="635.0" mnemonicParsing="false" onAction="#btnTakaisinPainettu" text="Takaisin" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
