@@ -7,9 +7,11 @@ package vuoto.vuokrattavatKiinteistot;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,9 +21,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import vuoto.aloitus.VuotoMainController;
+import vuoto.luokkafilet.Toimitila;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -41,7 +47,11 @@ public class PoistaKiinteistoController implements Initializable {
     private Button btnTakaisin;
     @FXML
     private Button btnPoistaKiinteisto;
-
+    private Toimitila toimitila;
+    private DBAccess tietokanta = new DBAccess();
+    private ComboBox<Toimitila> cbKiinteistot;
+    @FXML
+    private ComboBox<Toimitila> cbToimitilat;
    
 
     /**
@@ -52,9 +62,32 @@ public class PoistaKiinteistoController implements Initializable {
      @FXML
     private void btnPoistaKiinteistoPainettu(ActionEvent event) {
         
-        // Opens panel - UusiKiinteisto.
-        UusiKiinteistoController controller = (UusiKiinteistoController)siirryNakymaan(UusiKiinteistoController.fxmlString, "Uusi Kiinteistö", event);
-        //controller.asetaToimipiste(toimipiste);
+        boolean toimitilaPoistettu = true;
+        
+        // Opens panel - Toimipisteiden hallinta.
+        if(toimitila == null) {
+            heitaVirheNaytolle("Valitse poistettava toimitila");
+        } else {
+            
+            try {
+                tietokanta.poistaToimitila(toimitila);
+            } catch (SQLException ex) {
+                toimitilaPoistettu = false;
+                Logger.getLogger(PoistaKiinteistoController.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (toimitilaPoistettu) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Toimitilan poistaminen");
+                    alert.setHeaderText("Toimitila " + toimitila.getTilanNimi() + " poistettu");
+                    alert.showAndWait();
+                    // Opens panel - UusiKiinteisto.
+                    siirryNakymaan(VuokrattavatKiinteistotController.fxmlString, "Vuokrattavat kiinteistöt", event);
+                    //controller.asetaToimipiste(toimipiste);
+                }
+            }
+            
+        }
+        
     }
     
     
@@ -71,7 +104,22 @@ public class PoistaKiinteistoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        txtToimipiste.setText(VuotoMainController.valittuToimipiste);
+        haeToimitilat();
+        
+        cbToimitilat.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            toimitila = s3;
+        });
     }    
+    
+    private void haeToimitilat() {
+        
+        ObservableList<Toimitila> toimitilat = tietokanta.haeKaikkiToimitilat();
+        
+        cbToimitilat.getItems().addAll(toimitilat);
+    }
+    
 
        /**
      * Heittää virheilmoituksen näytölle

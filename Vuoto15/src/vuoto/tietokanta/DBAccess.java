@@ -213,6 +213,32 @@ public class DBAccess {
         
         return t;
     }
+    
+    /**
+     * Poistaa toimipisteen
+     * @param t Poistettava toimipiste
+     * @throws SQLException 
+     */
+    public void poistaToimipiste(Toimipiste t) throws SQLException {
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("DELETE FROM Toimipisteet WHERE toimipisteId = ?");
+            ps.setInt(1, t.getToimipisteID());
+            ps.execute();
+        } catch (SQLException ex) {        
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
       
     /**
      * Lisää uuden toimitilan tietokantaan
@@ -332,6 +358,31 @@ public class DBAccess {
         return toimitilat;
     }
     
+    /**
+     * Poistaa toimitilan
+     * @param t Poistettava toimitila
+     * @throws SQLException SQL virhe
+     */
+    public void poistaToimitila(Toimitila t) throws SQLException {
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("DELETE FROM Tilat WHERE tilaId = ?");
+            ps.setInt(1, t.getTilaId());
+            ps.execute();
+        } catch (SQLException ex) {        
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
  
 

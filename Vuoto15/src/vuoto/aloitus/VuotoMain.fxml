@@ -82,7 +82,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Label alignment="CENTER" prefHeight="53.0" prefWidth="761.0" text="  VuoTo  (v1.4)" textAlignment="CENTER">
+            <Label alignment="CENTER" prefHeight="53.0" prefWidth="761.0" text="  VuoTo  (v1.5)" textAlignment="CENTER">
                <font>
                   <Font size="36.0" />
                </font>

@@ -111,7 +111,6 @@ public class ToimipisteetController implements Initializable {
     private TableColumn<Toimipiste, String> colPostinumero;
     @FXML
     private TableColumn<Toimipiste, String> colKuvaus;
-    @FXML
     private ObservableList<Toimipiste> listTPs;
     
     /**
@@ -136,7 +135,7 @@ public class ToimipisteetController implements Initializable {
        colToimipisteenId.setCellValueFactory(new PropertyValueFactory<>("toimipisteID"));
        colLahiosoite.setCellValueFactory(new PropertyValueFactory<>("lahiosoite"));
        colPostinumero.setCellValueFactory(new PropertyValueFactory<>("postinumero"));
-       colToimipisteenNimi.setCellValueFactory(new PropertyValueFactory<>("toimipisteNimi"));
+       colToimipisteenNimi.setCellValueFactory(new PropertyValueFactory<>("toimipistenimi"));
        colKuvaus.setCellValueFactory(new PropertyValueFactory<>("kuvaus"));
 
         tblToimipisteet.setItems(listTPs);
