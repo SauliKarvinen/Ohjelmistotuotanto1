@@ -108,6 +108,7 @@ public class PoistaKiinteistoController implements Initializable {
         txtToimipiste.setText(VuotoMainController.valittuToimipiste);
         haeToimitilat();
         
+        // Valikosta valittu toimitila = toimitila
         cbToimitilat.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             toimitila = s3;
         });
