@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="954.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.palvelutJaLaitteet.PalvelutJaLaitteetController">
+   <top>
+      <VBox prefHeight="219.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <VBox prefHeight="58.0" prefWidth="754.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="53.0" prefWidth="836.0" text="VuoTo - ToTiVaRa" textAlignment="CENTER">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <GridPane alignment="CENTER" prefHeight="0.0" prefWidth="775.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.4285888671875" minWidth="10.0" prefWidth="285.71429443359375" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.28570556640625" minWidth="10.0" prefWidth="457.28570556640625" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="lblToimipisteValinta" alignment="CENTER" contentDisplay="RIGHT" maxWidth="150.0" prefHeight="30.0" prefWidth="268.0" style="-fx-font-size: 16;" text="Toimipiste:   " textAlignment="CENTER" GridPane.halignment="RIGHT" />
+                  <TextField fx:id="txtToimipiste" editable="false" text="Toimipiste" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="15.0" top="15.0" />
+                     </GridPane.margin>
+                     <opaqueInsets>
+                        <Insets bottom="10.0" />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+            </GridPane>
+            <Label alignment="CENTER" prefHeight="55.0" prefWidth="754.0" style="-fx-font-size: 22; -fx-background-color: grey; -fx-text-fill: white; -fx-border-style: dotted; -fx-background-radius: 15px;" text="Palvelut ja Laitteet" VBox.vgrow="SOMETIMES">
+               <opaqueInsets>
+                  <Insets top="10.0" />
+               </opaqueInsets>
+               <effect>
+                  <Glow level="0.05" />
+               </effect>
+            </Label>
+            <Separator prefHeight="33.0" prefWidth="754.0">
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Separator>
+         </children>
+      </VBox>
+   </top>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.4285888671875" minWidth="10.0" prefWidth="293.5714111328125" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="467.2857666015625" minWidth="10.0" prefWidth="460.4285888671875" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="306.0" text="Toimitila:" textAlignment="CENTER" />
+                  <MenuButton mnemonicParsing="false" prefHeight="28.0" prefWidth="454.0" style="-fx-background-color: white;" text="Valitse " GridPane.columnIndex="1">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                    </items>
+                  </MenuButton>
+               </children>
+            </GridPane>
+            <TableView fx:id="tbviewPalvelut" layoutX="12.0" layoutY="87.0" prefHeight="455.0" prefWidth="360.0">
+              <columns>
+                <TableColumn prefWidth="50.0" text="ID" />
+                <TableColumn prefWidth="197.0" text="Kuvaus" />
+                  <TableColumn minWidth="0.0" prefWidth="112.0" text="Hinta / vrk" />
+              </columns>
+            </TableView>
+            <Label layoutX="12.0" layoutY="66.0" text="Palvelut" />
+            <TableView fx:id="tbviewLaitteet" layoutX="382.0" layoutY="87.0" prefHeight="455.0" prefWidth="360.0">
+               <columns>
+                  <TableColumn prefWidth="48.0" text="ID" />
+                  <TableColumn prefWidth="202.0" text="Kuvaus" />
+                  <TableColumn prefWidth="109.0" text="Hinta / vrk" />
+               </columns>
+            </TableView>
+            <Label layoutX="382.0" layoutY="66.0" text="Laitteet" />
+            <Button layoutX="330.0" layoutY="640.0" mnemonicParsing="false" onAction="#btnEtusivullePainettu" text="Etusivulle" />
+            <HBox layoutX="12.0" layoutY="549.0" prefHeight="35.0" prefWidth="332.0" spacing="5.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#btnLisaaUusiPalveluPainettu" text="Lisää palvelu" />
+                  <Button fx:id="btnMuokkaaPalvelua" mnemonicParsing="false" onAction="#btnMuokkaaPalveluaPainettu" text="Muokkaa" />
+                  <Button fx:id="btnPoistaPalvelu" mnemonicParsing="false" onAction="#btnPoistaPalveluPainettu" text="Poista" />
+               </children>
+            </HBox>
+            <HBox layoutX="382.0" layoutY="550.0" prefHeight="34.0" prefWidth="333.0" spacing="5.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#btnLisaaUusiLaitePainettu" text="Lisää laite" />
+                  <Button fx:id="btnMuokkaaLaitetta" mnemonicParsing="false" onAction="#btnMuokkaaLaitettaPainettu" text="Muokkaa" />
+                  <Button fx:id="btnPoistaLaite" mnemonicParsing="false" onAction="#btnPoistaLaitePainettu" text="Poista" />
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+   </center>
+   <stylesheets>
+      <URL value="@../stylesheets/sauli_tableview.css" />
+      <URL value="@../stylesheets/sauli_background_color(gradient).css" />
+      <URL value="@../stylesheets/sauli_button.css" />
+   </stylesheets>
+</BorderPane>

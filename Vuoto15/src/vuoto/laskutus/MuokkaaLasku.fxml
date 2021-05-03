@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="782.0" prefWidth="662.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.laskutus.MuokkaaLaskuController">
+   <top>
+      <VBox prefHeight="304.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <VBox prefHeight="58.0" prefWidth="754.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="53.0" prefWidth="836.0" text="VuoTo - ToTiVaRa" textAlignment="CENTER">
+                     <font>
+                        <Font size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <GridPane alignment="CENTER" prefHeight="0.0" prefWidth="775.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.4285888671875" minWidth="10.0" prefWidth="285.71429443359375" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.28570556640625" minWidth="10.0" prefWidth="457.28570556640625" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="lblToimipisteValinta" alignment="CENTER" contentDisplay="RIGHT" maxWidth="150.0" prefHeight="30.0" prefWidth="268.0" style="-fx-font-size: 16;" text="Toimipiste:   " textAlignment="CENTER" GridPane.halignment="RIGHT" />
+                  <TextField fx:id="txtToimipiste" editable="false" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="15.0" top="15.0" />
+                     </GridPane.margin>
+                     <opaqueInsets>
+                        <Insets bottom="10.0" />
+                     </opaqueInsets>
+                  </TextField>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </GridPane>
+            <Label alignment="CENTER" prefHeight="55.0" prefWidth="749.0" style="-fx-font-size: 22; -fx-background-color: grey; -fx-text-fill: white; -fx-border-style: dotted; -fx-background-radius: 10px;" text="Muokataan laskua" VBox.vgrow="SOMETIMES">
+               <opaqueInsets>
+                  <Insets top="10.0" />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <Separator prefHeight="35.0" prefWidth="744.0">
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Separator>
+            <GridPane maxWidth="610.0" minWidth="600.0" prefHeight="44.0" prefWidth="610.0" vgap="15.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.4285888671875" minWidth="10.0" prefWidth="188.71429443359375" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="467.2857666015625" minWidth="10.0" prefWidth="457.28570556640625" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" maxWidth="220.0" prefHeight="21.0" prefWidth="293.0" text="Asiakas:" GridPane.halignment="RIGHT">
+                     <GridPane.margin>
+                        <Insets right="20.0" />
+                     </GridPane.margin></Label>
+                  <ComboBox fx:id="cbRajaa" prefHeight="31.0" prefWidth="454.0" promptText="Valitse asiakas" style="-fx-background-color: white;" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin></ComboBox>
+               </children>
+               <padding>
+                  <Insets left="25.0" />
+               </padding>
+            </GridPane>
+            <Separator prefHeight="35.0" prefWidth="744.0">
+               <padding>
+                  <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+               </padding>
+            </Separator>
+         </children>
+      </VBox>
+   </top>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+   <center>
+      <Pane maxHeight="420.0" maxWidth="600.0" prefHeight="393.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane layoutX="8.0" layoutY="4.0" prefHeight="386.0" prefWidth="589.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="368.4285888671875" minWidth="10.0" prefWidth="226.71435546875" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="581.5713500976562" minWidth="10.0" prefWidth="519.28564453125" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="60.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Asiakas:" GridPane.halignment="RIGHT">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Vuokrattava kiinteistö:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Palvelut:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Laitteet:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Laskutettava:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </TextArea>
+                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </TextArea>
+                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </TextArea>
+                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets right="15.0" />
+                     </GridPane.margin>
+                  </TextArea>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <children>
+                        <TextField prefHeight="48.0" prefWidth="199.0" />
+                        <Label text="€">
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+         </children>
+      </Pane>
+   </center>
+   <bottom>
+      <Pane prefHeight="75.0" prefWidth="646.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="149.0" layoutY="27.0" mnemonicParsing="false" onAction="#btnEtusivullePainettu" style="-fx-background-radius: 5px;" text="Etusivulle" />
+            <Button fx:id="btnPoistaLasku" layoutX="381.0" layoutY="27.0" mnemonicParsing="false" onAction="#MuokkaaToimipiste" style="-fx-background-radius: 5px;" text="Muokkaa" textAlignment="CENTER" />
+         </children>
+      </Pane>
+   </bottom>
+</BorderPane>
