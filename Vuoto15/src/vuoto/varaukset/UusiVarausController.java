@@ -28,6 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -37,9 +38,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import vuoto.asiakkuudet.LisaaUusiAsiakasController;
 import vuoto.luokkafilet.Asiakas;
+import vuoto.luokkafilet.Laite;
 import vuoto.luokkafilet.Palvelu;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 import vuoto.vuokrattavatKiinteistot.UusiKiinteistoController;
 
@@ -62,8 +65,6 @@ public class UusiVarausController implements Initializable {
     @FXML
     private VBox laitteetIkkuna;
     @FXML
-    private Button btnLisaaAsiakas1;
-    @FXML
     private TextField txtLoppusumma;
     @FXML
     private Button btnTakaisin;
@@ -82,6 +83,7 @@ public class UusiVarausController implements Initializable {
     private Toimitila valittuToimitila;
     private Asiakas valittuAsiakas;
     private Palvelu palvelu;
+    private Varaus varaus;
     private List<Palvelu> palvelut = new LinkedList<Palvelu>();
     private Map<Integer, LinkedHashSet<Palvelu>> palvelutMap = new HashMap<>();
 
@@ -95,11 +97,15 @@ public class UusiVarausController implements Initializable {
         maaritaToimipiste(); // Tämä metodi tossa heti alapuolella
         
         txtToimitila.textProperty().addListener((s1, s2, s3) -> {
-            // haePalvelutToimitilaId:llä
             
+            if (s3 != s2) {
+                paivitaPalvelut();
+                paivitaLaitteet();
+            // haePalvelutToimitilaId:llä
+            }
         });
         
-        listaPalveluista();
+        //listaPalveluista();
         
         
         // Hae palvelut HashMapiin, avain on Toimitilan nimi ja arvo on LinkedList toimitilan palveluista
@@ -122,24 +128,45 @@ public class UusiVarausController implements Initializable {
         return palvelut;
     }
     
-    private Map toimitilanPalvelut(int toimitilaId, LinkedHashSet<Palvelu> paivitettyLista) {
-
-        palvelutMap.putIfAbsent(toimitilaId, new LinkedHashSet<>());
-        LinkedHashSet<Palvelu> paivitettavaLista = palvelutMap.get(toimitilaId);
-        paivitettavaLista.addAll(paivitettyLista);
-        
-        
-        return palvelutMap;
-        
-        // Muistiinpanoja itselle:
-        // Kun valitaan toimitila -> tehdään tietokantahaku (palvelut joissa toimipisteId == valitun toimipisteen Id)  
-        // Hakutulokset (ObservableList) lisätään HashMapiin ja avaimeksi annetaan toimitilan Id. 
-        // Toimitila ID:llä voi hakea nyt HashMapista ID:tä vastaavat palvelut
-        // LinkedHashSet jotta uudet lisätyt palvelut on helppo päivittää listaan (poistaa automaattisesti duplikaatit)
-    }
+//    private Map toimitilanPalvelut(int toimitilaId, LinkedHashSet<Palvelu> paivitettyLista) {
+//
+//        
+//        
+//        palvelutMap.putIfAbsent(toimitilaId, new LinkedHashSet<>());
+//        LinkedHashSet<Palvelu> paivitettavaLista = palvelutMap.get(toimitilaId);
+//        paivitettavaLista.addAll(paivitettyLista);
+//        
+//        
+//        return palvelutMap;
+//        
+//        // Muistiinpanoja itselle:
+//        // Kun valitaan toimitila -> tehdään tietokantahaku (palvelut joissa toimipisteId == valitun toimipisteen Id)  
+//        // Hakutulokset (ObservableList) lisätään HashMapiin ja avaimeksi annetaan toimitilan Id. 
+//        // Toimitila ID:llä voi hakea nyt HashMapista ID:tä vastaavat palvelut
+//        // LinkedHashSet jotta uudet lisätyt palvelut on helppo päivittää listaan (poistaa automaattisesti duplikaatit)
+//    }
     
     private void paivitaPalvelut() {
         
+        //ObservableList<Palvelu> palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
+        palvelut = listaPalveluista();
+        
+        for(Palvelu p: palvelut) {
+            CheckBox checkbox = new CheckBox();
+            checkbox.setText(p.getKuvaus());
+            palvelutIkkuna.getChildren().add(checkbox);
+        }
+    }
+    
+    private void paivitaLaitteet() {
+        
+        ObservableList<Laite> laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
+        
+        for(Laite l: laitteet) {
+            CheckBox checkbox = new CheckBox();
+            checkbox.setText(l.getKuvaus());
+            laitteetIkkuna.getChildren().add(checkbox);
+        }
     }
     
     /**
@@ -164,9 +191,6 @@ public class UusiVarausController implements Initializable {
         
     }
 
-    @FXML
-    private void LisaaToimipiste(ActionEvent event) {
-    }
 
     @FXML
     private void btnTakaisinPainettu(ActionEvent event) {
@@ -270,6 +294,34 @@ public class UusiVarausController implements Initializable {
         if(a != null) {
             valittuAsiakas = a;
             txtAsiakas.setText(a.getEtunimi() + " " + a.getSukunimi());
+        }
+    }
+
+    @FXML
+    private void btnLisaaVarausPainettu(ActionEvent event) {
+        
+        varaus = new Varaus();
+        int palveluvarausId = tietokanta.haeVarauksenPalvelutId() + 1;
+        int laitevarausId = tietokanta.haeVarauksenLaitteetId() + 1;
+        
+        varaus.setAsiakasId(valittuAsiakas.getAsiakasId());
+        varaus.setTilaId(valittuToimitila.getTilaId());
+        //varaus.setVuokraAlku(dpAloituspvm.getValue());
+        //varaus.setVuokraLoppu(dpLopetuspvm.getValue());
+        
+        
+        varaus.setPalveluvarausId(palveluvarausId);
+        varaus.setLaitevarausId(laitevarausId);
+        
+        if(varaus.getAsiakasId() != 0 || varaus.getTilaId() != 0 || varaus.getVuokraAlku() != null || varaus.getVuokraLoppu() != null) {
+            tietokanta.lisaaVaraus(varaus);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Uusi varaus");
+            alert.setHeaderText("Varaus lisätty");
+            alert.showAndWait();
+            System.out.println(varaus);
+        } else {
+            heitaVirheNaytolle("Täytä kaikki kentät!");
         }
     }
     

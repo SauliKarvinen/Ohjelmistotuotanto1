@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.InnerShadow?>
@@ -124,7 +125,7 @@
                   </Label>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1">
                      <children>
-                        <TextField fx:id="txtToimitila" editable="false" prefHeight="31.0" prefWidth="273.0" promptText="Valitse Toimitila tai lisää uusi">
+                        <TextField fx:id="txtToimitila" editable="false" prefHeight="31.0" prefWidth="273.0" promptText="Valitse toimitila">
                            <HBox.margin>
                               <Insets top="6.0" />
                            </HBox.margin>
@@ -134,7 +135,7 @@
                               <Insets top="6.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="btnLisaaToimitila" mnemonicParsing="false" onAction="#btnLisaaToimitilaPainettu" text="Lisää uusi">
+                        <Button fx:id="btnLisaaToimitila" mnemonicParsing="false" onAction="#btnLisaaToimitilaPainettu" text="Lisää uusi" visible="false">
                            <HBox.margin>
                               <Insets top="6.0" />
                            </HBox.margin>
@@ -143,7 +144,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <TextField fx:id="txtAsiakas" editable="false" prefHeight="31.0" prefWidth="273.0" promptText="Valitse Asiakas tai lisää uusi">
+                        <TextField fx:id="txtAsiakas" editable="false" prefHeight="31.0" prefWidth="273.0" promptText="Valitse asiakas">
                            <HBox.margin>
                               <Insets top="6.0" />
                            </HBox.margin>
@@ -153,7 +154,7 @@
                               <Insets top="6.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#btnLisaaUusiAsiakasPainettu" text="Lisää uusi">
+                        <Button mnemonicParsing="false" onAction="#btnLisaaUusiAsiakasPainettu" text="Lisää uusi" visible="false">
                            <HBox.margin>
                               <Insets top="6.0" />
                            </HBox.margin>
@@ -185,22 +186,38 @@
             </GridPane>
             <HBox layoutX="14.0" layoutY="243.0" prefHeight="317.0" prefWidth="727.0" spacing="5.0">
                <children>
-                  <VBox fx:id="palvelutIkkuna" prefHeight="317.0" prefWidth="362.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
-                     <effect>
-                        <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
-                     </effect></VBox>
-                  <VBox fx:id="laitteetIkkuna" layoutX="10.0" layoutY="10.0" prefHeight="317.0" prefWidth="362.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
-                     <effect>
-                        <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
-                     </effect></VBox>
+                  <ScrollPane prefHeight="317.0" prefWidth="362.0">
+                     <content>
+                        <VBox fx:id="palvelutIkkuna" prefHeight="317.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
+                           <effect>
+                              <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
+                           </effect>
+                           <padding>
+                              <Insets left="20.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+                  <ScrollPane prefHeight="317.0" prefWidth="362.0">
+                     <content>
+                        <VBox fx:id="laitteetIkkuna" prefHeight="317.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
+                           <effect>
+                              <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
+                           </effect>
+                           <padding>
+                              <Insets left="20.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
                </children>
             </HBox>
             <Label layoutX="14.0" layoutY="222.0" text="Valitse palvelut" />
             <Label layoutX="378.0" layoutY="222.0" text="Valitse laitteet" />
-            <Button fx:id="btnLisaaAsiakas1" layoutX="636.0" layoutY="635.0" mnemonicParsing="false" onAction="#LisaaToimipiste" text="Luo varaus" textAlignment="CENTER" />
-            <Label layoutX="17.0" layoutY="574.0" text="Varauksen loppusumma:" />
-            <TextField fx:id="txtLoppusumma" alignment="CENTER_RIGHT" layoutX="191.0" layoutY="569.0" prefHeight="31.0" prefWidth="184.0" stylesheets="@../stylesheets/sauli_textfield.css" text="0" />
-            <Label layoutX="377.0" layoutY="577.0" text="€" />
+            <Button layoutX="636.0" layoutY="635.0" mnemonicParsing="false" onAction="#btnLisaaVarausPainettu" text="Luo varaus" textAlignment="CENTER" />
+            <Label layoutX="17.0" layoutY="574.0" text="Varauksen loppusumma:" visible="false" />
+            <TextField fx:id="txtLoppusumma" alignment="CENTER_RIGHT" layoutX="191.0" layoutY="569.0" prefHeight="31.0" prefWidth="184.0" stylesheets="@../stylesheets/sauli_textfield.css" text="0" visible="false" />
+            <Label layoutX="377.0" layoutY="577.0" text="€" visible="false" />
             <Button fx:id="btnTakaisin" layoutX="14.0" layoutY="635.0" mnemonicParsing="false" onAction="#btnTakaisinPainettu" text="Takaisin" />
          </children>
       </Pane>
