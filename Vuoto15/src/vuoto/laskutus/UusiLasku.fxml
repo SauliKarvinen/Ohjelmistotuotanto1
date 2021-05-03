@@ -163,19 +163,19 @@
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin></Label>
-                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                  <TextArea fx:id="txfAsiakas" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin></TextArea>
-                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <TextArea fx:id="txfVuokKiinteisto" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin></TextArea>
-                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <TextArea fx:id="txfPalvelut" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin></TextArea>
-                  <TextArea prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <TextArea fx:id="txfLaitteet" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin></TextArea>
