@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -539,7 +540,103 @@ public class DBAccess {
             katkaiseYhteys();
         }
     }
-
+    
+    /**
+     * Hakee kaikki varaukset
+     * @return ObservableList varaukset
+     */
+    public ObservableList<Varaus> haeKaikkiVaraukset() {
+        
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        int varausId = 0;
+        LocalDate vuokraAlku = null;
+        LocalDate vuokraLoppu = null;
+        int tilaId = 0;
+        int asiakasId = 0;
+        int palveluvarausId = 0;
+        int laitevarausId = 0;
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Varaus;");
+            
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                varausId = results.getInt("varausId");
+                vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
+                vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
+                tilaId = results.getInt("tilaId");
+                asiakasId = results.getInt("asiakasId");
+                palveluvarausId = results.getInt("palveluvarausId");
+                laitevarausId = results.getInt("laitevarausId");
+                
+                varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeKaikkiVaraukset)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return varaukset;
+    }
+    
+    /**
+     * Hakee varaukset toimitilasta
+     * @param t Toimitila
+     * @return ObservableList varaukset
+     */
+    public ObservableList<Varaus> haeVarauksetToimitilasta(Toimitila t) {
+        
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        int varausId = 0;
+        LocalDate vuokraAlku = null;
+        LocalDate vuokraLoppu = null;
+        int tilaId = 0;
+        int asiakasId = 0;
+        int palveluvarausId = 0;
+        int laitevarausId = 0;
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE tilaId = ?");
+            ps.setInt(1, t.getTilaId());
+            
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                varausId = results.getInt("varausId");
+                vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
+                vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
+                tilaId = results.getInt("tilaId");
+                asiakasId = results.getInt("asiakasId");
+                palveluvarausId = results.getInt("palveluvarausId");
+                laitevarausId = results.getInt("laitevarausId");
+                
+                varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeVarauksetToimitilasta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return varaukset;
+    }
+    
     public void lisaaVarauksenPalvelut(Varaus v, Palvelu p) {
         
 

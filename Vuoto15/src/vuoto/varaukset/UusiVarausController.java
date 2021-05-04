@@ -101,7 +101,6 @@ public class UusiVarausController implements Initializable {
             if (s3 != s2) {
                 paivitaPalvelut();
                 paivitaLaitteet();
-            // haePalvelutToimitilaId:llä
             }
         });
         
