@@ -3,7 +3,9 @@ package vuoto.luokkafilet;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
+
+
 
 /**
  *
@@ -15,7 +17,7 @@ public class Varaus {
      * Varauksen tiedot::
      *  int     varausId, 
      *  LocalDate    vuokraAlku, 
-     *  LocalDate    vuokraLoppu, 
+     *  LocalDate    vuokraLoppu,  Trying TimeStamp
      *  int   tilaId, 
      *  int   asiakasId,
      *  int   palveluvarausId,
@@ -33,14 +35,13 @@ public class Varaus {
      */
     
     private int   varausId;
-    private LocalDate  vuokraAlku; 
-    private LocalDate  vuokraLoppu;
+    private Date  vuokraAlku;
+    private Date  vuokraLoppu;
     private int   tilaId;
     private int   asiakasId;
     private int   palveluvarausId;
     private int   laitevarausId;
     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-    
     
     /**
      * Tyhjä Varaus konstruktori, uuden laskun luontia varten.
@@ -53,7 +54,24 @@ public class Varaus {
         this.asiakasId = 0;
         this.palveluvarausId = 0;
         this.laitevarausId = 0;
+        this.vuokraAlku  = date;
+        this.vuokraLoppu  = date;
     }
+
+    /** TEMPORARY !! 
+     * Konstruktori ilman PVM -kenttiä, 
+     *
+     **/
+    public Varaus(int varausId, int tilaId, int asiakasId, int palveluvarausId,  int laitevarausId) {
+        this.varausId = varausId;
+        this.tilaId = tilaId;
+        this.asiakasId = asiakasId;
+        this.palveluvarausId = palveluvarausId;
+        this.vuokraAlku = new Date();
+        this.vuokraLoppu = new Date();
+        this.laitevarausId = laitevarausId;
+    }
+
     
     /**
      * Konstruktori ilman varausId:tä, kun varaus luodaan.
@@ -62,7 +80,7 @@ public class Varaus {
      **/
     
      
-    public Varaus(LocalDate vuokraAlku, LocalDate vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
+    public Varaus(Date vuokraAlku, Date vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
         this.vuokraAlku = vuokraAlku;
         this.vuokraLoppu = vuokraLoppu;
         this.tilaId = tilaId;
@@ -77,7 +95,7 @@ public class Varaus {
      * 
      */
            
-    public Varaus(int varausId, LocalDate vuokraAlku, LocalDate vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
+    public Varaus(int varausId, Date vuokraAlku, Date vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
         this.varausId = varausId;
         this.vuokraAlku = vuokraAlku;
         this.vuokraLoppu = vuokraLoppu;
@@ -100,19 +118,19 @@ public class Varaus {
         this.varausId = varausId;
     }
 
-    public LocalDate getVuokraAlku() {
+    public Date getVuokraAlku() {
         return vuokraAlku;
     }
 
-    public void setVuokraAlku(LocalDate vuokraAlku) {
+    public void setVuokraAlku(Date vuokraAlku) {
         this.vuokraAlku = vuokraAlku;
     }
 
-    public LocalDate getVuokraLoppu() {
+    public Date getVuokraLoppu() {
         return vuokraLoppu;
     }
 
-    public void setVuokraLoppu(LocalDate vuokraLoppu) {
+    public void setVuokraLoppu(Date vuokraLoppu) {
         this.vuokraLoppu = vuokraLoppu;
     }
 

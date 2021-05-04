@@ -188,15 +188,15 @@
    <bottom>
       <Pane prefHeight="356.0" prefWidth="754.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView layoutX="5.0" prefHeight="356.0" prefWidth="748.0">
+            <TableView fx:id="tblVaraukset" layoutX="5.0" prefHeight="356.0" prefWidth="748.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Varaus ID" />
-                  <TableColumn prefWidth="110.7142333984375" text="Asiakkaan nimi" />
-                  <TableColumn prefWidth="102.28570556640625" text="Varauksen kohde" />
-                <TableColumn prefWidth="75.0" text="Varaus alku" />
-                  <TableColumn prefWidth="84.71429443359375" text="Varaus loppu" />
-                  <TableColumn prefWidth="166.28564453125" text="Palvelut" />
-                  <TableColumn prefWidth="131.0" text="Laitteet" />
+                <TableColumn fx:id="colVarausId" prefWidth="75.0" text="Varaus ID" />
+                  <TableColumn fx:id="colAsiakas" prefWidth="110.7142333984375" text="Asiakkaan nimi" />
+                  <TableColumn fx:id="colVuokrattava" prefWidth="102.28570556640625" text="Varauksen kohde" />
+                <TableColumn fx:id="colVarausAlku" prefWidth="75.0" text="Varaus alku" />
+                  <TableColumn fx:id="colVarausLoppu" prefWidth="84.71429443359375" text="Varaus loppu" />
+                  <TableColumn fx:id="colPalvelut" prefWidth="166.28564453125" text="Palvelut" />
+                  <TableColumn fx:id="colLaitteet" prefWidth="131.0" text="Laitteet" />
               </columns>
             </TableView>
          </children>

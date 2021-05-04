@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Date;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -512,10 +512,10 @@ public class DBAccess {
         try {
             yhdista();
             ps = conn.prepareStatement("INSERT INTO Varaus (varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId) "
-                    + "VALUES (?, ?, ?, ?);");
+                    + "VALUES (?, ?, ?, ?, ?, ?);");
             ps.setInt(1, v.getVarausId());
-//            ps.setLocalDate(2,   v.getVuokraAlku());
-//            ps.setLocalDate(3,   v.getVuokraLoppu());
+            ps.setDate(2, v.getVuokraAlku());
+            ps.setDate(3, v.getVuokraLoppu());
             ps.setInt(4, v.getTilaId());
             ps.setInt(5, v.getAsiakasId());
             ps.setInt(6, v.getPalveluvarausId());
@@ -549,4 +549,46 @@ public class DBAccess {
         a.setHeaderText(viesti);
         a.showAndWait();
     }
+    
+         /**
+     * Hakee KAIKKI VARAUKSET tietokannasta ja palauttaa ObservableList listan
+     * @return ObservableList varauksista.
+     */
+    public ObservableList<Varaus> haeKaikkiVaraukset(){
+        
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+     
+        try {
+            yhdista();
+            stmt = conn.createStatement();
+            
+            results = stmt.executeQuery("SELECT * FROM Varaus;");
+ 
+            while(results.next()) {
+                varaukset.add(new Varaus(
+                        results.getInt("varausId"), 
+                        results.getDate("vuokraAlku"), 
+                        results.getDate("vuokraLoppu"),
+                        results.getInt("asiakasId"),
+                        results.getInt("tilaId"), 
+                        results.getInt("palveluvarausId"), 
+                        results.getInt("laitevarausId")));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa kaikkia varauksia tietokannasta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            katkaiseYhteys();
+        }
+        
+        return varaukset;
+        
+    }
+    
 }
