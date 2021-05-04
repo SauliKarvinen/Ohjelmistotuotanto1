@@ -30,6 +30,7 @@ import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.asiakkuudet.AsiakkuudetController;
 import vuoto.laskutus.LaskutusController;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -53,6 +54,7 @@ public class VarauksetController implements Initializable {
     private VBox palvelutIkkuna;
     @FXML
     private VBox laitteetIkkuna;
+    private DBAccess tietokanta = new DBAccess();
     
 
     /**
@@ -65,6 +67,11 @@ public class VarauksetController implements Initializable {
         txtToimipiste.setText(valittuToimipiste);
         
     }    
+    
+    public void paivitaPalvelut() {
+        
+        
+    }
 
     /**
      * Heittää virheilmoituksen näytölle
