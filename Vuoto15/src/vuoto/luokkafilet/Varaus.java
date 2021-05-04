@@ -41,6 +41,7 @@ public class Varaus {
     private int   asiakasId;
     private int   palveluvarausId;
     private int   laitevarausId;
+    
     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     
     /**

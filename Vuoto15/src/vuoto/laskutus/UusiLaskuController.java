@@ -93,10 +93,18 @@ public class UusiLaskuController implements Initializable {
         paivitaAsiakasValikko();
         // Tämä asettaa aina cbValitseToimipiste -valikosta / comboboxista valitun asian muutujaan valittuToimipiste (String)
         cbAsiakas.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
-            
             valittuAsiakas = s3;
         });
         
+        
+     Asiakas asiakas = new Asiakas();
+// Import list to ->>>  asiakas = tietokanta.haeAsiakas(valittuAsiakas);
+     
+     txfAsiakas.setText(asiakas.getYrityksenNimi());
+     txfVuokKiinteisto.setText("Vuokrattavan kiinteistön tiedot.");
+     txfPalvelut.setText("Vuokrattavan kiinteistön palvelut.");
+     txfLaitteet.setText("Vuokrattavan kiinteistön laitteet.");
+             
         // TABLEVIEW VARAUKSET aktivointi
         try {
             // Aktivoi TblView

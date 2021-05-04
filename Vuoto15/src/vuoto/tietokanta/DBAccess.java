@@ -470,6 +470,51 @@ public class DBAccess {
         return asiakkaat;
         
     }
+
+     /**
+     * Hakee yrityksen/ASIAKKAAN tiedot tietokannasta ja palauttaa ObservableList listan
+     * @param a Haettava yritys
+     * @return ObservableList asiakkaista.
+     */
+    public ObservableList<Asiakas> haeAsiakas(String a){
+        
+        ObservableList<Asiakas> asiakas = FXCollections.observableArrayList();
+     
+        try {
+            yhdista();
+            stmt = conn.createStatement();
+            
+            ps = conn.prepareStatement("SELECT * FROM Asiakas WHERE yrityksenNimi = ?;");
+            ps.setString(1, a);
+            
+            results = ps.executeQuery();
+            while(results.next()) {
+                asiakas.add(new Asiakas(
+                        results.getInt("asiakasId"), 
+                        results.getString("etunimi"), 
+                        results.getString("sukunimi"), 
+                        results.getString("lahiosoite"), 
+                        results.getString("postinumero"), 
+                        results.getString("puhelinnumero"), 
+                        results.getString("sahkoposti"), 
+                        results.getString("yrityksenNimi")));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa kaikkia asiakkaita tietokannasta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            katkaiseYhteys();
+        }
+        
+        return asiakas;
+        
+    }
     
     /** L A S K U T U S * *
      **/
