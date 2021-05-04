@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -30,6 +32,10 @@ import javafx.stage.StageStyle;
 import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.laskutus.LaskutusController;
+import vuoto.luokkafilet.Laite;
+import vuoto.luokkafilet.Palvelu;
+import vuoto.luokkafilet.Toimitila;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -46,9 +52,9 @@ public class PalvelutJaLaitteetController implements Initializable {
     @FXML
     private TextField txtToimipiste;
     @FXML
-    private TableView<?> tbviewPalvelut;
+    private TableView<Palvelu> tbviewPalvelut;
     @FXML
-    private TableView<?> tbviewLaitteet;
+    private TableView<Laite> tbviewLaitteet;
     @FXML
     private Button btnMuokkaaPalvelua;
     @FXML
@@ -57,6 +63,10 @@ public class PalvelutJaLaitteetController implements Initializable {
     private Button btnMuokkaaLaitetta;
     @FXML
     private Button btnPoistaLaite;
+    @FXML
+    private ComboBox<Toimitila> cbToimitilavalikko;
+    private Toimitila valittuToimitila;
+    private DBAccess tietokanta = new DBAccess();
 
     /**
      * Initializes the controller class.
@@ -67,6 +77,19 @@ public class PalvelutJaLaitteetController implements Initializable {
         txtToimipiste.setFocusTraversable(false);
         txtToimipiste.setText(valittuToimipiste);
         
+        paivitaToimitilavalikko();
+        
+        // Kuuntelee toimitilavalikon valintaa ja asettaa toimitilan
+        cbToimitilavalikko.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if (s3 != s2) {
+                valittuToimitila = s3;
+                
+            }
+        });
+        
+        
+        
 //      // Asettaa Muokkaa ja Poista napit aktiiviseksi vasta kun on valittu jotain
 //        tbviewPalvelut.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
 //            if(s3 != null) {
@@ -76,7 +99,27 @@ public class PalvelutJaLaitteetController implements Initializable {
 //            }
 //        });
     }    
+    
+    /**
+     * Lisää toimitilat toimitilat-valikkoon
+     */
+    private void paivitaToimitilavalikko() {
+        
+        ObservableList<Toimitila> toimitilat = null;
+                
+        if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
+            toimitilat = tietokanta.haeKaikkiToimitilat();
+            cbToimitilavalikko.setItems(toimitilat);
+        } else {
+            toimitilat = tietokanta.haeToimitilatToimipisteesta(valittuToimipiste);
+            cbToimitilavalikko.setItems(toimitilat);
+        }
+    }
 
+    /**
+     * Palauttaa näkymän etusivulle
+     * @param event Etusivulle -napin painallus
+     */
     @FXML
     private void btnEtusivullePainettu(ActionEvent event) {
         

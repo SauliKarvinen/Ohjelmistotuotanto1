@@ -145,6 +145,9 @@ public class UusiVarausController implements Initializable {
 //        // LinkedHashSet jotta uudet lisätyt palvelut on helppo päivittää listaan (poistaa automaattisesti duplikaatit)
 //    }
     
+    /**
+     * Hakee palvelut valitusta toimitilasta ja luo niistä checkboxit Palvelut -ikkunaan
+     */
     private void paivitaPalvelut() {
         
         //ObservableList<Palvelu> palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
@@ -157,6 +160,9 @@ public class UusiVarausController implements Initializable {
         }
     }
     
+    /**
+     * Hakee laitteet valitusta toimitilasta ja luo niistä checkboxit Laitteet -ikkunaan
+     */
     private void paivitaLaitteet() {
         
         ObservableList<Laite> laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);

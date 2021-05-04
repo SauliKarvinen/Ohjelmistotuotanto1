@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +21,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -30,6 +33,9 @@ import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.asiakkuudet.AsiakkuudetController;
 import vuoto.laskutus.LaskutusController;
+import vuoto.luokkafilet.Laite;
+import vuoto.luokkafilet.Palvelu;
+import vuoto.luokkafilet.Toimitila;
 import vuoto.tietokanta.DBAccess;
 
 /**
@@ -55,6 +61,9 @@ public class VarauksetController implements Initializable {
     @FXML
     private VBox laitteetIkkuna;
     private DBAccess tietokanta = new DBAccess();
+    private Toimitila valittuToimitila;
+    @FXML
+    private ComboBox<Toimitila> cbToimitilavalikko;
     
 
     /**
@@ -65,14 +74,62 @@ public class VarauksetController implements Initializable {
         // Aktiivinen toimipiste (eli yksi keskuksista)
         txtToimipiste.setFocusTraversable(false);
         txtToimipiste.setText(valittuToimipiste);
+        paivitaToimitilavalikko();
+        
+        // Kuuntelee toimitilan valintaa, asettaa valitun toimitilan ja päivittää Palvelut ja Laitteet ikkunat
+        cbToimitilavalikko.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if (s3 != s2) {
+                valittuToimitila = s3;
+                paivitaPalvelut();
+                paivitaLaitteet();
+            }
+        });
+        
         
     }    
     
-    public void paivitaPalvelut() {
+    /**
+     * Hakee palvelut valitusta toimitilasta ja luo niistä checkboxit Palvelut -ikkunaan
+     */
+    private void paivitaPalvelut() {
         
+        ObservableList<Palvelu> palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
+        
+        for(Palvelu p: palvelut) {
+            CheckBox checkbox = new CheckBox();
+            checkbox.setText(p.getKuvaus());
+            palvelutIkkuna.getChildren().add(checkbox);
+        }
         
     }
+    
+    /**
+     * Hakee laitteet valitusta toimitilasta ja luo niistä checkboxit Laitteet -ikkunaan
+     */
+    private void paivitaLaitteet() {
+        
+        ObservableList<Laite> laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
+        
+        for(Laite l: laitteet) {
+            CheckBox checkbox = new CheckBox();
+            checkbox.setText(l.getKuvaus());
+            laitteetIkkuna.getChildren().add(checkbox);
+        }
+    }
 
+    private void paivitaToimitilavalikko() {
+        
+        ObservableList<Toimitila> toimitilat = null;
+                
+        if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
+            toimitilat = tietokanta.haeKaikkiToimitilat();
+            cbToimitilavalikko.setItems(toimitilat);
+        } else {
+            toimitilat = tietokanta.haeToimitilatToimipisteesta(valittuToimipiste);
+            cbToimitilavalikko.setItems(toimitilat);
+        }
+    }
     /**
      * Heittää virheilmoituksen näytölle
      * @param virhe Virheilmoitus

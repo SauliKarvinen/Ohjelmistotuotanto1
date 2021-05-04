@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import vuoto.aloitus.VuotoMainController;
 
 /**
  * FXML Controller class
@@ -73,6 +74,8 @@ public class MuokkaaKiinteistoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        txtToimipiste.setText(VuotoMainController.valittuToimipiste);
     }    
     
         /**
