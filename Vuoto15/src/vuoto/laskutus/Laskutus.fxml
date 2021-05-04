@@ -137,13 +137,13 @@
                   <Insets />
                </opaqueInsets>
             </HBox>
-            <TableView layoutX="3.0" layoutY="20.0" prefHeight="472.0" prefWidth="744.0">
+            <TableView fx:id="tblLaskut" layoutX="3.0" layoutY="20.0" prefHeight="472.0" prefWidth="744.0">
               <columns>
-                <TableColumn prefWidth="94.4285888671875" text="Laskun nro" />
-                <TableColumn prefWidth="103.5714111328125" text="Varauksen nro" />
-                  <TableColumn prefWidth="182.142822265625" text="Asiakas" />
-                  <TableColumn prefWidth="233.7142333984375" text="Toimitila" />
-                  <TableColumn prefWidth="129.28564453125" text="Laskun tyyppi" />
+                <TableColumn fx:id="colLaskunNro" prefWidth="94.4285888671875" text="Laskun nro" />
+                <TableColumn fx:id="colVarausNro" prefWidth="103.5714111328125" text="Varauksen nro" />
+                  <TableColumn fx:id="colAsiakas" prefWidth="182.142822265625" text="Asiakas" />
+                  <TableColumn fx:id="colToimitila" prefWidth="233.7142333984375" text="Toimitila" />
+                  <TableColumn fx:id="colTyyppi" prefWidth="129.28564453125" text="Laskun tyyppi" />
               </columns>
             </TableView>
          </children>

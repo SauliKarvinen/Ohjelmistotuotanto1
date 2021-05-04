@@ -167,21 +167,19 @@ public class UusiLaskuController implements Initializable {
      *  Alustetaan -> setCellValueFactory määritykset sarakkeille.
      * 
      * */
-    
-    
     private void populateTableViewVaraukset() throws SQLException {
         // alustetaan lista
         listVaraukset = FXCollections.observableArrayList();
        
-        // Haetaan toimipisteet...         
+        // Haetaan asiakkaan Varaukset (Ei vielä, nyt KAIKKI varaukset)
         listVaraukset = tietokanta.haeKaikkiVaraukset();
         
         // set propertyTab to TableView
        colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
-       colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakasId"));
-       colVuokrattava.setCellValueFactory(new PropertyValueFactory<>("tilaId"));
        colVarausAlku.setCellValueFactory(new PropertyValueFactory<>("vuokraAlku"));
        colVarausLoppu.setCellValueFactory(new PropertyValueFactory<>("vuokraLoppu"));
+       colVuokrattava.setCellValueFactory(new PropertyValueFactory<>("tilaId"));
+       colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakasId"));
        colPalvelut.setCellValueFactory(new PropertyValueFactory<>("palveluvarausId"));
        colLaitteet.setCellValueFactory(new PropertyValueFactory<>("laitevarausId"));
 

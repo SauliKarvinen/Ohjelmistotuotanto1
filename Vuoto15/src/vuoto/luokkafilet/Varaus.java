@@ -35,8 +35,8 @@ public class Varaus {
      */
     
     private int   varausId;
-    private Date  vuokraAlku;
-    private Date  vuokraLoppu;
+    private LocalDate  vuokraAlku;
+    private LocalDate  vuokraLoppu;
     private int   tilaId;
     private int   asiakasId;
     private int   palveluvarausId;
@@ -54,25 +54,10 @@ public class Varaus {
         this.asiakasId = 0;
         this.palveluvarausId = 0;
         this.laitevarausId = 0;
-        this.vuokraAlku  = date;
-        this.vuokraLoppu  = date;
+        this.vuokraAlku  = null;
+        this.vuokraLoppu  = null;
     }
 
-    /** TEMPORARY !! 
-     * Konstruktori ilman PVM -kenttiä, 
-     *
-     **/
-    public Varaus(int varausId, int tilaId, int asiakasId, int palveluvarausId,  int laitevarausId) {
-        this.varausId = varausId;
-        this.tilaId = tilaId;
-        this.asiakasId = asiakasId;
-        this.palveluvarausId = palveluvarausId;
-        this.vuokraAlku = new Date();
-        this.vuokraLoppu = new Date();
-        this.laitevarausId = laitevarausId;
-    }
-
-    
     /**
      * Konstruktori ilman varausId:tä, kun varaus luodaan.
      * varausId luodaan vasta db:ssä.
@@ -80,7 +65,7 @@ public class Varaus {
      **/
     
      
-    public Varaus(Date vuokraAlku, Date vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
+    public Varaus(LocalDate vuokraAlku, LocalDate vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
         this.vuokraAlku = vuokraAlku;
         this.vuokraLoppu = vuokraLoppu;
         this.tilaId = tilaId;
@@ -95,7 +80,7 @@ public class Varaus {
      * 
      */
            
-    public Varaus(int varausId, Date vuokraAlku, Date vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
+    public Varaus(int varausId, LocalDate vuokraAlku, LocalDate vuokraLoppu, int tilaId, int asiakasId, int palveluvarausId, int laitevarausId) {
         this.varausId = varausId;
         this.vuokraAlku = vuokraAlku;
         this.vuokraLoppu = vuokraLoppu;
@@ -118,19 +103,19 @@ public class Varaus {
         this.varausId = varausId;
     }
 
-    public Date getVuokraAlku() {
+    public LocalDate getVuokraAlku() {
         return vuokraAlku;
     }
 
-    public void setVuokraAlku(Date vuokraAlku) {
+    public void setVuokraAlku(LocalDate vuokraAlku) {
         this.vuokraAlku = vuokraAlku;
     }
 
-    public Date getVuokraLoppu() {
+    public LocalDate getVuokraLoppu() {
         return vuokraLoppu;
     }
 
-    public void setVuokraLoppu(Date vuokraLoppu) {
+    public void setVuokraLoppu(LocalDate vuokraLoppu) {
         this.vuokraLoppu = vuokraLoppu;
     }
 

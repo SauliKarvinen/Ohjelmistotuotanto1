@@ -191,10 +191,10 @@
             <TableView fx:id="tblVaraukset" layoutX="5.0" prefHeight="356.0" prefWidth="748.0">
               <columns>
                 <TableColumn fx:id="colVarausId" prefWidth="75.0" text="Varaus ID" />
-                  <TableColumn fx:id="colAsiakas" prefWidth="110.7142333984375" text="Asiakkaan nimi" />
-                  <TableColumn fx:id="colVuokrattava" prefWidth="102.28570556640625" text="Varauksen kohde" />
                 <TableColumn fx:id="colVarausAlku" prefWidth="75.0" text="Varaus alku" />
                   <TableColumn fx:id="colVarausLoppu" prefWidth="84.71429443359375" text="Varaus loppu" />
+                  <TableColumn fx:id="colVuokrattava" prefWidth="102.28570556640625" text="Varauksen kohde" />
+                  <TableColumn fx:id="colAsiakas" prefWidth="110.7142333984375" text="Asiakkaan ID" />
                   <TableColumn fx:id="colPalvelut" prefWidth="166.28564453125" text="Palvelut" />
                   <TableColumn fx:id="colLaitteet" prefWidth="131.0" text="Laitteet" />
               </columns>
