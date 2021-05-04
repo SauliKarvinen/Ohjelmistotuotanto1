@@ -52,6 +52,7 @@ public class PoistaToimipisteController implements Initializable {
 
         haeToimipisteet();
         
+        // valikosta valittu toimipiste = toimipiste
         cbToimipisteet.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             toimipiste = s3;
         });

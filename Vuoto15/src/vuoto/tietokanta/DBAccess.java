@@ -11,7 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -19,7 +21,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Asiakas;
+import vuoto.luokkafilet.Laite;
 import vuoto.luokkafilet.Lasku;
+import vuoto.luokkafilet.Palvelu;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 
@@ -524,7 +528,7 @@ public class DBAccess {
             ps.execute();
 
         } catch (SQLException e) {
-            heitaVirhe("Virhe lisätessä toimipistettä");
+            heitaVirhe("Virhe lisätessä varausta");
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             try {
@@ -536,7 +540,310 @@ public class DBAccess {
             katkaiseYhteys();
         }
     }
+    
+    /**
+     * Hakee kaikki varaukset
+     * @return ObservableList varaukset
+     */
+    public ObservableList<Varaus> haeKaikkiVaraukset() {
+        
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        int varausId = 0;
+        LocalDate vuokraAlku = null;
+        LocalDate vuokraLoppu = null;
+        int tilaId = 0;
+        int asiakasId = 0;
+        int palveluvarausId = 0;
+        int laitevarausId = 0;
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Varaus;");
+            
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                varausId = results.getInt("varausId");
+                vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
+                vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
+                tilaId = results.getInt("tilaId");
+                asiakasId = results.getInt("asiakasId");
+                palveluvarausId = results.getInt("palveluvarausId");
+                laitevarausId = results.getInt("laitevarausId");
+                
+                varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe haettaessa varauksia");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeKaikkiVaraukset)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return varaukset;
+    }
+    
+    /**
+     * Hakee varaukset toimitilasta
+     * @param t Toimitila
+     * @return ObservableList varaukset
+     */
+    public ObservableList<Varaus> haeVarauksetToimitilasta(Toimitila t) {
+        
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        int varausId = 0;
+        LocalDate vuokraAlku = null;
+        LocalDate vuokraLoppu = null;
+        int tilaId = 0;
+        int asiakasId = 0;
+        int palveluvarausId = 0;
+        int laitevarausId = 0;
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE tilaId = ?");
+            ps.setInt(1, t.getTilaId());
+            
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                varausId = results.getInt("varausId");
+                vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
+                vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
+                tilaId = results.getInt("tilaId");
+                asiakasId = results.getInt("asiakasId");
+                palveluvarausId = results.getInt("palveluvarausId");
+                laitevarausId = results.getInt("laitevarausId");
+                
+                varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeVarauksetToimitilasta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return varaukset;
+    }
+    
+    /**
+     * Hakee varaukset halutulta aikaväliltä
+     * @param alku Alkupäivä
+     * @param loppu Loppupäivä
+     * @return ObservableList varaukset
+     */
+    public ObservableList<Varaus> haeVarauksetAikavalilta(LocalDate alku, LocalDate loppu) {
+        
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        int varausId = 0;
+        LocalDate vuokraAlku = null;
+        LocalDate vuokraLoppu = null;
+        int tilaId = 0;
+        int asiakasId = 0;
+        int palveluvarausId = 0;
+        int laitevarausId = 0;
+        
+        try {
+            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE varausAlku >= ? AND varausLoppu <= ?");
+            ps.setDate(1, Date.valueOf(alku));
+            ps.setDate(2, Date.valueOf(loppu));
+            
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                varausId = results.getInt("varausId");
+                vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
+                vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
+                tilaId = results.getInt("tilaId");
+                asiakasId = results.getInt("asiakasId");
+                palveluvarausId = results.getInt("palveluvarausId");
+                laitevarausId = results.getInt("laitevarausId");
+                
+                varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe haettaessa varauksia aikaväliltä");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyitä (haeVarauksetAikavalilta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
+        return varaukset;
+    }
+    
+    // KESKEN
+    public void lisaaVarauksenPalvelut(Varaus v, Palvelu p) {
+        
 
+        
+        try {
+            ps = conn.prepareStatement("INSERT INTO Varauspalvelut (palveluvarausId, palveluId) VALUES (?, ?)");
+            
+            ps.setInt(1, v.getPalveluvarausId());
+            ps.setInt(2, p.getPalveluId());
+
+            ps.execute();
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe lisätessä varauksen palveluita");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    // KESKEN
+    public void lisaaVarauksenLaitteet(List laitteet) {
+        
+    }
+    
+    /**
+     * Palauttaa viimeisimmän Varauspalvelut -taulun palveluvarausId:n
+     * @return palveluvarausId
+     */
+    public int haeVarauksenPalvelutId() {
+       
+        int palveluvarausId = 0;
+        
+        try {
+            yhdista();
+            stmt = conn.createStatement();
+            results = stmt.executeQuery("SELECT MAX(palveluvarausId) AS 'palveluvarausId' FROM Varauspalvelut LIMIT 1;");
+            results.next();
+            palveluvarausId = results.getInt("palveluvarausId");
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa VarauksenPalvelutId:tä");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                stmt.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyitä (haeVarauksenPalvelutId)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return palveluvarausId;
+    }
+    
+    /**
+     * Palauttaa viimeisimmän Varauslaitteet -taulun laitevarausId:n
+     * @return laitevarausId
+     */
+    public int haeVarauksenLaitteetId() {
+        
+        int laitevarausId = 0;
+        
+        try {
+            yhdista();
+            stmt = conn.createStatement();
+            results = stmt.executeQuery("SELECT MAX(laitevarausId) AS 'laitevarausId' FROM Varauslaitteet LIMIT 1;");
+            results.next();
+            laitevarausId = results.getInt("laitevarausId");
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa VarauksenLaitteetId:tä");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                stmt.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyitä (haeVarauksenLaitteetId)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return laitevarausId;
+    }
+    /**
+     * Hakee halutun toimitilan palvelut
+     * @param t Toimipiste
+     */
+    public ObservableList<Palvelu> haePalvelutToimitilasta(Toimitila t) {
+        
+        ObservableList<Palvelu> palvelut = FXCollections.observableArrayList();
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Palvelut p, Tilanpalvelut tp WHERE tp.tilaId = ? AND p.palveluId = tp.palveluId LIMIT 1;");
+            ps.setInt(1, t.getTilaId());
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                palvelut.add(new Palvelu(results.getInt("palveluId"), results.getInt("hinta"), results.getString("kuvaus")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyitä (haePalvelutToimitilasta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return palvelut;
+    }
+    
+    /**
+     * Hakee halutun toimitilan laitteet
+     * @param t Toimitila
+     */
+    public ObservableList<Laite> haeLaitteetToimitilasta(Toimitila t) {
+        
+        ObservableList<Laite> laitteet = FXCollections.observableArrayList();
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Laitteet l, Tilanlaitteet tl WHERE tl.tilaId = ? AND l.laiteId = tl.laiteId LIMIT 1;");
+            ps.setInt(1, t.getTilaId());
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                laitteet.add(new Laite(results.getInt("laiteId"), results.getString("kuvaus"),results.getInt("hinta")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyitä (haeLaitteetToimitilasta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return laitteet;
+    }
+    
 
     
     /**

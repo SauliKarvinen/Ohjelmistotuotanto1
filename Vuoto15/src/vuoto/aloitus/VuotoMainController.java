@@ -130,6 +130,7 @@ public class VuotoMainController implements Initializable {
         // Lisää toimipistevalikkoon vaihtoehdon Kaikki toimipisteet
         cbValitseToimipiste.getItems().add("Kaikki toimipisteet");
         // Päivittää toimipistevalikon tietokannan toimipisteillä
+        
         paivitaToimipistevalikko();
         
      
@@ -139,6 +140,10 @@ public class VuotoMainController implements Initializable {
             valittuToimipiste = s3;
         });
   
+        // Jos toimipiste on jo valittu, aloitusnäkymän toimipistevalikko muistaa aikaisemman toimipisteen valinnan
+        if(valittuToimipiste != null) {
+            cbValitseToimipiste.getSelectionModel().select(valittuToimipiste);
+        }
     }    
   
     /**
