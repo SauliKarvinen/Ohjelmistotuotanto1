@@ -7,9 +7,11 @@ package vuoto.laskutus;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,11 +24,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.luokkafilet.Asiakas;
+import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.tietokanta.DBAccess;
 
@@ -53,10 +59,16 @@ public class LaskutusController implements Initializable {
     private Button btnLisaaLasku;
     @FXML
     private Button btnPoistaLasku;
+    @FXML
     private Toimipiste toimipiste;
     @FXML
     private ComboBox<String> cbValitseAsiakas;
+    @FXML
     private String valittuAsiakas;
+    @FXML
+    private Button btnMuokkaaLasku;
+    
+    
     
      @FXML
     private void LisaaLaskuPainettu(ActionEvent event) {
@@ -106,6 +118,8 @@ public class LaskutusController implements Initializable {
         cbValitseAsiakas.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             valittuAsiakas = s3;
+            
+            // populateTableViewLaskut()
         });
         
         // Lista kaikista laskuista...
@@ -115,6 +129,46 @@ public class LaskutusController implements Initializable {
         
     }    
 
+     /*** TABLEVIEW **/   
+    private ObservableList<Lasku> listLaskut;
+    @FXML
+    private TableView<Lasku> tblLaskut;
+    @FXML
+    private TableColumn<Lasku, Integer> colLaskunNro;
+    @FXML
+    private TableColumn<Lasku, Integer> colVarausNro;
+    @FXML
+    private TableColumn<Lasku, Integer> colAsiakas;
+    @FXML
+    private TableColumn<Lasku, Integer> colToimitila;
+    @FXML
+    private TableColumn<Lasku, String> colTyyppi;
+    
+    
+    /**
+     * Method to populate TableView: Laskut
+     * Käytetään Laskun (DBAccess) metodia, 
+     *  haeKaikkiLaskut() 
+     *  Luetaan -> observableArrayList(listLaskut)
+     *  Alustetaan -> setCellValueFactory määritykset sarakkeille.
+     * 
+     * */
+    private void populateTableViewVaraukset() throws SQLException {
+        // alustetaan lista
+        listLaskut = FXCollections.observableArrayList();
+       
+        // Haetaan asiakkaan Varaukset (Ei vielä, nyt KAIKKI varaukset)
+        listLaskut = tietokanta.haeKaikkiLaskut();
+        
+        // set propertyTab to TableView
+       colLaskunNro.setCellValueFactory(new PropertyValueFactory<>("laskuNro"));
+       colVarausNro.setCellValueFactory(new PropertyValueFactory<>("laskuntyyppi"));
+       colToimitila.setCellValueFactory(new PropertyValueFactory<>("hinta"));
+       colTyyppi.setCellValueFactory(new PropertyValueFactory<>("varausId"));
+       
+       tblLaskut.setItems(listLaskut);
+    }
+    
     
     @FXML
     private void btnEtusivullePainettu(ActionEvent event) {
@@ -148,7 +202,10 @@ public class LaskutusController implements Initializable {
         }
     }
    
-    
+    /**
+     * TABLEVIEW A S I A K K A A N   L A S K U T
+     * 
+     */
     
     /**
      * Heittää virheilmoituksen näytölle

@@ -141,7 +141,7 @@
               <columns>
                 <TableColumn fx:id="colLaskunNro" prefWidth="94.4285888671875" text="Laskun nro" />
                 <TableColumn fx:id="colVarausNro" prefWidth="103.5714111328125" text="Varauksen nro" />
-                  <TableColumn fx:id="colAsiakas" prefWidth="182.142822265625" text="Asiakas" />
+                  <TableColumn fx:id="colAsiakas" prefWidth="182.142822265625" text="Asiakas ID" />
                   <TableColumn fx:id="colToimitila" prefWidth="233.7142333984375" text="Toimitila" />
                   <TableColumn fx:id="colTyyppi" prefWidth="129.28564453125" text="Laskun tyyppi" />
               </columns>

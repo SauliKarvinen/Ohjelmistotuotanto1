@@ -902,6 +902,35 @@ public class DBAccess {
     }
     
 
+    /**
+     * Hakee laskut
+     */
+    public ObservableList<Lasku> haeKaikkiLaskut() {
+        
+        ObservableList<Lasku> laskut = FXCollections.observableArrayList();
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Lasku;");
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                laskut.add(new Lasku(results.getInt("laiteId"), results.getString("laskuntyyppi"),results.getInt("hinta"),results.getInt("varausId")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyitä (haeKaikkiLaskut)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return laskut;
+    }    
     
     /**
      * Heittää virheen näytölle
