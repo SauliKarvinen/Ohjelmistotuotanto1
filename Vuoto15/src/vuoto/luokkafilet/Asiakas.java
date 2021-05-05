@@ -1,6 +1,8 @@
 
 package vuoto.luokkafilet;
 
+import javafx.collections.ObservableList;
+
 /**
  *
  * @author marko
@@ -91,7 +93,7 @@ public class Asiakas {
         this.yrityksenNimi = yrityksenNimi;
     }
 
-    /**
+     /**
      * SETTERs & GETTERs
      * 
      */

@@ -3,7 +3,9 @@ package vuoto.luokkafilet;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
+
+
 
 /**
  *
@@ -15,7 +17,7 @@ public class Varaus {
      * Varauksen tiedot::
      *  int     varausId, 
      *  LocalDate    vuokraAlku, 
-     *  LocalDate    vuokraLoppu, 
+     *  LocalDate    vuokraLoppu,  Trying TimeStamp
      *  int   tilaId, 
      *  int   asiakasId,
      *  int   palveluvarausId,
@@ -33,14 +35,14 @@ public class Varaus {
      */
     
     private int   varausId;
-    private LocalDate  vuokraAlku; 
+    private LocalDate  vuokraAlku;
     private LocalDate  vuokraLoppu;
     private int   tilaId;
     private int   asiakasId;
     private int   palveluvarausId;
     private int   laitevarausId;
-    private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     
+    private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     
     /**
      * Tyhjä Varaus konstruktori, uuden laskun luontia varten.
@@ -53,8 +55,10 @@ public class Varaus {
         this.asiakasId = 0;
         this.palveluvarausId = 0;
         this.laitevarausId = 0;
+        this.vuokraAlku  = null;
+        this.vuokraLoppu  = null;
     }
-    
+
     /**
      * Konstruktori ilman varausId:tä, kun varaus luodaan.
      * varausId luodaan vasta db:ssä.

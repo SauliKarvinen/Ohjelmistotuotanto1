@@ -114,13 +114,12 @@ public class ToimipisteetController implements Initializable {
     private ObservableList<Toimipiste> listTPs;
     
     /**
-     * Method to populate TableView: COURSE
+     * Method to populate TableView: Toimipisteet
      * Käytetään Toimipisteiden (DBAccess) metodia, 
      *  haeKaikkiToimipisteet() 
      *  Luetaan -> observableArrayList(listTPs)
      *  Alustetaan -> setCellValueFactory määritykset sarakkeille.
      * 
-     * !!!!! Nimi ei näy !!
      * */
     
     

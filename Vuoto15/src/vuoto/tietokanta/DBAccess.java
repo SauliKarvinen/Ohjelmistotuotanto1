@@ -471,6 +471,61 @@ public class DBAccess {
         return asiakkaat;
         
     }
+
+     /**
+     * Hakee yrityksen/ASIAKKAAN tiedot tietokannasta ja palauttaa ObservableList listan
+     * @param a Haettava yritys
+     * @return ObservableList asiakkaista.
+     */
+    public ObservableList<Asiakas> haeAsiakas(String a){
+        
+        ObservableList<Asiakas> asiakas = FXCollections.observableArrayList();
+        int asiakasId = 0;
+        String etunimi = "";
+        String sukunimi = "";
+        String lahiosoite = "";
+        String postinumero = "";
+        String puhelinnumero = "";
+        String sahkoposti = "";
+        String yrityksenNimi = "";
+                
+        try {
+            yhdista();
+            stmt = conn.createStatement();
+            
+            ps = conn.prepareStatement("SELECT * FROM Asiakas WHERE yrityksenNimi = ?;");
+            ps.setString(1, a);
+            
+            results = ps.executeQuery();
+            while(results.next()) {
+                asiakasId = results.getInt("asiakasId"); 
+                etunimi = results.getString("etunimi");
+                sukunimi = results.getString("sukunimi");
+                lahiosoite = results.getString("lahiosoite"); 
+                postinumero = results.getString("postinumero"); 
+                puhelinnumero = results.getString("puhelinnumero"); 
+                sahkoposti = results.getString("sahkoposti"); 
+                yrityksenNimi = results.getString("yrityksenNimi");
+                
+                asiakas.add(new Asiakas(asiakasId, etunimi, sukunimi, lahiosoite, postinumero, puhelinnumero, sahkoposti, yrityksenNimi));
+            }
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa asiakasta tietokannasta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            katkaiseYhteys();
+        }
+        
+        return asiakas;
+        
+    }
     
     /** L A S K U T U S * *
      **/
@@ -517,6 +572,7 @@ public class DBAccess {
         try {
             yhdista();
             ps = conn.prepareStatement("INSERT INTO Varaus (varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId) "
+
                     + "VALUES (?, ?, ?, ?, ?, ?, ?);");
             ps.setInt(1, v.getVarausId());
             ps.setDate(2,   Date.valueOf(v.getVuokraAlku()));
@@ -525,6 +581,7 @@ public class DBAccess {
             ps.setInt(5, v.getAsiakasId());
             ps.setInt(6, v.getPalveluvarausId());
             ps.setInt(7, v.getLaitevarausId());
+
 
             ps.execute();
 
@@ -562,16 +619,17 @@ public class DBAccess {
             ps = conn.prepareStatement("SELECT * FROM Varaus;");
             
             results = ps.executeQuery();
-            
+
             while(results.next()) {
                 varausId = results.getInt("varausId");
                 vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
+            //    System.out.println("Vuokran alku: "+vuokraAlku);
                 vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
                 tilaId = results.getInt("tilaId");
                 asiakasId = results.getInt("asiakasId");
                 palveluvarausId = results.getInt("palveluvarausId");
                 laitevarausId = results.getInt("laitevarausId");
-                
+                                
                 varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
             }
         } catch (SQLException ex) {
@@ -640,7 +698,7 @@ public class DBAccess {
         
         return varaukset;
     }
-    
+
     /**
      * Hakee varaukset halutulta aikaväliltä
      * @param alku Alkupäivä
@@ -694,6 +752,7 @@ public class DBAccess {
         
         return varaukset;
     }
+
     
     // KESKEN
     public void lisaaVarauksenPalvelut(Varaus v, Palvelu p) {
@@ -996,4 +1055,49 @@ public class DBAccess {
         a.setHeaderText(viesti);
         a.showAndWait();
     }
+   
+    
+    
+     /**
+     * Hakee KAIKKI VARAUKSET tietokannasta ja palauttaa ObservableList listan
+     * @return ObservableList varauksista.
+     */
+    /*
+    public ObservableList<Varaus> haeKaikkiVaraukset(){
+        
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+     
+        try {
+            yhdista();
+            stmt = conn.createStatement();
+            
+            results = stmt.executeQuery("SELECT * FROM Varaus;");
+ 
+            while(results.next()) {
+                varaukset.add(new Varaus(
+                        results.getInt("varausId"), 
+                        results.getDate("vuokraAlku"), 
+                        results.getDate("vuokraLoppu"),
+                        results.getInt("asiakasId"),
+                        results.getInt("tilaId"), 
+                        results.getInt("palveluvarausId"), 
+                        results.getInt("laitevarausId")));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa kaikkia varauksia tietokannasta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            katkaiseYhteys();
+        }
+        
+        return varaukset;
+        
+    }
+    */
 }
