@@ -163,7 +163,8 @@ public class LaskutusController implements Initializable {
         // set propertyTab to TableView
        colLaskunNro.setCellValueFactory(new PropertyValueFactory<>("laskuNro"));
        colVarausNro.setCellValueFactory(new PropertyValueFactory<>("laskuntyyppi"));
-       colToimitila.setCellValueFactory(new PropertyValueFactory<>("hinta"));
+       colAsiakas.setCellValueFactory(new PropertyValueFactory<>("yritysNimi"));
+       colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
        colTyyppi.setCellValueFactory(new PropertyValueFactory<>("varausId"));
        
        tblLaskut.setItems(listLaskut);

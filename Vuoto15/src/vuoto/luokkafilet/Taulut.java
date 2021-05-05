@@ -1,9 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package vuoto.luokkafilet;
+
+import vuoto.luokkafilet.Toimipiste;
+import vuoto.luokkafilet.Asiakas;
+import vuoto.luokkafilet.Laite;
+import vuoto.luokkafilet.Lasku;
+import vuoto.luokkafilet.Palvelu;
+import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.Varaus;
 
 /**
  *
@@ -11,4 +14,34 @@ package vuoto.luokkafilet;
  */
 public class Taulut {
     
+    /**
+     * Luokka Laskun TblVu-näkymää varten:
+     * int laskuNro
+     * String laskuntyyppi  (email/lasku)
+     * String yritysNimi (asiakas)
+     * int toimitila    (varattu kohde)
+     * int varausId
+     * 
+     */
+    
+   int laskuNro;
+   String laskuntyyppi;
+   String yritysNimi;
+   String toimitila;
+   int varausId;
+
+    public void LaskutTauluOlio(Lasku l, Asiakas a, Varaus v, Toimitila t) {
+        this.laskuNro = l.getLaskunNro();
+        this.laskuntyyppi = l.getLaskunTyyppi();
+        this.yritysNimi = a.getYrityksenNimi();
+        this.toimitila = t.getTilanNimi();
+        this.varausId = v.getVarausId();
+        
+    }
+
+   
+   
+   
+      
+   
 }
