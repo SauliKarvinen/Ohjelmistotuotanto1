@@ -83,8 +83,12 @@ public class UusiVarausController implements Initializable {
     private Toimitila valittuToimitila;
     private Asiakas valittuAsiakas;
     private Palvelu palvelu;
+    private Laite laite;
     private Varaus varaus;
+    private List<Palvelu> valitutPalvelut = new LinkedList<>();
+    private List<Laite> valitutLaitteet = new LinkedList<>();
     private List<Palvelu> palvelut = new LinkedList<Palvelu>();
+    private List<Laite> laitteet = new LinkedList<Laite>();
     private Map<Integer, LinkedHashSet<Palvelu>> palvelutMap = new HashMap<>();
 
 
@@ -99,6 +103,8 @@ public class UusiVarausController implements Initializable {
         txtToimitila.textProperty().addListener((s1, s2, s3) -> {
             
             if (s3 != s2) {
+                valitutLaitteet.clear();
+                valitutPalvelut.clear();
                 paivitaPalvelut();
                 paivitaLaitteet();
             }
@@ -124,7 +130,32 @@ public class UusiVarausController implements Initializable {
         palvelu = new Palvelu(3, 70, "Muut palvelut");
         palvelut.add(palvelu);
         
+        
+        for(Palvelu p: palvelut) {
+            System.out.println("Tässä kohtaa toimitila on: " + valittuToimitila + " ja lisättävä palvelu on: " + p);
+            //tietokanta.lisaaPalvelu(p);
+            tietokanta.lisaaTilanPalvelu(p, valittuToimitila);
+        }
+        
+        System.out.println("Palvelut lisätty");
+        
         return palvelut;
+    }
+    
+    private List listaLaitteista() {
+        
+        laite = new Laite(1, "Huono tietokone", 20);
+        laitteet.add(laite);
+        laite = new Laite(2, "Hyvä tietokone", 80);
+        laitteet.add(laite);
+        
+        for(Laite l: laitteet) {
+            tietokanta.lisaaLaite(l);
+            tietokanta.lisaaTilanLaite(l, valittuToimitila);
+        }
+        System.out.println("Laitteet lisätty");
+        
+        return laitteet;
     }
     
 //    private Map toimitilanPalvelut(int toimitilaId, LinkedHashSet<Palvelu> paivitettyLista) {
@@ -154,6 +185,7 @@ public class UusiVarausController implements Initializable {
         palvelut = listaPalveluista();
         
         for(Palvelu p: palvelut) {
+            valitutPalvelut.add(p);
             CheckBox checkbox = new CheckBox();
             checkbox.setText(p.getKuvaus());
             palvelutIkkuna.getChildren().add(checkbox);
@@ -165,9 +197,11 @@ public class UusiVarausController implements Initializable {
      */
     private void paivitaLaitteet() {
         
-        ObservableList<Laite> laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
+        //ObservableList<Laite> laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
+        laitteet = listaLaitteista();
         
         for(Laite l: laitteet) {
+            valitutLaitteet.add(l);
             CheckBox checkbox = new CheckBox();
             checkbox.setText(l.getKuvaus());
             laitteetIkkuna.getChildren().add(checkbox);
@@ -309,14 +343,22 @@ public class UusiVarausController implements Initializable {
         int palveluvarausId = tietokanta.haeVarauksenPalvelutId() + 1;
         int laitevarausId = tietokanta.haeVarauksenLaitteetId() + 1;
         
-        varaus.setAsiakasId(valittuAsiakas.getAsiakasId());
-        varaus.setTilaId(valittuToimitila.getTilaId());
-        //varaus.setVuokraAlku(dpAloituspvm.getValue());
-        //varaus.setVuokraLoppu(dpLopetuspvm.getValue());
+        System.out.println("PalveluId: " + palveluvarausId);
+        System.out.println("LaiteId: " + laitevarausId);
         
+        if(valittuAsiakas != null) {
+            varaus.setAsiakasId(valittuAsiakas.getAsiakasId());
+            varaus.setTilaId(valittuToimitila.getTilaId());
+        }
         
+        varaus.setVuokraAlku(dpAloituspvm.getValue());
+        varaus.setVuokraLoppu(dpLopetuspvm.getValue());
         varaus.setPalveluvarausId(palveluvarausId);
         varaus.setLaitevarausId(laitevarausId);
+        
+        lisaaPalvelut(varaus);
+        lisaaLaitteet(varaus);
+        
         
         if(varaus.getAsiakasId() != 0 || varaus.getTilaId() != 0 || varaus.getVuokraAlku() != null || varaus.getVuokraLoppu() != null) {
             tietokanta.lisaaVaraus(varaus);
@@ -330,4 +372,32 @@ public class UusiVarausController implements Initializable {
         }
     }
     
+    public void lisaaPalvelut(Varaus v) {
+        
+        for(Palvelu p: valitutPalvelut) {
+            tietokanta.lisaaVarauksenPalvelut(v, p);
+        }
+    }
+    
+    public void lisaaLaitteet(Varaus v) {
+       
+        for(Laite l: valitutLaitteet) {
+            tietokanta.lisaaVarauksenLaitteet(v, l);
+        }
+    }
+    
 }
+//
+//class LaskuTauluOlio {
+//    
+//    private int laskunNumero;
+//    private String asiakkaanNimi;
+//    private int varausNumero;
+//
+//    public LaskuTauluOlio(Lasku l, Asiakas a, Varaus v) {
+//        
+//        this.laskunNumero = l.getLaskuId();
+//        this.asiakkaanNimi = a.getEtunimi();
+//        this.varausNumero = v.getVarausId();
+//    }
+//}

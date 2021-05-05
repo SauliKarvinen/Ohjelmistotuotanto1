@@ -28,6 +28,7 @@ import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 
 
+
 /**
  * Database connection to opskure database
  *
@@ -516,10 +517,10 @@ public class DBAccess {
         try {
             yhdista();
             ps = conn.prepareStatement("INSERT INTO Varaus (varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId) "
-                    + "VALUES (?, ?, ?, ?);");
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?);");
             ps.setInt(1, v.getVarausId());
-//            ps.setLocalDate(2,   v.getVuokraAlku());
-//            ps.setLocalDate(3,   v.getVuokraLoppu());
+            ps.setDate(2,   Date.valueOf(v.getVuokraAlku()));
+            ps.setDate(3,   Date.valueOf(v.getVuokraLoppu()));
             ps.setInt(4, v.getTilaId());
             ps.setInt(5, v.getAsiakasId());
             ps.setInt(6, v.getPalveluvarausId());
@@ -596,7 +597,7 @@ public class DBAccess {
      * @return ObservableList varaukset
      */
     public ObservableList<Varaus> haeVarauksetToimitilasta(Toimitila t) {
-        
+    
         ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
         int varausId = 0;
         LocalDate vuokraAlku = null;
@@ -658,6 +659,7 @@ public class DBAccess {
         int laitevarausId = 0;
         
         try {
+            yhdista();
             ps = conn.prepareStatement("SELECT * FROM Varaus WHERE varausAlku >= ? AND varausLoppu <= ?");
             ps.setDate(1, Date.valueOf(alku));
             ps.setDate(2, Date.valueOf(loppu));
@@ -699,6 +701,7 @@ public class DBAccess {
 
         
         try {
+            yhdista();
             ps = conn.prepareStatement("INSERT INTO Varauspalvelut (palveluvarausId, palveluId) VALUES (?, ?)");
             
             ps.setInt(1, v.getPalveluvarausId());
@@ -708,13 +711,89 @@ public class DBAccess {
         } catch (SQLException ex) {
             heitaVirhe("Virhe lisätessä varauksen palveluita");
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }
     
     // KESKEN
-    public void lisaaVarauksenLaitteet(List laitteet) {
+    public void lisaaVarauksenLaitteet(Varaus v, Laite l) {
         
+        try {
+            yhdista();
+            ps = conn.prepareStatement("INSERT INTO Varauslaitteet (laitevarausId, laiteId) VALUES (?, ?)");
+            
+            ps.setInt(1, v.getLaitevarausId());
+            ps.setInt(2, l.getLaiteId());
+
+            ps.execute();
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe lisätessä varauksen palveluita");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void lisaaTilanPalvelu(Palvelu p, Toimitila t) {
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("INSERT INTO Tilanpalvelut (tila, palveluId, tilaId) VALUES (?, ?, ?)");
+            ps.setInt(1, 1);
+            ps.setInt(2, p.getPalveluId());
+            ps.setInt(3, t.getTilaId());
+            
+            ps.execute();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe lisätessä tilan palvelua");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (lisaaTilanPalvelu)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void lisaaTilanLaite(Laite l, Toimitila t) {
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("INSERT INTO Tilanlaitteet (tila, laiteId, tilaId) VALUES (?, ?, ?)");
+            ps.setInt(1, 1);
+            ps.setInt(2, l.getLaiteId());
+            ps.setInt(3, t.getTilaId());
+            
+            ps.execute();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe lisätessä tilan laitetta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (lisaaTilanLaite)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     /**
@@ -789,12 +868,12 @@ public class DBAccess {
         ObservableList<Palvelu> palvelut = FXCollections.observableArrayList();
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT * FROM Palvelut p, Tilanpalvelut tp WHERE tp.tilaId = ? AND p.palveluId = tp.palveluId LIMIT 1;");
+            ps = conn.prepareStatement("SELECT p.palveluId, p.hintaPvm, p.kuvaus FROM Palvelut p, Tilanpalvelut tp WHERE tp.tilaId = ? AND p.palveluId = tp.palveluId LIMIT 1;");
             ps.setInt(1, t.getTilaId());
             results = ps.executeQuery();
             
             while(results.next()) {
-                palvelut.add(new Palvelu(results.getInt("palveluId"), results.getInt("hinta"), results.getString("kuvaus")));
+                palvelut.add(new Palvelu(results.getInt("palveluId"), results.getInt("hintaPvm"), results.getString("kuvaus")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
@@ -808,7 +887,7 @@ public class DBAccess {
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+        System.out.println("Palvelut toimitilasta " + t.getTilanNimi() + ": " + palvelut);
         return palvelut;
     }
     
@@ -821,12 +900,12 @@ public class DBAccess {
         ObservableList<Laite> laitteet = FXCollections.observableArrayList();
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT * FROM Laitteet l, Tilanlaitteet tl WHERE tl.tilaId = ? AND l.laiteId = tl.laiteId LIMIT 1;");
+            ps = conn.prepareStatement("SELECT l.laiteId, l.kuvaus, l.hintaPvm FROM Laitteet l, Tilanlaitteet tl WHERE tl.tilaId = ? AND l.laiteId = tl.laiteId LIMIT 1;");
             ps.setInt(1, t.getTilaId());
             results = ps.executeQuery();
             
             while(results.next()) {
-                laitteet.add(new Laite(results.getInt("laiteId"), results.getString("kuvaus"),results.getInt("hinta")));
+                laitteet.add(new Laite(results.getInt("laiteId"), results.getString("kuvaus"),results.getInt("hintaPvm")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
@@ -844,6 +923,67 @@ public class DBAccess {
         return laitteet;
     }
     
+    /**
+     * Lisää palvelun tietokantaan
+     * @param p Lisättävä palvelu
+     */
+    public void lisaaPalvelu(Palvelu p) throws SQLException {
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("INSERT INTO Palvelut (hintaPvm, kuvaus) VALUES (?, ?)");
+            ps.setInt(1, p.getHintapvm());
+            ps.setString(2, p.getKuvaus());
+            
+            System.out.println("Lisätään palvelu");
+            ps.execute();
+            System.out.println("Palvelu lisätty");
+            
+        } catch (SQLException ex) {
+            //heitaVirhe("Virhe lisätessä palvelua");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (lisaaPalvelu)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    /**
+     * Lisää laitteen tietokantaan
+     * @param l Lisättävä laite
+     */
+    public void lisaaLaite(Laite l) {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("INSERT INTO Laitteet (kuvaus, hintaPvm) VALUES (?, ?)");
+            ps.setString(1, l.getKuvaus());
+            ps.setInt(2, l.getHintaPvm());
+            
+            System.out.println("lisätään laite");
+            ps.execute();
+            System.out.println("Laite lisätty");
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe lisätessä laitetta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (lisaaLaite)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
     
     /**

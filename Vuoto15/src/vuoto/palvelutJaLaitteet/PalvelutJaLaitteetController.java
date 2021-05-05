@@ -147,7 +147,7 @@ public class PalvelutJaLaitteetController implements Initializable {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Palvelut ja Laitteet");
         a.setHeaderText(virhe);
-        a = muotoileIlmoitus(a);
+        //a = muotoileIlmoitus(a);
         a.showAndWait();
     }
     
@@ -177,7 +177,13 @@ public class PalvelutJaLaitteetController implements Initializable {
     @FXML
     private void btnLisaaUusiPalveluPainettu(ActionEvent event) {
         
-        LisaaUusiPalveluController controller = (LisaaUusiPalveluController) avaaUusiIkkuna(LisaaUusiPalveluController.fxmlString, "Lisää uusi palvelu");
+        if(valittuToimitila == null) {
+            heitaVirheNaytolle("Valitse toimitila");
+        } else {
+
+            LisaaUusiPalveluController controller = (LisaaUusiPalveluController) avaaUusiIkkuna(LisaaUusiPalveluController.fxmlString, "Lisää uusi palvelu");
+            controller.asetaToimitila(valittuToimitila);
+        }
     }
 
     /**
@@ -187,8 +193,9 @@ public class PalvelutJaLaitteetController implements Initializable {
     @FXML
     private void btnLisaaUusiLaitePainettu(ActionEvent event) {
         
-        LisaaUusiLaiteController controller = (LisaaUusiLaiteController) avaaUusiIkkuna(LisaaUusiLaiteController.fxmlString, "Lisää uusi laite");  
-    }
+        LisaaUusiLaiteController controller = (LisaaUusiLaiteController) avaaUusiIkkuna(LisaaUusiLaiteController.fxmlString, "Lisää uusi laite");
+        controller.asetaToimitila(valittuToimitila);
+    }   
   
     @FXML
     private void btnMuokkaaPalveluaPainettu(ActionEvent event) {

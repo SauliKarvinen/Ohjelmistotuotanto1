@@ -15,6 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import vuoto.aloitus.VuotoMainController;
+import vuoto.luokkafilet.Laite;
+import vuoto.luokkafilet.Toimitila;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -32,12 +36,16 @@ public class LisaaUusiLaiteController implements Initializable {
     private Label lblToimipisteValinta;
     @FXML
     private Button btnPoistaLasku;
-    @FXML
     private TextField txtLaiteID;
     @FXML
     private TextField txtKuvaus;
     @FXML
     private TextField txtHinta;
+    private Laite laite;
+    private DBAccess tietokanta = new DBAccess();
+    @FXML
+    private TextField txtToimitila;
+    private Toimitila toimitila;
 
     /**
      * Initializes the controller class.
@@ -56,6 +64,23 @@ public class LisaaUusiLaiteController implements Initializable {
 
     @FXML
     private void btnLisaaPainettu(ActionEvent event) {
+        
+        String kuvaus = txtKuvaus.getText();
+        int hintaPvm = Integer.valueOf(txtHinta.getText());
+        
+        laite = new Laite(kuvaus, hintaPvm);
+        
+        tietokanta.lisaaLaite(laite);
+        tietokanta.lisaaTilanLaite(laite, toimitila);
+        
+    }
+    
+    public void asetaToimitila(Toimitila t) {
+        
+        if(t != null) {
+            toimitila = t;
+            txtToimitila.setText(t.getTilanNimi());
+        }
     }
     
 }
