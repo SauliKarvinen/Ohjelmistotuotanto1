@@ -73,7 +73,6 @@ public class VuotoMainController implements Initializable {
         // Opens panel - VuokrattavatKiinteistot.
         VuokrattavatKiinteistotController controller = (VuokrattavatKiinteistotController)siirryNakymaan(VuokrattavatKiinteistotController.fxmlString, "Vuokrattavat Kiinteistot", event);
         
-         
     }
 
     @FXML
@@ -108,7 +107,7 @@ public class VuotoMainController implements Initializable {
         
         // Opens panel - Laskutuksen hallinta.
         LaskutusController controller = (LaskutusController) siirryNakymaan(LaskutusController.fxmlString, "Laskutuksen hallinta", event);
-        
+       
     
     }
 
@@ -196,7 +195,9 @@ public class VuotoMainController implements Initializable {
         if (toimipisteValittu) {
 
             try {
+                // Luodaan FXMLLoader luokan ilmentymä ja kerrotaan sille missä valitun näkymän fxml file sijaitsee
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+                // 
                 Parent vuoto = (Parent) fxmlLoader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 controller = fxmlLoader.getController();
