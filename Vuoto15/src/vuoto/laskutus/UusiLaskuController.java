@@ -94,17 +94,11 @@ public class UusiLaskuController implements Initializable {
         // Tämä asettaa aina cbValitseToimipiste -valikosta / comboboxista valitun asian muutujaan valittuToimipiste (String)
         cbAsiakas.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             valittuAsiakas = s3;
+            paivitaAsiakasKentat();
         });
         
         
-     Asiakas asiakas = new Asiakas();
-// Import list to ->>>  asiakas = tietokanta.haeAsiakas(valittuAsiakas);
-     
-     txfAsiakas.setText(asiakas.getYrityksenNimi());
-     txfVuokKiinteisto.setText("Vuokrattavan kiinteistön tiedot.");
-     txfPalvelut.setText("Vuokrattavan kiinteistön palvelut.");
-     txfLaitteet.setText("Vuokrattavan kiinteistön laitteet.");
-             
+        
         // TABLEVIEW VARAUKSET aktivointi
         try {
             // Aktivoi TblView
@@ -147,7 +141,9 @@ public class UusiLaskuController implements Initializable {
         }
     }
  
-    /*** TABLEVIEW **/    
+    /*** TABLEVIEW **/   
+    private ObservableList<Varaus> listVaraukset;
+    
     @FXML
     private TableView<Varaus> tblVaraukset;
     @FXML
@@ -164,7 +160,7 @@ public class UusiLaskuController implements Initializable {
     private TableColumn<Varaus, String> colPalvelut;
     @FXML
     private TableColumn<Varaus, String> colLaitteet;
-    private ObservableList<Varaus> listVaraukset;
+    
     
     
    /**
@@ -191,9 +187,27 @@ public class UusiLaskuController implements Initializable {
        colPalvelut.setCellValueFactory(new PropertyValueFactory<>("palveluvarausId"));
        colLaitteet.setCellValueFactory(new PropertyValueFactory<>("laitevarausId"));
 
-        tblVaraukset.setItems(listVaraukset);
+       tblVaraukset.setItems(listVaraukset);
     }
         
+    private void paivitaAsiakasKentat(){
+        ObservableList<Asiakas> asiakasL = FXCollections.observableArrayList();
+        
+        asiakasL = tietokanta.haeAsiakas(valittuAsiakas);
+        
+        for(Asiakas a: asiakasL) {
+            txfAsiakas.setText(
+                    a.getYrityksenNimi() + "\n" + 
+                    a.getEtunimi() + " " + a.getSukunimi() + "\n" +
+                    a.getLahiosoite() + " " + a.getPostinumero());
+            }
+     
+        // Väliaikaiset 
+        txfVuokKiinteisto.setText("Vuokrattavan kiinteistön tiedot.");
+        txfPalvelut.setText("Vuokrattavan kiinteistön palvelut.");
+        txfLaitteet.setText("Vuokrattavan kiinteistön laitteet.");
+        
+    }
     
     
     /** LISTA ASIAKKAISTA

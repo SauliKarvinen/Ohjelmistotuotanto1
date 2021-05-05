@@ -479,7 +479,15 @@ public class DBAccess {
     public ObservableList<Asiakas> haeAsiakas(String a){
         
         ObservableList<Asiakas> asiakas = FXCollections.observableArrayList();
-     
+        int asiakasId = 0;
+        String etunimi = "";
+        String sukunimi = "";
+        String lahiosoite = "";
+        String postinumero = "";
+        String puhelinnumero = "";
+        String sahkoposti = "";
+        String yrityksenNimi = "";
+                
         try {
             yhdista();
             stmt = conn.createStatement();
@@ -489,18 +497,20 @@ public class DBAccess {
             
             results = ps.executeQuery();
             while(results.next()) {
-                asiakas.add(new Asiakas(
-                        results.getInt("asiakasId"), 
-                        results.getString("etunimi"), 
-                        results.getString("sukunimi"), 
-                        results.getString("lahiosoite"), 
-                        results.getString("postinumero"), 
-                        results.getString("puhelinnumero"), 
-                        results.getString("sahkoposti"), 
-                        results.getString("yrityksenNimi")));
+                asiakasId = results.getInt("asiakasId"); 
+                etunimi = results.getString("etunimi");
+                sukunimi = results.getString("sukunimi");
+                lahiosoite = results.getString("lahiosoite"); 
+                postinumero = results.getString("postinumero"); 
+                puhelinnumero = results.getString("puhelinnumero"); 
+                sahkoposti = results.getString("sahkoposti"); 
+                yrityksenNimi = results.getString("yrityksenNimi");
+                
+                asiakas.add(new Asiakas(asiakasId, etunimi, sukunimi, lahiosoite, postinumero, puhelinnumero, sahkoposti, yrityksenNimi));
             }
+            
         } catch (SQLException ex) {
-            heitaVirhe("Virhe hakiessa kaikkia asiakkaita tietokannasta");
+            heitaVirhe("Virhe hakiessa asiakasta tietokannasta");
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
