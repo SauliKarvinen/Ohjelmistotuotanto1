@@ -178,9 +178,10 @@ public class DBAccess {
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                stmt.close();
+                ps.close();
                 results.close();
             } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeKaikkiToimipisteet)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
             
@@ -214,6 +215,14 @@ public class DBAccess {
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             katkaiseYhteys();
+            
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) { 
+                heitaVirhe("Virhe suljettaessa kyselyä (haeToimipisteNimella)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return t;
@@ -240,6 +249,7 @@ public class DBAccess {
             try {
                 ps.close();
             } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (poistaToimipiste)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -283,6 +293,7 @@ public class DBAccess {
             try {
                 ps.close();
             } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (lisaaToimitila)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
             
@@ -316,7 +327,9 @@ public class DBAccess {
         } finally {
             try {
                 stmt.close();
+                results.close();
             } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeKaikkiToimitilat)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
             
@@ -355,6 +368,7 @@ public class DBAccess {
                 ps.close();
                 results.close();
             } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeToimitilatToimipisteestä)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
      
@@ -384,6 +398,7 @@ public class DBAccess {
             try {
                 ps.close();
             } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (poistaToimitila)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -461,6 +476,7 @@ public class DBAccess {
         } finally {
             try {
                 stmt.close();
+                results.close();
             } catch (SQLException ex) {
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -516,6 +532,8 @@ public class DBAccess {
         } finally {
             try {
                 stmt.close();
+                ps.close();
+                results.close();
             } catch (SQLException ex) {
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
