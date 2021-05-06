@@ -8,6 +8,8 @@ package vuoto.laskutus;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +36,7 @@ import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Asiakas;
+import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 
@@ -45,6 +48,15 @@ import vuoto.tietokanta.DBAccess;
 public class UusiLaskuController implements Initializable {
     // Tietokanta yht.
     private final DBAccess tietokanta = new DBAccess();
+    
+    private int asiakkaanID = 0;
+    private Toimitila toimitila;
+    
+    //Listat tilatuista xxx, id:t, käytetään nimien selvitykseen.
+    private List<Integer> ttilat = new LinkedList<Integer>();
+    private List<Integer> tpalvelut = new LinkedList<Integer>();
+    private List<Integer> tlaitteet = new LinkedList<Integer>();
+
     // Jos muutat fxml-tiedoston sijaintia niin muuta tähän uusi sijainti!
     /** fxml-tiedoston sijainti*/
     public static final String fxmlString = "/vuoto/laskutus/UusiLasku.fxml";
@@ -199,10 +211,25 @@ public class UusiLaskuController implements Initializable {
                     a.getYrityksenNimi() + "\n" + 
                     a.getEtunimi() + " " + a.getSukunimi() + "\n" +
                     a.getLahiosoite() + " " + a.getPostinumero());
+                    asiakkaanID = a.getAsiakasId();
             }
      
-        // Väliaikaiset 
-        txfVuokKiinteisto.setText("Vuokrattavan kiinteistön tiedot.");
+        // hae asiakkaan vuokraamat kiinteistöt
+        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        varaukset = tietokanta.haeAsiakkaanVaraukset(asiakkaanID);
+        
+        for(Varaus v: varaukset){
+            ttilat.add(v.getTilaId());
+            tpalvelut.add(v.getPalveluvarausId());
+            tlaitteet.add(v.getLaitevarausId());
+            }   
+            
+        // Selvitetään ID:t nimiksi
+            //todo
+        
+        
+        
+        txfVuokKiinteisto.setText("varaukset" + ttilat);
         txfPalvelut.setText("Vuokrattavan kiinteistön palvelut.");
         txfLaitteet.setText("Vuokrattavan kiinteistön laitteet.");
         
@@ -223,6 +250,25 @@ public class UusiLaskuController implements Initializable {
         }
     }
     
+    /**  // KESKEN
+     * Asiakkaan vuokraamat tilat
+     * @param a asiakasId
+     * @return tilat String, lista tiloista
+     * 
+     */
+    private String haeVuokratutTilat(int a){
+       ObservableList<Varaus> kaikki = FXCollections.observableArrayList();
+       ObservableList<Varaus> vainIDt = FXCollections.observableArrayList();
+
+       kaikki = tietokanta.haeKaikkiVaraukset();
+        
+       for (Varaus va: kaikki){
+           // TODO
+           // vainIDt.add(va.getTilaId());            
+       }
+       String tmp = ""; 
+       return tmp; 
+    }
     
     private void btnEtusivullePainettu(ActionEvent event) {
         
