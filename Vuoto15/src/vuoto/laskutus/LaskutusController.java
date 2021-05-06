@@ -34,6 +34,7 @@ import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Toimipiste;
+import vuoto.luokkafilet.Taulut;
 import vuoto.tietokanta.DBAccess;
 
 
@@ -119,7 +120,15 @@ public class LaskutusController implements Initializable {
             
             valittuAsiakas = s3;
             
-            // populateTableViewLaskut()
+            // TableView aktivointi
+        try {
+            // Aktivoi TblView
+            populateTableViewLaskut();
+            } catch (SQLException ex) {
+                heitaVirheNaytolle("TableView:n aktivoinnissa virhe (Laskut).");
+                Logger.getLogger(LaskutusController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         });
         
         // Lista kaikista laskuista...
@@ -130,6 +139,7 @@ public class LaskutusController implements Initializable {
     }    
 
      /*** TABLEVIEW **/   
+    @FXML
     private ObservableList<Lasku> listLaskut;
     @FXML
     private TableView<Lasku> tblLaskut;
@@ -145,6 +155,7 @@ public class LaskutusController implements Initializable {
     private TableColumn<Lasku, String> colTyyppi;
     
     
+    
     /**
      * Method to populate TableView: Laskut
      * Käytetään Laskun (DBAccess) metodia, 
@@ -153,7 +164,7 @@ public class LaskutusController implements Initializable {
      *  Alustetaan -> setCellValueFactory määritykset sarakkeille.
      * 
      * */
-    private void populateTableViewVaraukset() throws SQLException {
+    private void populateTableViewLaskut() throws SQLException {
         // alustetaan lista
         listLaskut = FXCollections.observableArrayList();
        

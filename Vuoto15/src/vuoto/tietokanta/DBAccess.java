@@ -24,6 +24,7 @@ import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Laite;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Palvelu;
+import vuoto.luokkafilet.Taulut;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 
@@ -52,7 +53,7 @@ public class DBAccess {
     }
 
     /**
-     * Creates connection to Opskure-database.
+     * Creates connection to database.
      *
      * @param dbURL
      * @param user
@@ -1093,6 +1094,44 @@ public class DBAccess {
     }    
     
     /**
+     * Hakee ASIAKKAAN laskut //KESKEN
+     * @param a String Haettavan yrityksen nimi
+     * @return laskut ObservableList
+     */
+    public ObservableList<Lasku> haeAsiakkaanLaskut(Asiakas a) {
+        
+        ObservableList<Lasku> laskut = FXCollections.observableArrayList();
+        try {
+            yhdista();
+            
+            
+            ps = conn.prepareStatement("SELECT l.laskuNro, l.varausId , a.yrityksenNimi, t.tilanNimi, l.laskuntyyppi FROM Lasku l, Asiakas a, Tilat t \n" +
+                                " WHERE a.yrityksenNimi= ? LIMIT 1;;");
+            ps.setString(1, a.getYrityksenNimi());
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                laskut.add(new Lasku(results.getInt("laiteId"), results.getString("laskuntyyppi"),results.getInt("hinta"),results.getInt("varausId")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyitä (haeKaikkiLaskut)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return laskut;
+    }
+    
+    
+    
+    /**
      * Heittää virheen näytölle
      * @param viesti Virheilmoitus
      */
@@ -1106,30 +1145,43 @@ public class DBAccess {
     
     
      /**
-     * Hakee KAIKKI VARAUKSET tietokannasta ja palauttaa ObservableList listan
-     * @return ObservableList varauksista.
+     * TauluOlio
+     * @return ObservableList laskun tiedot.
      */
-    /*
-    public ObservableList<Varaus> haeKaikkiVaraukset(){
+    
+    
+    public ObservableList<Taulut> haeLaskut(){
         
-        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
-     
+        ObservableList<Taulut> tiedot = FXCollections.observableArrayList();
+        int laskunNro = 0;
+        String laskunTyyppi = "";
+        String yritysNimi = "";
+        String toimitila = "";
+        int varausId = 0;
+            
         try {
             yhdista();
             stmt = conn.createStatement();
-            
-            results = stmt.executeQuery("SELECT * FROM Varaus;");
  
+            // Tiedot laskuista
+            results = stmt.executeQuery("SELECT * FROM Lasku;");
             while(results.next()) {
-                varaukset.add(new Varaus(
-                        results.getInt("varausId"), 
-                        results.getDate("vuokraAlku"), 
-                        results.getDate("vuokraLoppu"),
-                        results.getInt("asiakasId"),
-                        results.getInt("tilaId"), 
-                        results.getInt("palveluvarausId"), 
-                        results.getInt("laitevarausId")));
+                laskunNro = results.getInt("laskunNro");
+                laskunTyyppi = results.getString("laskunTyyppi");
+                
+                 // tiedot.add(new Taulut(laskunNro, laskunTyyppi));
             }
+            
+            // Tiedot Asiakkaasta
+            results = null;
+            results = stmt.executeQuery("SELECT * FROM Asiakas;");
+            while(results.next()) {
+                yritysNimi = results.getString("yritysNimi"); 
+                laskunTyyppi = results.getString("laskunTyyppi");
+                        
+                // laskut.add(new Taulut(laskunNro, laskunTyyppi));
+            }
+        
         } catch (SQLException ex) {
             heitaVirhe("Virhe hakiessa kaikkia varauksia tietokannasta");
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
@@ -1143,8 +1195,8 @@ public class DBAccess {
             katkaiseYhteys();
         }
         
-        return varaukset;
+        return tiedot;
         
     }
-    */
+    
 }

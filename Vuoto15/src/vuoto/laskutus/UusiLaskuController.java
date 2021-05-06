@@ -118,19 +118,18 @@ public class UusiLaskuController implements Initializable {
     private void btnMuokkaaLaskuPainettu(ActionEvent event) {
         // Open panel - UusiLasku
         MuokkaaLaskuController controller = (MuokkaaLaskuController) siirryNakymaan("MuokkaaLasku.fxml", "Muokkaa Laskua", event);
-        //controller.asetaToimipiste(toimipiste);
     }
 
     @FXML
     private void btnTakaisinLaskutukseen(ActionEvent event) {
          // Opens panel - Laskutuksen hallinta.
         LaskutusController controller = (LaskutusController) siirryNakymaan("Laskutus.fxml", "Laskutuksen hallinta", event);
-        // controller.asetaToimipiste(toimipiste);
-    
     }
 
     @FXML
     private void VahvistaLaskuPainettu(ActionEvent event) {
+        // Opens panel - Laskun lähetys/tulostus.
+        TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan("TaytettyLaskuPohja.fxml", "Laskutuksen hallinta", event);
     }
     
     public void asetaToimipiste(Toimipiste toimipiste) {

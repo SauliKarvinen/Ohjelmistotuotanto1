@@ -30,6 +30,14 @@ public class Taulut {
    String toimitila;
    int varausId;
 
+   /**
+    * Olio Lasku -paneelin Laskut tblvu:n sarakkeille.
+    * 
+    * @param l Lasku -luokka
+    * @param a Asiakas -luokka
+    * @param v Varaus  -luokka
+    * @param t Toimitila  -luokka
+    */
     public void LaskutTauluOlio(Lasku l, Asiakas a, Varaus v, Toimitila t) {
         this.laskuNro = l.getLaskunNro();
         this.laskuntyyppi = l.getLaskunTyyppi();
