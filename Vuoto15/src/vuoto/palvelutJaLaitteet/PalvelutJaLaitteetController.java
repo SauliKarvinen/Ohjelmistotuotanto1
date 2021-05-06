@@ -193,8 +193,12 @@ public class PalvelutJaLaitteetController implements Initializable {
     @FXML
     private void btnLisaaUusiLaitePainettu(ActionEvent event) {
         
-        LisaaUusiLaiteController controller = (LisaaUusiLaiteController) avaaUusiIkkuna(LisaaUusiLaiteController.fxmlString, "Lisää uusi laite");
-        controller.asetaToimitila(valittuToimitila);
+        if(valittuToimitila == null) {
+            heitaVirheNaytolle("Valitse toimitila");
+        } else {
+            LisaaUusiLaiteController controller = (LisaaUusiLaiteController) avaaUusiIkkuna(LisaaUusiLaiteController.fxmlString, "Lisää uusi laite");
+            controller.asetaToimitila(valittuToimitila);
+        }
     }   
   
     @FXML

@@ -6,11 +6,15 @@
 package vuoto.palvelutJaLaitteet;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -65,18 +69,37 @@ public class LisaaUusiLaiteController implements Initializable {
     @FXML
     private void btnLisaaPainettu(ActionEvent event) {
         
+        boolean laiteLisatty = true;
         String kuvaus = txtKuvaus.getText();
         int hintaPvm = Integer.valueOf(txtHinta.getText());
         
         laite = new Laite(kuvaus, hintaPvm);
         
-        tietokanta.lisaaLaite(laite);
-        tietokanta.lisaaTilanLaite(laite, toimitila);
+        try {
+            tietokanta.lisaaLaite(laite);
+            tietokanta.lisaaTilanLaite(laite, toimitila);
+        } catch (SQLException ex) {
+            laiteLisatty = false;
+            Logger.getLogger(LisaaUusiLaiteController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if(laiteLisatty) {
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Laitteen lisääminen");
+                a.setHeaderText("Laite lisätty!");
+                a.showAndWait();
+                
+                Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                stage.close();
+            } 
+            
+        }
         
     }
     
     public void asetaToimitila(Toimitila t) {
         
+        System.out.println("test");
+        System.out.println(t);
         if(t != null) {
             toimitila = t;
             txtToimitila.setText(t.getTilanNimi());

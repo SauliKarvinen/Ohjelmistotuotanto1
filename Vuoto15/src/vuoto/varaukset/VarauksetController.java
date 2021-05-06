@@ -7,9 +7,11 @@ package vuoto.varaukset;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,16 +28,23 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.asiakkuudet.AsiakkuudetController;
 import vuoto.laskutus.LaskutusController;
+import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Laite;
 import vuoto.luokkafilet.Palvelu;
+import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.Varaus;
+import vuoto.luokkafilet.VarausOlio;
 import vuoto.tietokanta.DBAccess;
 
 /**
@@ -64,41 +73,66 @@ public class VarauksetController implements Initializable {
     private Toimitila valittuToimitila;
     @FXML
     private ComboBox<Toimitila> cbToimitilavalikko;
-    
+    @FXML
+    private TableColumn<VarausOlio, Integer> colVarausId;
+    @FXML
+    private TableColumn<VarausOlio, LocalDate> colVarausalku;
+    @FXML
+    private TableColumn<VarausOlio, LocalDate> colVarausloppu;
+    @FXML
+    private TableColumn<VarausOlio, String> colAsiakas;
+    @FXML
+    private TableColumn<VarausOlio, String> colToimitila;
+    @FXML
+    private TableColumn<VarausOlio, String> colToimipiste;
+    @FXML
+    private TableView<VarausOlio> tbvVaraukset;
+    private boolean toimipisteessaOnToimitiloja = false;
+    private ObservableList<VarausOlio> varaukset = null;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        System.out.println(valittuToimipiste);
         // Aktiivinen toimipiste (eli yksi keskuksista)
         txtToimipiste.setFocusTraversable(false);
         txtToimipiste.setText(valittuToimipiste);
         paivitaToimitilavalikko();
+        paivitaTableview();
         
         // Kuuntelee toimitilan valintaa, asettaa valitun toimitilan ja päivittää Palvelut ja Laitteet ikkunat
         cbToimitilavalikko.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             if (s3 != s2) {
                 valittuToimitila = s3;
-                paivitaPalvelut();
-                paivitaLaitteet();
+                
             }
         });
         
+        tbvVaraukset.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            palvelutIkkuna.getChildren().clear();
+            laitteetIkkuna.getChildren().clear();
+            System.out.println(s3.getVarausId());
+            paivitaPalvelut(s3.getVarausId());
+            paivitaLaitteet(s3.getVarausId());
+        });
         
     }    
     
     /**
      * Hakee palvelut valitusta toimitilasta ja luo niistä checkboxit Palvelut -ikkunaan
      */
-    private void paivitaPalvelut() {
+    private void paivitaPalvelut(int varausId) {
         
-        ObservableList<Palvelu> palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
+        ObservableList<String> palvelut = tietokanta.haeVarauksenPalvelut(varausId);
         
-        for(Palvelu p: palvelut) {
+        
+        for(String p: palvelut) {
             CheckBox checkbox = new CheckBox();
-            checkbox.setText(p.getKuvaus());
+            checkbox.setText(p);
             palvelutIkkuna.getChildren().add(checkbox);
         }
         
@@ -107,13 +141,13 @@ public class VarauksetController implements Initializable {
     /**
      * Hakee laitteet valitusta toimitilasta ja luo niistä checkboxit Laitteet -ikkunaan
      */
-    private void paivitaLaitteet() {
+    private void paivitaLaitteet(int varausId) {
         
-        ObservableList<Laite> laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
+        ObservableList<String> laitteet = tietokanta.haeVarauksenLaitteet(varausId);
         
-        for(Laite l: laitteet) {
+        for(String l: laitteet) {
             CheckBox checkbox = new CheckBox();
-            checkbox.setText(l.getKuvaus());
+            checkbox.setText(l);
             laitteetIkkuna.getChildren().add(checkbox);
         }
     }
@@ -128,8 +162,37 @@ public class VarauksetController implements Initializable {
         } else {
             toimitilat = tietokanta.haeToimitilatToimipisteesta(valittuToimipiste);
             cbToimitilavalikko.setItems(toimitilat);
+            if(toimitilat.size() > 0) {
+                toimipisteessaOnToimitiloja = true;
+            }
+        }
+        
+        cbToimitilavalikko.getSelectionModel().selectFirst();
+        if(valittuToimitila == null) {
+            valittuToimitila = cbToimitilavalikko.getSelectionModel().getSelectedItem();
         }
     }
+    
+    public void paivitaTableview() {
+        
+        //ObservableList<Varaus> varaukset = tietokanta.haeKaikkiVaraukset();
+        if(toimipisteessaOnToimitiloja) {
+        varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
+
+    
+        
+        colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
+        colVarausalku.setCellValueFactory(new PropertyValueFactory<>("alkupaiva"));
+        colVarausloppu.setCellValueFactory(new PropertyValueFactory<>("loppupaiva"));
+        colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakas"));
+        colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
+        colToimipiste.setCellValueFactory(new PropertyValueFactory<>("toimipiste"));
+        
+        tbvVaraukset.setItems(varaukset);
+        }
+        
+    }
+    
     /**
      * Heittää virheilmoituksen näytölle
      * @param virhe Virheilmoitus
@@ -238,6 +301,46 @@ public class VarauksetController implements Initializable {
         
         return a;
     }
+
+    @FXML
+    private void btnHaeAjaltaPainettu(ActionEvent event) {
+        
+        System.out.println(varaukset.size());
+        
+        if(varaukset.isEmpty()) {
+            varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
+        }
+        ObservableList<VarausOlio> varauksetAikavalilta = FXCollections.observableArrayList();
+        
+//        System.out.println(dpAlkupaiva.getValue() + " - " + dpLoppupaiva.getValue());
+//        if(dpAlkupaiva.getValue() != null && dpLoppupaiva.getValue() != null) {
+//            varaukset = tietokanta.haeTiedotVarausIkkunaanAikavalilta(valittuToimipiste, dpAlkupaiva.getValue(), dpLoppupaiva.getValue());
+//        }
+
+        
+        for(VarausOlio varaus: varaukset) {
+            if(varaus.getAlkupaiva().isAfter(dpAlkupaiva.getValue().minusDays(1)) && varaus.getLoppupaiva().isBefore(dpLoppupaiva.getValue().plusDays(1))) {
+                varauksetAikavalilta.add(varaus);
+            }
+        }
+        
+        //System.out.println(varaukset.size());
+        if(varaukset != null) {
+            tbvVaraukset.getItems().clear();
+            tbvVaraukset.setItems(varauksetAikavalilta);
+        }
+    }
+
+    @FXML
+    private void btnPalautaPainettu(ActionEvent event) {
+        
+        tbvVaraukset.getItems().clear();
+        dpAlkupaiva.setValue(null);
+        dpLoppupaiva.setValue(null);
+        paivitaTableview();
+    }
    
     
 }
+
+

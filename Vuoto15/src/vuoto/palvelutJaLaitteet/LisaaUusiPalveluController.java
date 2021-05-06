@@ -74,7 +74,7 @@ public class LisaaUusiPalveluController implements Initializable {
         
         try {
             tietokanta.lisaaPalvelu(palvelu);
-            //tietokanta.lisaaTilanPalvelu(palvelu, toimitila);
+            tietokanta.lisaaTilanPalvelu(palvelu, toimitila);
         } catch (SQLException ex) {
             palveluLisatty = false;
             heitaVirheNaytolle("Virhe lisätessä palvelua tietokantaan");

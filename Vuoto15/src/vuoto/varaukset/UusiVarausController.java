@@ -87,9 +87,13 @@ public class UusiVarausController implements Initializable {
     private Varaus varaus;
     private List<Palvelu> valitutPalvelut = new LinkedList<>();
     private List<Laite> valitutLaitteet = new LinkedList<>();
-    private List<Palvelu> palvelut = new LinkedList<Palvelu>();
-    private List<Laite> laitteet = new LinkedList<Laite>();
-    private Map<Integer, LinkedHashSet<Palvelu>> palvelutMap = new HashMap<>();
+    private List<String> palveluCheckboxit = new LinkedList<>();
+    private List<String> laiteCheckboxit = new LinkedList<>();
+    private ObservableList<Palvelu> palvelut = null;
+    private ObservableList<Laite> laitteet = null;
+//    private List<Palvelu> palvelut = new LinkedList<Palvelu>();
+//    private List<Laite> laitteet = new LinkedList<Laite>();
+   // private Map<Integer, LinkedHashSet<Palvelu>> palvelutMap = new HashMap<>();
 
 
     /**
@@ -107,6 +111,8 @@ public class UusiVarausController implements Initializable {
                 valitutPalvelut.clear();
                 paivitaPalvelut();
                 paivitaLaitteet();
+                System.out.println("palvelut: " + palvelut);
+                System.out.println("laitteet: " + laitteet);
             }
         });
         
@@ -121,42 +127,42 @@ public class UusiVarausController implements Initializable {
     }    
     
     // Kokeilumetodi. Täytyy muuttaa lopulliseen versioon
-    private List listaPalveluista() {
-        
-        palvelu = new Palvelu(1, 55, "Ruokailu");
-        palvelut.add(palvelu);
-        palvelu = new Palvelu(2, 250, "Konsultointi");
-        palvelut.add(palvelu);
-        palvelu = new Palvelu(3, 70, "Muut palvelut");
-        palvelut.add(palvelu);
-        
-        
-        for(Palvelu p: palvelut) {
-            System.out.println("Tässä kohtaa toimitila on: " + valittuToimitila + " ja lisättävä palvelu on: " + p);
-            //tietokanta.lisaaPalvelu(p);
-            tietokanta.lisaaTilanPalvelu(p, valittuToimitila);
-        }
-        
-        System.out.println("Palvelut lisätty");
-        
-        return palvelut;
-    }
-    
-    private List listaLaitteista() {
-        
-        laite = new Laite(1, "Huono tietokone", 20);
-        laitteet.add(laite);
-        laite = new Laite(2, "Hyvä tietokone", 80);
-        laitteet.add(laite);
-        
-        for(Laite l: laitteet) {
-            tietokanta.lisaaLaite(l);
-            tietokanta.lisaaTilanLaite(l, valittuToimitila);
-        }
-        System.out.println("Laitteet lisätty");
-        
-        return laitteet;
-    }
+//    private List listaPalveluista() {
+//        
+//        palvelu = new Palvelu(1, 55, "Ruokailu");
+//        palvelut.add(palvelu);
+//        palvelu = new Palvelu(2, 250, "Konsultointi");
+//        palvelut.add(palvelu);
+//        palvelu = new Palvelu(3, 70, "Muut palvelut");
+//        palvelut.add(palvelu);
+//        
+//        
+//        for(Palvelu p: palvelut) {
+//            System.out.println("Tässä kohtaa toimitila on: " + valittuToimitila + " ja lisättävä palvelu on: " + p);
+//            //tietokanta.lisaaPalvelu(p);
+//            tietokanta.lisaaTilanPalvelu(p, valittuToimitila);
+//        }
+//        
+//        System.out.println("Palvelut lisätty");
+//        
+//        return palvelut;
+//    }
+//    
+//    private List listaLaitteista() {
+//        
+//        laite = new Laite(1, "Huono tietokone", 20);
+//        laitteet.add(laite);
+//        laite = new Laite(2, "Hyvä tietokone", 80);
+//        laitteet.add(laite);
+//        
+//        for(Laite l: laitteet) {
+//            //tietokanta.lisaaLaite(l);
+//            tietokanta.lisaaTilanLaite(l, valittuToimitila);
+//        }
+//        System.out.println("Laitteet lisätty");
+//        
+//        return laitteet;
+//    }
     
 //    private Map toimitilanPalvelut(int toimitilaId, LinkedHashSet<Palvelu> paivitettyLista) {
 //
@@ -181,14 +187,28 @@ public class UusiVarausController implements Initializable {
      */
     private void paivitaPalvelut() {
         
-        //ObservableList<Palvelu> palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
-        palvelut = listaPalveluista();
+        if(palvelut != null) {
+            palvelut.clear();
+        }
+        palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
+        //palvelut = listaPalveluista();
         
         for(Palvelu p: palvelut) {
-            valitutPalvelut.add(p);
+            //valitutPalvelut.add(p);
             CheckBox checkbox = new CheckBox();
             checkbox.setText(p.getKuvaus());
             palvelutIkkuna.getChildren().add(checkbox);
+            
+            checkbox.selectedProperty().addListener((s1, s2, s3) -> {
+                
+                if(s3) {
+                    palveluCheckboxit.add(checkbox.getText());
+                    System.out.println(palveluCheckboxit);
+                } else {
+                    palveluCheckboxit.remove(checkbox.getText());
+                    System.out.println(palveluCheckboxit);
+                }
+            });
         }
     }
     
@@ -197,14 +217,28 @@ public class UusiVarausController implements Initializable {
      */
     private void paivitaLaitteet() {
         
-        //ObservableList<Laite> laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
-        laitteet = listaLaitteista();
+        if(laitteet != null) {
+            laitteet.clear();
+        }
+        laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
+        //laitteet = listaLaitteista();
         
         for(Laite l: laitteet) {
-            valitutLaitteet.add(l);
+            //valitutLaitteet.add(l);
             CheckBox checkbox = new CheckBox();
             checkbox.setText(l.getKuvaus());
             laitteetIkkuna.getChildren().add(checkbox);
+            
+            checkbox.selectedProperty().addListener((s1, s2, s3) -> {
+                
+                if(s3) {
+                    laiteCheckboxit.add(checkbox.getText());
+                    System.out.println(laiteCheckboxit);
+                } else {
+                    laiteCheckboxit.remove(checkbox.getText());
+                    System.out.println(laiteCheckboxit);
+                }
+            });
         }
     }
     
@@ -255,7 +289,7 @@ public class UusiVarausController implements Initializable {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Palvelut ja Laitteet");
         a.setHeaderText(virhe);
-        a = muotoileIlmoitus(a);
+        //a = muotoileIlmoitus(a);
         a.showAndWait();
     }
     
@@ -342,9 +376,8 @@ public class UusiVarausController implements Initializable {
         varaus = new Varaus();
         int palveluvarausId = tietokanta.haeVarauksenPalvelutId() + 1;
         int laitevarausId = tietokanta.haeVarauksenLaitteetId() + 1;
+          
         
-        System.out.println("PalveluId: " + palveluvarausId);
-        System.out.println("LaiteId: " + laitevarausId);
         
         if(valittuAsiakas != null) {
             varaus.setAsiakasId(valittuAsiakas.getAsiakasId());
@@ -353,37 +386,65 @@ public class UusiVarausController implements Initializable {
         
         varaus.setVuokraAlku(dpAloituspvm.getValue());
         varaus.setVuokraLoppu(dpLopetuspvm.getValue());
-        varaus.setPalveluvarausId(palveluvarausId);
-        varaus.setLaitevarausId(laitevarausId);
-        
-        lisaaPalvelut(varaus);
-        lisaaLaitteet(varaus);
+
         
         
-        if(varaus.getAsiakasId() != 0 || varaus.getTilaId() != 0 || varaus.getVuokraAlku() != null || varaus.getVuokraLoppu() != null) {
+        int lisattyVarausId = 0;
+        
+        if (txtToimitila.getText().isEmpty() || txtAsiakas.getText().isEmpty() || dpAloituspvm.getValue() == null || dpLopetuspvm.getValue() == null) {
+            
+            heitaVirheNaytolle("Täytä kaikki kentät!");
+            
+        } else {
+            System.out.println(varaus.getPalveluvarausId());
+            System.out.println(varaus.getLaitevarausId());
             tietokanta.lisaaVaraus(varaus);
+            lisattyVarausId = tietokanta.haeLisattyVarausId(varaus);
+
+            if (palveluCheckboxit.size() > 0) {
+                varaus.setPalveluvarausId(palveluvarausId);
+                lisaaPalvelut(lisattyVarausId);
+            }
+            System.out.println("Valitut laitteet: " + valitutLaitteet);
+            if (laiteCheckboxit.size() > 0) {
+                varaus.setLaitevarausId(laitevarausId);
+                lisaaLaitteet(lisattyVarausId);
+            }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Uusi varaus");
             alert.setHeaderText("Varaus lisätty");
             alert.showAndWait();
             System.out.println(varaus);
-        } else {
-            heitaVirheNaytolle("Täytä kaikki kentät!");
         }
     }
     
-    public void lisaaPalvelut(Varaus v) {
-        
-        for(Palvelu p: valitutPalvelut) {
-            tietokanta.lisaaVarauksenPalvelut(v, p);
-        }
+    public void lisaaPalvelut(int varausId) {
+         
+          for(String p: palveluCheckboxit) {
+              for(Palvelu lisattava: palvelut) {
+                  if(lisattava.getKuvaus().equals(p)) {
+                      System.out.println("Lisätään " + lisattava);
+                      tietokanta.yhdista();
+                      tietokanta.lisaaVarauksenPalvelut(lisattava, varausId);
+                      tietokanta.katkaiseYhteys();
+                  }
+              }
+          } 
     }
     
-    public void lisaaLaitteet(Varaus v) {
-       
-        for(Laite l: valitutLaitteet) {
-            tietokanta.lisaaVarauksenLaitteet(v, l);
-        }
+    public void lisaaLaitteet(int varausId) {
+
+          for(String l: laiteCheckboxit) {
+              
+              for(Laite lisattava: laitteet) {
+                  if(lisattava.getKuvaus().equals(l)) {
+                      System.out.println("Lisätään " + lisattava);
+                      tietokanta.yhdista();
+                      tietokanta.lisaaVarauksenLaitteet(lisattava, varausId);
+                      tietokanta.katkaiseYhteys();
+                  }
+              }
+          } 
     }
     
 }
