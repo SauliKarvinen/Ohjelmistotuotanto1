@@ -109,22 +109,22 @@
               </rowConstraints>
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="306.0" text="Toimitila:" textAlignment="CENTER" />
-                  <ComboBox fx:id="cbToimitilavalikko" prefHeight="31.0" prefWidth="448.0" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="cbToimitilavalikko" prefHeight="31.0" prefWidth="443.0" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <TableView fx:id="tbviewPalvelut" layoutX="12.0" layoutY="87.0" prefHeight="455.0" prefWidth="360.0">
               <columns>
-                <TableColumn prefWidth="50.0" text="ID" />
-                <TableColumn prefWidth="197.0" text="Kuvaus" />
-                  <TableColumn minWidth="0.0" prefWidth="112.0" text="Hinta / vrk" />
+                <TableColumn fx:id="colPalveluId" prefWidth="50.0" text="ID" />
+                <TableColumn fx:id="colPalveluKuvaus" prefWidth="197.0" text="Kuvaus" />
+                  <TableColumn fx:id="colPalveluHintaPvm" minWidth="0.0" prefWidth="112.0" text="Hinta / vrk" />
               </columns>
             </TableView>
             <Label layoutX="12.0" layoutY="66.0" text="Palvelut" />
             <TableView fx:id="tbviewLaitteet" layoutX="382.0" layoutY="87.0" prefHeight="455.0" prefWidth="360.0">
                <columns>
-                  <TableColumn prefWidth="48.0" text="ID" />
-                  <TableColumn prefWidth="202.0" text="Kuvaus" />
-                  <TableColumn prefWidth="109.0" text="Hinta / vrk" />
+                  <TableColumn fx:id="colLaiteId" prefWidth="48.0" text="ID" />
+                  <TableColumn fx:id="colLaiteKuvaus" prefWidth="202.0" text="Kuvaus" />
+                  <TableColumn fx:id="colLaiteHintaPvm" prefWidth="109.0" text="Hinta / vrk" />
                </columns>
             </TableView>
             <Label layoutX="382.0" layoutY="66.0" text="Laitteet" />

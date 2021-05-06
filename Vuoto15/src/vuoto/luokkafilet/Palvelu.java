@@ -45,11 +45,11 @@ public class Palvelu {
         this.PalveluId = PalveluId;
     }
 
-    public int getHintapvm() {
+    public int getHintaPvm() {
         return hintaPvm;
     }
 
-    public void setHintapvm(int hintapvm) {
+    public void setHintapPvm(int hintapvm) {
         this.hintaPvm = hintapvm;
     }
 

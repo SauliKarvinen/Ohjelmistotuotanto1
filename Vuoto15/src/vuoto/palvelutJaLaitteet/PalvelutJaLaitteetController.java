@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,11 +22,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -67,6 +71,21 @@ public class PalvelutJaLaitteetController implements Initializable {
     private ComboBox<Toimitila> cbToimitilavalikko;
     private Toimitila valittuToimitila;
     private DBAccess tietokanta = new DBAccess();
+    private ObservableList<Laite> laitteet = FXCollections.observableArrayList();
+    private ObservableList<Palvelu> palvelut = FXCollections.observableArrayList();
+    private boolean toimipisteessaOnToimitiloja = false;
+    @FXML
+    private TableColumn<Palvelu, Integer> colPalveluId;
+    @FXML
+    private TableColumn<Palvelu, String> colPalveluKuvaus;
+    @FXML
+    private TableColumn<Palvelu, Integer> colPalveluHintaPvm;
+    @FXML
+    private TableColumn<Laite, Integer> colLaiteId;
+    @FXML
+    private TableColumn<Laite, String> colLaiteKuvaus;
+    @FXML
+    private TableColumn<Laite, Integer> colLaiteHintaPvm;
 
     /**
      * Initializes the controller class.
@@ -78,41 +97,90 @@ public class PalvelutJaLaitteetController implements Initializable {
         txtToimipiste.setText(valittuToimipiste);
         
         paivitaToimitilavalikko();
+        paivitaPalvelut();
+        paivitaLaitteet();
         
         // Kuuntelee toimitilavalikon valintaa ja asettaa toimitilan
         cbToimitilavalikko.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             if (s3 != s2) {
+//                laitteet.clear();
+//                palvelut.clear();
                 valittuToimitila = s3;
+                paivitaPalvelut();
+                paivitaLaitteet();
                 
             }
         });
         
-        
-        
-//      // Asettaa Muokkaa ja Poista napit aktiiviseksi vasta kun on valittu jotain
-//        tbviewPalvelut.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
-//            if(s3 != null) {
-//                btnMuokkaaPalvelua.setDisable(false);
-//                btnPoistaPalvelu.setDisable(false);
-//                palvelu = s3;
-//            }
-//        });
-    }    
+
+    }
     
+    public void paivitaPalvelut() {
+
+        if(txtToimipiste.getText().equals("Kaikki toimipisteet")) {
+            palvelut = tietokanta.haeKaikkiPalvelut();
+            cbToimitilavalikko.setValue(null);
+            cbToimitilavalikko.setDisable(true);
+        } else {
+            if(toimipisteessaOnToimitiloja) {
+                palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
+            }
+        }
+        colPalveluId.setCellValueFactory(new PropertyValueFactory<>("palveluId"));
+        colPalveluKuvaus.setCellValueFactory(new PropertyValueFactory<>("kuvaus"));
+        colPalveluHintaPvm.setCellValueFactory(new PropertyValueFactory<>("hintaPvm"));
+        tbviewPalvelut.setItems(palvelut);
+
+    }
+
+    public void paivitaLaitteet() {
+
+         if(txtToimipiste.getText().equals("Kaikki toimipisteet")) {
+            laitteet = tietokanta.haeKaikkiLaitteet();
+        } else {
+            if(toimipisteessaOnToimitiloja) {
+                laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
+            }
+        }
+
+        colLaiteId.setCellValueFactory(new PropertyValueFactory<>("laiteId"));
+        colLaiteKuvaus.setCellValueFactory(new PropertyValueFactory<>("kuvaus"));
+        colLaiteHintaPvm.setCellValueFactory(new PropertyValueFactory<>("hintaPvm"));
+        tbviewLaitteet.setItems(laitteet);
+
+    }
+
     /**
      * Lisää toimitilat toimitilat-valikkoon
      */
     private void paivitaToimitilavalikko() {
         
+//        ObservableList<Toimitila> toimitilat = null;
+//                
+//        if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
+//            toimitilat = tietokanta.haeKaikkiToimitilat();
+//            cbToimitilavalikko.setItems(toimitilat);
+//        } else {
+//            toimitilat = tietokanta.haeToimitilatToimipisteesta(valittuToimipiste);
+//            cbToimitilavalikko.setItems(toimitilat);
+//        }
         ObservableList<Toimitila> toimitilat = null;
-                
+
         if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
             toimitilat = tietokanta.haeKaikkiToimitilat();
             cbToimitilavalikko.setItems(toimitilat);
         } else {
             toimitilat = tietokanta.haeToimitilatToimipisteesta(valittuToimipiste);
             cbToimitilavalikko.setItems(toimitilat);
+            if (toimitilat.size() > 0) {
+                toimipisteessaOnToimitiloja = true;
+            }
+        }
+
+        cbToimitilavalikko.getSelectionModel().selectFirst();
+        if (valittuToimitila == null) {
+            valittuToimitila = cbToimitilavalikko.getSelectionModel().getSelectedItem();
         }
     }
 
@@ -183,6 +251,7 @@ public class PalvelutJaLaitteetController implements Initializable {
 
             LisaaUusiPalveluController controller = (LisaaUusiPalveluController) avaaUusiIkkuna(LisaaUusiPalveluController.fxmlString, "Lisää uusi palvelu");
             controller.asetaToimitila(valittuToimitila);
+            controller.lisaaPalvelutJaLaitteetController(this);
         }
     }
 
@@ -198,6 +267,7 @@ public class PalvelutJaLaitteetController implements Initializable {
         } else {
             LisaaUusiLaiteController controller = (LisaaUusiLaiteController) avaaUusiIkkuna(LisaaUusiLaiteController.fxmlString, "Lisää uusi laite");
             controller.asetaToimitila(valittuToimitila);
+            controller.lisaaPalvelutJaLaitteetController(this);
         }
     }   
   

@@ -50,6 +50,7 @@ public class LisaaUusiLaiteController implements Initializable {
     @FXML
     private TextField txtToimitila;
     private Toimitila toimitila;
+    private PalvelutJaLaitteetController controller;
 
     /**
      * Initializes the controller class.
@@ -88,6 +89,7 @@ public class LisaaUusiLaiteController implements Initializable {
                 a.setHeaderText("Laite lisätty!");
                 a.showAndWait();
                 
+                controller.paivitaLaitteet();
                 Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 stage.close();
             } 
@@ -103,6 +105,13 @@ public class LisaaUusiLaiteController implements Initializable {
         if(t != null) {
             toimitila = t;
             txtToimitila.setText(t.getTilanNimi());
+        }
+    }
+    
+    public void lisaaPalvelutJaLaitteetController(PalvelutJaLaitteetController controller) {
+        
+        if(controller != null) {
+            this.controller = controller;
         }
     }
     
