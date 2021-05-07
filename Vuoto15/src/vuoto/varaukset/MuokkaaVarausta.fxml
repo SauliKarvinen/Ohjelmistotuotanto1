@@ -135,7 +135,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <ComboBox fx:id="cbLaitteet" disable="true" prefHeight="31.0" prefWidth="273.0">
+                        <ComboBox fx:id="cbAsiakas" disable="true" prefHeight="31.0" prefWidth="273.0">
                            <HBox.margin>
                               <Insets top="6.0" />
                            </HBox.margin>
@@ -167,23 +167,29 @@
             </GridPane>
             <HBox layoutX="14.0" layoutY="243.0" prefHeight="317.0" prefWidth="727.0" spacing="5.0">
                <children>
-                  <VBox fx:id="palvelutIkkuna" prefHeight="317.0" prefWidth="362.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
+                  <VBox fx:id="palvelutIkkuna" prefHeight="317.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
                      <effect>
                         <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
-                     </effect></VBox>
-                  <VBox fx:id="laitteetIkkuna" layoutX="10.0" layoutY="10.0" prefHeight="317.0" prefWidth="362.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
+                     </effect>
+                     <padding>
+                        <Insets left="20.0" top="20.0" />
+                     </padding></VBox>
+                  <VBox fx:id="laitteetIkkuna" layoutX="10.0" layoutY="10.0" prefHeight="317.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: lightblue;">
                      <effect>
                         <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
-                     </effect></VBox>
+                     </effect>
+                     <padding>
+                        <Insets left="20.0" top="20.0" />
+                     </padding></VBox>
                </children>
             </HBox>
             <Label layoutX="14.0" layoutY="222.0" text="Valitse palvelut" />
             <Label layoutX="378.0" layoutY="222.0" text="Valitse laitteet" />
-            <Button fx:id="btnLisaaAsiakas1" layoutX="636.0" layoutY="635.0" maxWidth="152.0" mnemonicParsing="false" onAction="#LisaaToimipiste" prefHeight="31.0" prefWidth="152.0" text="Tallenna" textAlignment="CENTER" />
-            <Label layoutX="17.0" layoutY="574.0" text="Varauksen loppusumma:" />
-            <TextField fx:id="txtLoppusumma" alignment="CENTER_RIGHT" layoutX="191.0" layoutY="569.0" prefHeight="31.0" prefWidth="184.0" stylesheets="@../stylesheets/sauli_textfield.css" text="0" />
-            <Label layoutX="377.0" layoutY="577.0" text="€" />
-            <Button fx:id="btnTakaisin" layoutX="14.0" layoutY="635.0" mnemonicParsing="false" onAction="#btnTakaisinPainettu" text="Takaisin" />
+            <Button layoutX="616.0" layoutY="635.0" maxHeight="0.0" minWidth="120.0" mnemonicParsing="false" onAction="#btnPaivitaTiedotPainettu" prefHeight="31.0" text="Päivitä tiedot" textAlignment="CENTER" />
+            <Label layoutX="17.0" layoutY="574.0" text="Varauksen loppusumma:" visible="false" />
+            <TextField fx:id="txtLoppusumma" alignment="CENTER_RIGHT" layoutX="191.0" layoutY="569.0" prefHeight="31.0" prefWidth="184.0" stylesheets="@../stylesheets/sauli_textfield.css" text="0" visible="false" />
+            <Label layoutX="377.0" layoutY="577.0" text="€" visible="false" />
+            <Button layoutX="14.0" layoutY="635.0" mnemonicParsing="false" onAction="#btnTakaisinPainettu" text="Takaisin" />
          </children>
       </Pane>
    </center>

@@ -7,6 +7,7 @@ package vuoto.varaukset;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -89,6 +90,7 @@ public class VarauksetController implements Initializable {
     private TableView<VarausOlio> tbvVaraukset;
     private boolean toimipisteessaOnToimitiloja = false;
     private ObservableList<VarausOlio> varaukset = null;
+    private VarausOlio varausOlio;
 
     /**
      * Initializes the controller class.
@@ -118,6 +120,7 @@ public class VarauksetController implements Initializable {
             System.out.println(s3.getVarausId());
             paivitaPalvelut(s3.getVarausId());
             paivitaLaitteet(s3.getVarausId());
+            varausOlio = s3;
         });
         
     }    
@@ -134,6 +137,7 @@ public class VarauksetController implements Initializable {
             CheckBox checkbox = new CheckBox();
             checkbox.setText(p);
             palvelutIkkuna.getChildren().add(checkbox);
+            checkbox.setSelected(true);
         }
         
     }
@@ -149,6 +153,7 @@ public class VarauksetController implements Initializable {
             CheckBox checkbox = new CheckBox();
             checkbox.setText(l);
             laitteetIkkuna.getChildren().add(checkbox);
+            checkbox.setSelected(true);
         }
     }
 
@@ -244,7 +249,31 @@ public class VarauksetController implements Initializable {
     @FXML
     private void btnPoistaVarausPainettu(ActionEvent event) {
         
-        boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko palvelu " + "*tähän varaus*" + "?", "Palvelun poistaminen");
+        boolean varausPoistettu = true;
+        
+        if(varausOlio != null) {
+            
+            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko palvelu " + varausOlio.getVarausId() + "?", "Palvelun poistaminen");
+            
+            if(okPainettu) {
+                try {
+                    tietokanta.poistaVaraus(varausOlio.getVarausId());
+                } catch (SQLException ex) {
+                    varausPoistettu = false;
+                    heitaVirheNaytolle("Virhe poistettaessa varausta");
+                    Logger.getLogger(VarauksetController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if(varausPoistettu) {
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Varauksen poistaminen");
+                a.setHeaderText("Varaus poistettu");
+                a.showAndWait();
+                paivitaTableview();
+            }
+        }
+        
+        
         
         // if(okPainettu) niin poista tiedot.........
     }
@@ -252,19 +281,30 @@ public class VarauksetController implements Initializable {
     @FXML
     private void btnMuokkaaVaraustaPainettu(ActionEvent event) {
         
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(MuokkaaVaraustaController.fxmlString));
-        Parent root = null;
-        
-        try {
-            root = loader.load();
-        } catch (IOException ex) {
-            heitaVirheNaytolle("Virhe luotaessa näkymää MuokkaaVarausta.fxml");
-            Logger.getLogger(AsiakkuudetController.class.getName()).log(Level.SEVERE, null, ex);
+        if (varausOlio != null) {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(MuokkaaVaraustaController.fxmlString));
+            Parent root = null;
+
+            try {
+                root = loader.load();
+            } catch (IOException ex) {
+                heitaVirheNaytolle("Virhe luotaessa näkymää MuokkaaVarausta.fxml");
+                Logger.getLogger(AsiakkuudetController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            Varaus muokattavaVaraus = tietokanta.haeVarausIdNumerolla(varausOlio.getVarausId());
+            
+            MuokkaaVaraustaController controller = loader.getController();
+            controller.asetaToimitila(valittuToimitila);
+            controller.asetaMuokattavaVaraus(muokattavaVaraus);
+            controller.asetaAsiakas(varausOlio.getAsiakas());
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } else {
+            heitaVirheNaytolle("Valitse varaus");
         }
-        
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
     }
     
     /**

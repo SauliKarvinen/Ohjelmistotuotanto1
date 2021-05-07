@@ -811,6 +811,79 @@ public class DBAccess {
         return varaukset;
     }
     
+    
+    /**
+     * Hakee Varauksen ID-numerolla
+     * @param varausId Varaus ID
+     * @return Varaus
+     */
+    public Varaus haeVarausIdNumerolla(int varausId) {
+        
+        Varaus palautettavaVaraus = null;
+        
+        try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE varausId = ?");
+            ps.setInt(1, varausId);
+            
+            results = ps.executeQuery();
+            
+            results.next();
+            
+            int id = results.getInt("varausId");
+            LocalDate vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
+            LocalDate vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
+            int tilaId = results.getInt("tilaId");
+            int asiakasId = results.getInt("asiakasId");
+            int palveluvarausId = results.getInt("palveluvarausId");
+            int laitevarausId = results.getInt("laitevarausId");
+            
+            palautettavaVaraus = new Varaus(id, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId);
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa varausta ID-numerolla");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeVarausIdNumerolla)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
+        return palautettavaVaraus;
+    }
+    
+    /**
+     * Poistaa ID-numeroa vastaavan varauksen
+     * @param varausId VarausId
+     * @throws SQLException SQL-Virhe
+     */
+    public void poistaVaraus(int varausId) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("DELETE FROM Varaus WHERE varausId = ?");
+            ps.setInt(1, varausId);
+            ps.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+    }
+    
+    public void paivitaVaraus(Varaus v) {
+        
+//        ps = conn.prepareStatement("UPDATE Varaus SET vuokraAlku = ?, vuokraLoppu = ? WHERE varausId = ?;");
+//        ps.setDate(1, Date);
+    }
     /**
      * Hakee varaukset toimitilasta
      * @param t Toimitila
@@ -1505,11 +1578,12 @@ public class DBAccess {
         
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE asiakasId = (?) ;");
-            ps.setInt(1, asiakasId);
+            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE asiakasId = (?);");
+            ps.setInt(1, asId);
             
             results = ps.executeQuery();
-
+            
+            
             while(results.next()) {
                 System.out.println("INSIDE RESULTS");    
                 varausId = results.getInt("varausId");
@@ -1530,15 +1604,15 @@ public class DBAccess {
             }
             
             // TEST
-            varaukset.add(new Varaus(
-                    varausId = 3400,
-                    vuokraAlku = LocalDate.now(),
-                    vuokraLoppu = vuokraAlku.plusMonths(12), 
-                    tilaId = 15, 
-                    asiakasId = 3, 
-                    palveluvarausId = 1, 
-                    laitevarausId = 1
-                            ));
+//            varaukset.add(new Varaus(
+//                    varausId = 3400,
+//                    vuokraAlku = LocalDate.now(),
+//                    vuokraLoppu = vuokraAlku.plusMonths(12), 
+//                    tilaId = 15, 
+//                    asiakasId = 3, 
+//                    palveluvarausId = 1, 
+//                    laitevarausId = 1
+//                            ));
             
         } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa varauksia");

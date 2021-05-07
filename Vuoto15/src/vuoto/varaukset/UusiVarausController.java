@@ -203,10 +203,10 @@ public class UusiVarausController implements Initializable {
                 
                 if(s3) {
                     palveluCheckboxit.add(checkbox.getText());
-                    System.out.println(palveluCheckboxit);
+
                 } else {
                     palveluCheckboxit.remove(checkbox.getText());
-                    System.out.println(palveluCheckboxit);
+
                 }
             });
         }
@@ -233,10 +233,8 @@ public class UusiVarausController implements Initializable {
                 
                 if(s3) {
                     laiteCheckboxit.add(checkbox.getText());
-                    System.out.println(laiteCheckboxit);
                 } else {
                     laiteCheckboxit.remove(checkbox.getText());
-                    System.out.println(laiteCheckboxit);
                 }
             });
         }

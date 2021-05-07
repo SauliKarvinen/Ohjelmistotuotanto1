@@ -4,6 +4,7 @@ package vuoto.luokkafilet;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.Objects;
 
 
 
@@ -150,6 +151,58 @@ public class Varaus {
 
     public void setLaitevarausId(int laitevarausId) {
         this.laitevarausId = laitevarausId;
+    }
+
+    /**
+     * Ylikirjoittaa Object luokan HashCode metodin
+     * @return HashCode
+     */
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 89 * hash + Objects.hashCode(this.vuokraAlku);
+        hash = 89 * hash + Objects.hashCode(this.vuokraLoppu);
+        hash = 89 * hash + this.tilaId;
+        hash = 89 * hash + this.asiakasId;
+        return hash;
+    }
+
+    /**
+     * Ylikirjoittaa Object luokan equals metodin
+     * @param obj Verrattava objekti
+     * @return true / false
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Varaus other = (Varaus) obj;
+        
+        if (this.tilaId != other.tilaId) {
+            return false;
+        }
+        if (this.asiakasId != other.asiakasId) {
+            return false;
+        }
+        if (!Objects.equals(this.vuokraAlku, other.vuokraAlku)) {
+            return false;
+        }
+        if (!Objects.equals(this.vuokraLoppu, other.vuokraLoppu)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Varaus{" + "vuokraAlku=" + vuokraAlku + ", vuokraLoppu=" + vuokraLoppu + ", tilaId=" + tilaId + ", asiakasId=" + asiakasId + '}';
     }
 
     
