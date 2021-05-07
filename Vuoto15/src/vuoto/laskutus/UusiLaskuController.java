@@ -8,6 +8,7 @@ package vuoto.laskutus;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -32,6 +33,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import static javax.management.Query.value;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Toimipiste;
@@ -39,6 +41,7 @@ import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
+
 
 /**
  * FXML Controller class
@@ -216,20 +219,31 @@ public class UusiLaskuController implements Initializable {
      
         // hae asiakkaan vuokraamat kiinteistöt
         ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        List<Integer> listVaraukset = new ArrayList<Integer>();
+        
         varaukset = tietokanta.haeAsiakkaanVaraukset(asiakkaanID);
         
         for(Varaus v: varaukset){
+            System.out.println(v.getVarausId());
+            System.out.println("Varauksissa");
+            
+            listVaraukset.add(v.getVarausId());
+            }
+        
+        /*
+            for(Varaus v: varaukset){
             ttilat.add(v.getTilaId());
             tpalvelut.add(v.getPalveluvarausId());
             tlaitteet.add(v.getLaitevarausId());
             }   
-            
+        */    
         // Selvitetään ID:t nimiksi
             //todo
         
         
-        
-        txfVuokKiinteisto.setText("varaukset" + ttilat);
+        // txfVuokKiinteisto.toString().
+        // txfVuokKiinteisto.setText(listVaraukset);
+        txfVuokKiinteisto.setText(String.valueOf(listVaraukset));
         txfPalvelut.setText("Vuokrattavan kiinteistön palvelut.");
         txfLaitteet.setText("Vuokrattavan kiinteistön laitteet.");
         

@@ -12,7 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Date;
+import java.sql.ResultSetMetaData;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +26,7 @@ import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Laite;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Palvelu;
-import vuoto.luokkafilet.Taulut;
+import vuoto.luokkafilet.LaskutTauluOlio;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 import vuoto.luokkafilet.VarausOlio;
@@ -1434,9 +1436,9 @@ public class DBAccess {
      */
     
     
-    public ObservableList<Taulut> haeLaskut(){
+    public ObservableList<LaskutTauluOlio> haeLaskut(){
         
-        ObservableList<Taulut> tiedot = FXCollections.observableArrayList();
+        ObservableList<LaskutTauluOlio> tiedot = FXCollections.observableArrayList();
         int laskunNro = 0;
         String laskunTyyppi = "";
         String yritysNimi = "";
@@ -1485,11 +1487,13 @@ public class DBAccess {
 
    /**
      * Hakee kaikki varaukset
+     * @param asId
      * @return ObservableList varaukset
      */
     public ObservableList<Varaus> haeAsiakkaanVaraukset(int asId) {
         
         ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
+        
         int varausId = 0;
         LocalDate vuokraAlku = null;
         LocalDate vuokraLoppu = null;
@@ -1497,25 +1501,45 @@ public class DBAccess {
         int asiakasId = 0;
         int palveluvarausId = 0;
         int laitevarausId = 0;
+        results = null;
         
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE asiakasId =?;");
+            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE asiakasId = (?) ;");
+            ps.setInt(1, asiakasId);
             
             results = ps.executeQuery();
 
             while(results.next()) {
+                System.out.println("INSIDE RESULTS");    
                 varausId = results.getInt("varausId");
                 vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
-            //    System.out.println("Vuokran alku: "+vuokraAlku);
+            
+            System.out.println("Vuokran alku: "+vuokraAlku);
+                
                 vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
                 tilaId = results.getInt("tilaId");
+        
+            System.out.println("TilaID: " + tilaId);
+            
                 asiakasId = results.getInt("asiakasId");
                 palveluvarausId = results.getInt("palveluvarausId");
                 laitevarausId = results.getInt("laitevarausId");
-                                
+                
                 varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
             }
+            
+            // TEST
+            varaukset.add(new Varaus(
+                    varausId = 3400,
+                    vuokraAlku = LocalDate.now(),
+                    vuokraLoppu = vuokraAlku.plusMonths(12), 
+                    tilaId = 15, 
+                    asiakasId = 3, 
+                    palveluvarausId = 1, 
+                    laitevarausId = 1
+                            ));
+            
         } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa varauksia");
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
@@ -1525,7 +1549,7 @@ public class DBAccess {
                 ps.close();
                 results.close();
             } catch (SQLException ex) {
-                heitaVirhe("Virhe suljettaessa kyselyä (haeKaikkiVaraukset)");
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanVaraukset)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

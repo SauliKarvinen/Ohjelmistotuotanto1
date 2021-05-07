@@ -34,7 +34,7 @@ import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Toimipiste;
-import vuoto.luokkafilet.Taulut;
+import vuoto.luokkafilet.LaskutTauluOlio;
 import vuoto.tietokanta.DBAccess;
 
 
