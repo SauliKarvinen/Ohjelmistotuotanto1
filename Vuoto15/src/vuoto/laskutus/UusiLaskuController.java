@@ -206,7 +206,7 @@ public class UusiLaskuController implements Initializable {
         
     private void paivitaAsiakasKentat(){
         ObservableList<Asiakas> asiakasL = FXCollections.observableArrayList();
-        
+        int asId = 0;
         asiakasL = tietokanta.haeAsiakas(valittuAsiakas);
         
         for(Asiakas a: asiakasL) {
@@ -215,35 +215,36 @@ public class UusiLaskuController implements Initializable {
                     a.getEtunimi() + " " + a.getSukunimi() + "\n" +
                     a.getLahiosoite() + " " + a.getPostinumero());
                     asiakkaanID = a.getAsiakasId();
+                    asId =  a.getAsiakasId();
             }
      
         // hae asiakkaan vuokraamat kiinteistöt
         ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
         List<Integer> listVaraukset = new ArrayList<Integer>();
         
-        varaukset = tietokanta.haeAsiakkaanVaraukset(asiakkaanID);
+    // Palauttaa vain ID:t
+        // varaukset = tietokanta.haeAsiakkaanVaraukset(asiakkaanID);
+        
+    // String versio: hakee id:llä varukset, ja palauttaa nimet:
+        String tilat = tietokanta.haeAsiakkaanToimitilaVaraukset(valittuAsiakas);
         
         for(Varaus v: varaukset){
-            System.out.println(v.getVarausId());
-            System.out.println("Varauksissa");
-            
-            listVaraukset.add(v.getVarausId());
+            // System.out.println(v.getVarausId());
+            // System.out.println("Varauksissa");
+            listVaraukset.add(v.getTilaId());
             }
         
-        /*
-            for(Varaus v: varaukset){
+        /* Toimi, mutta vain ID:n palautus
+            for(Varaus v: listVaraukset){
             ttilat.add(v.getTilaId());
             tpalvelut.add(v.getPalveluvarausId());
             tlaitteet.add(v.getLaitevarausId());
             }   
         */    
-        // Selvitetään ID:t nimiksi
-            //todo
+                
+        txfVuokKiinteisto.setText(String.valueOf(tilat));
         
-        
-        // txfVuokKiinteisto.toString().
-        // txfVuokKiinteisto.setText(listVaraukset);
-        txfVuokKiinteisto.setText(String.valueOf(listVaraukset));
+        // txfVuokKiinteisto.setText(String.valueOf(listVaraukset));
         txfPalvelut.setText("Vuokrattavan kiinteistön palvelut.");
         txfLaitteet.setText("Vuokrattavan kiinteistön laitteet.");
         

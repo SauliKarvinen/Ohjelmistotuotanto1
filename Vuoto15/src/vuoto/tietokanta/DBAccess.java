@@ -34,7 +34,7 @@ import vuoto.luokkafilet.VarausOlio;
 
 
 /**
- * Database connection to opskure database
+ * Database connection to database
  *
  * @author marko
  */
@@ -45,6 +45,7 @@ public class DBAccess {
     private Statement stmt = null;
     private PreparedStatement ps = null;
     private ResultSet results = null;
+    private ResultSet res = null;
     private final String URL = "jdbc:mariadb://maria.westeurope.cloudapp.azure.com";
     //private String localUrl = "jdbc:mariadb://localhost:3306"; // Paikallisella koneella
 
@@ -1578,42 +1579,24 @@ public class DBAccess {
         
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT * FROM Varaus WHERE asiakasId = (?);");
+            ps = conn.prepareStatement("SELECT DISTINCT * FROM Varaus WHERE asiakasId = (?);");
             ps.setInt(1, asId);
             
             results = ps.executeQuery();
             
             
             while(results.next()) {
-                System.out.println("INSIDE RESULTS");    
                 varausId = results.getInt("varausId");
                 vuokraAlku = results.getDate("vuokraAlku").toLocalDate();
-            
-            System.out.println("Vuokran alku: "+vuokraAlku);
-                
                 vuokraLoppu = results.getDate("vuokraLoppu").toLocalDate();
                 tilaId = results.getInt("tilaId");
-        
-            System.out.println("TilaID: " + tilaId);
-            
                 asiakasId = results.getInt("asiakasId");
                 palveluvarausId = results.getInt("palveluvarausId");
                 laitevarausId = results.getInt("laitevarausId");
                 
                 varaukset.add(new Varaus(varausId, vuokraAlku, vuokraLoppu, tilaId, asiakasId, palveluvarausId, laitevarausId));
             }
-            
-            // TEST
-//            varaukset.add(new Varaus(
-//                    varausId = 3400,
-//                    vuokraAlku = LocalDate.now(),
-//                    vuokraLoppu = vuokraAlku.plusMonths(12), 
-//                    tilaId = 15, 
-//                    asiakasId = 3, 
-//                    palveluvarausId = 1, 
-//                    laitevarausId = 1
-//                            ));
-            
+         
         } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa varauksia");
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
@@ -1630,11 +1613,46 @@ public class DBAccess {
         
         return varaukset;
     }
-    
-    
-    
-    
-    
-    
-    
+
+    /** // K E S K E N //  Palauttaa vain viimeisen tilan, eli String ylikirjoittaa edellisen arvon!!!!!!!!
+     * Hakee ValitunAsiakkaan nimella, vuokratut tilat
+     * @param asiakas Sting
+     * @return tilanNimi String
+     */
+    public String haeAsiakkaanToimitilaVaraukset(String asiakas){
+          String tilanNimi = "";
+          results = null;
+          
+          try {
+            yhdista();
+            ps = conn.prepareStatement("SELECT tilanNimi FROM Tilat WHERE tilaId IN \n" +
+                                            "(SELECT DISTINCT tilaId FROM Varaus WHERE asiakasId =\n" +
+                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?)));");
+            ps.setString(1, asiakas);
+            
+            results = ps.executeQuery();
+            
+            while(results.next()){
+                System.out.println(results.getString(1));
+                tilanNimi = results.getString("tilanNimi");
+                System.out.println(tilanNimi);
+            }
+          } catch (SQLException ex) {
+            heitaVirhe("Virhe haettaessa varauksia");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+          } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanVaraukset)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
+        return tilanNimi;
+    }
+               
+
 }
