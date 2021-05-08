@@ -100,12 +100,12 @@
          <children>
             <TableView fx:id="tbvVaraukset" layoutX="14.0" layoutY="108.0" prefHeight="249.0" prefWidth="736.0">
                <columns>
-                  <TableColumn fx:id="colVarausId" prefWidth="93.0" text="Varaus ID" />
-                  <TableColumn fx:id="colVarausalku" prefWidth="112.0" text="Aloitus pvm" />
-                  <TableColumn fx:id="colVarausloppu" prefWidth="113.0" text="Lopetus pvm" />
-                  <TableColumn fx:id="colAsiakas" prefWidth="146.0" text="Asiakas" />
-                  <TableColumn fx:id="colToimitila" prefWidth="136.0" text="Toimitila" />
-                  <TableColumn fx:id="colToimipiste" prefWidth="134.0" text="Toimipiste" />
+                  <TableColumn fx:id="colVarausId" prefWidth="87.0" text="Varaus ID" />
+                  <TableColumn fx:id="colVarausalku" prefWidth="105.0" text="Aloitus pvm" />
+                  <TableColumn fx:id="colVarausloppu" prefWidth="111.0" text="Lopetus pvm" />
+                  <TableColumn fx:id="colAsiakas" prefWidth="140.0" text="Asiakas" />
+                  <TableColumn fx:id="colToimitila" prefWidth="154.0" text="Toimitila" />
+                  <TableColumn fx:id="colToimipiste" prefWidth="137.0" text="Toimipiste" />
                </columns>
                <effect>
                   <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />
@@ -118,25 +118,25 @@
             </HBox>
             <GridPane prefHeight="89.0" prefWidth="754.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.4285888671875" minWidth="10.0" prefWidth="247.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="528.0" minWidth="10.0" prefWidth="507.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.4285888671875" minWidth="10.0" prefWidth="293.5714111328125" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="467.2857666015625" minWidth="10.0" prefWidth="460.4285888671875" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="220.0" prefHeight="18.0" prefWidth="306.0" style="-fx-font-size: 16;" text="Vuokrattavan tilan osoite:" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="220.0" prefHeight="18.0" prefWidth="306.0" style="-fx-font-size: 16;" text="Vuokrattavan tilan osoite:" textAlignment="CENTER" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <padding>
                         <Insets right="30.0" />
                      </padding></Label>
-                  <Label style="-fx-font-size: 16;" text="Hae ajalta:" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                  <Label style="-fx-font-size: 16;" text="Hae ajalta:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets right="35.0" />
                      </GridPane.margin></Label>
                   <HBox prefHeight="44.0" prefWidth="443.0" spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <DatePicker fx:id="dpAlkupaiva" prefHeight="31.0" prefWidth="162.0" />
+                        <DatePicker fx:id="dpAlkupaiva" prefHeight="31.0" prefWidth="214.0" />
                         <Label text="-">
                            <HBox.margin>
                               <Insets top="2.0" />
@@ -145,18 +145,16 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <DatePicker fx:id="dpLoppupaiva" prefHeight="31.0" prefWidth="162.0" />
-                        <Button mnemonicParsing="false" onAction="#btnHaeAjaltaPainettu" text="Hae ajalta" />
-                        <Button mnemonicParsing="false" onAction="#btnPalautaPainettu" text="Palauta" />
+                        <DatePicker fx:id="dpLoppupaiva" prefHeight="31.0" prefWidth="218.0" />
                      </children>
                      <padding>
                         <Insets bottom="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <ComboBox fx:id="cbToimitilavalikko" prefHeight="31.0" prefWidth="314.0" promptText="Valitse" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="cbToimitilavalikko" prefHeight="31.0" prefWidth="456.0" promptText="Valitse" GridPane.columnIndex="1" />
                </children>
             </GridPane>
-            <Button layoutX="18.0" layoutY="675.0" mnemonicParsing="false" onAction="#btnEtusivullePainettu" text="Etusivulle" />
+            <Button layoutX="331.0" layoutY="683.0" mnemonicParsing="false" onAction="#btnEtusivullePainettu" text="Etusivulle" />
             <Button layoutX="418.0" layoutY="365.0" mnemonicParsing="false" onAction="#btnUusiVarausPainettu" prefHeight="31.0" prefWidth="123.0" text="Uusi varaus" textAlignment="CENTER" />
             <Button layoutX="641.0" layoutY="365.0" mnemonicParsing="false" onAction="#btnPoistaVarausPainettu" text="Poista" textAlignment="CENTER" />
             <Button layoutX="530.0" layoutY="365.0" mnemonicParsing="false" onAction="#btnMuokkaaVaraustaPainettu" text="Muokkaa" textAlignment="CENTER" />
@@ -164,7 +162,7 @@
                <children>
                   <ScrollPane prefHeight="317.0" prefWidth="362.0">
                      <content>
-                        <VBox fx:id="palvelutIkkuna" prefHeight="317.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: linear-gradient(#d6f5f5 80%, #70dbdb 100%);">
+                        <VBox fx:id="palvelutIkkuna" disable="true" prefHeight="226.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: linear-gradient(#d6f5f5 80%, #70dbdb 100%);">
                            <padding>
                               <Insets left="20.0" top="20.0" />
                            </padding>
@@ -176,7 +174,7 @@
                   </ScrollPane>
                   <ScrollPane prefHeight="317.0" prefWidth="362.0">
                      <content>
-                        <VBox fx:id="laitteetIkkuna" prefHeight="317.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: linear-gradient(#d6f5f5 80%, #70dbdb 100%);">
+                        <VBox fx:id="laitteetIkkuna" disable="true" prefHeight="317.0" prefWidth="362.0" spacing="15.0" style="-fx-background-color: linear-gradient(#d6f5f5 0%, #70dbdb 100%); -fx-border-color: linear-gradient(#d6f5f5 80%, #70dbdb 100%);">
                            <padding>
                               <Insets left="20.0" top="20.0" />
                            </padding>
@@ -188,8 +186,9 @@
                   </ScrollPane>
                </children>
             </HBox>
-            <Label layoutX="19.0" layoutY="417.0" text="Palvelut" />
-            <Label layoutX="383.0" layoutY="417.0" text="Laitteet" />
+            <Label layoutX="19.0" layoutY="417.0" text="Varauksen palvelut" />
+            <Label layoutX="383.0" layoutY="417.0" text="Varauksen laitteet" />
+            <Label layoutX="18.0" layoutY="89.0" text="Valitse varaus" />
          </children>
       </Pane>
    </right>

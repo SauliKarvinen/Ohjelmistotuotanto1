@@ -880,11 +880,32 @@ public class DBAccess {
         }
     }
     
-    public void paivitaVaraus(Varaus v) {
+    public void paivitaVaraus(Varaus v, int varausId) throws SQLException {
         
-//        ps = conn.prepareStatement("UPDATE Varaus SET vuokraAlku = ?, vuokraLoppu = ? WHERE varausId = ?;");
-//        ps.setDate(1, Date);
+        try {
+            yhdista();
+            ps = conn.prepareStatement("UPDATE Varaus SET vuokraAlku = (?), vuokraLoppu = (?) WHERE varausId = (?);");
+            ps.setDate(1, Date.valueOf(v.getVuokraAlku()));
+            ps.setDate(2, Date.valueOf(v.getVuokraLoppu()));
+            ps.setInt(3, varausId);
+            
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe päivittäessä varausta");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (paivitaVaraus)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+        
     }
+    
     /**
      * Hakee varaukset toimitilasta
      * @param t Toimitila
@@ -1074,6 +1095,79 @@ public class DBAccess {
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+    }
+    
+    public void paivitaVarauksenPalvelut(Varaus varaus, List<Palvelu> palvelut) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("DELETE FROM Varauspalvelut WHERE varausId = (?);");
+            ps.setInt(1, varaus.getVarausId());
+            ps.execute();
+            
+            
+            if (palvelut.size() > 0) {
+                ps.close();
+                for (Palvelu p : palvelut) {
+                    ps = conn.prepareStatement("INSERT INTO Varauspalvelut (palveluId, varausId) VALUES (?, ?)");
+                    ps.setInt(1, p.getPalveluId());
+                    ps.setInt(2, varaus.getVarausId());
+                    ps.execute();
+                }
+            }
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe päivittäessä varauksen palveluita");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (paivitaVarauksenPalvelut)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        
+    }
+    
+    public void paivitaVarauksenLaitteet(Varaus varaus, List<Laite> laitteet) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("DELETE FROM Varauslaitteet WHERE varausId = (?);");
+            ps.setInt(1, varaus.getVarausId());
+            ps.execute();
+            
+            
+            if (laitteet.size() > 0) {
+                ps.close();
+                for (Laite l : laitteet) {
+
+                    ps = conn.prepareStatement("INSERT INTO Varauslaitteet (laiteId, varausId) VALUES (?, ?);");
+                    ps.setInt(1, l.getLaiteId());
+                    ps.setInt(2, varaus.getVarausId());
+                    ps.execute();
+                }
+            }
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe päivittäessä varauksen laitteita");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (paivitaVarauksenLaitteet)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
         
     }
     
@@ -1388,6 +1482,58 @@ public class DBAccess {
                 heitaVirhe("Virhe suljettaessa kyselyä (lisaaPalvelu)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+    
+    /**
+     * Päivittää palvelun
+     * @param p Päivitettävä palvelu
+     * @throws SQLException SQL-virhe
+     */
+    public void paivitaPalvelu(Palvelu p) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("UPDATE Palvelut set hintaPvm = (?), kuvaus = (?) WHERE palveluId = (?);");
+            ps.setInt(1, p.getHintaPvm());
+            ps.setString(2, p.getKuvaus());
+            ps.setInt(3, p.getPalveluId());
+            
+            ps.execute();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe päivittäessä palvelua");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+    }
+    
+    /**
+     * Päivittää palvelun
+     * @param l Päivitettävä palvelu
+     * @throws SQLException SQL-virhe
+     */
+    public void paivitaLaite(Laite l) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("UPDATE Laitteet set kuvaus = (?), hintaPvm = (?) WHERE laiteId = (?);");
+            ps.setString(1, l.getKuvaus());
+            ps.setInt(2, l.getHintaPvm());
+            ps.setInt(3, l.getLaiteId());
+            
+            ps.execute();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe päivittäessä laitetta");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
         }
     }
     

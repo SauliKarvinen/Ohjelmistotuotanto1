@@ -7,6 +7,7 @@ package vuoto.varaukset;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +38,7 @@ import vuoto.luokkafilet.Palvelu;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
+import vuoto.vuokrattavatKiinteistot.UusiKiinteistoController;
 
 /**
  * FXML Controller class
@@ -78,7 +80,8 @@ public class MuokkaaVaraustaController implements Initializable {
     private List<String> valitutLaitteet = new LinkedList<>();
     private Toimitila valittuToimitila;
     private boolean tietojaMuutettu = false;
-    private boolean palveluitaTaiLaitteitaMuutettu = false;
+    private boolean palveluitaMuutettu = false;
+    private boolean laitteitaMuutettu = false;
     
 
     /**
@@ -113,10 +116,10 @@ public class MuokkaaVaraustaController implements Initializable {
             checkbox.selectedProperty().addListener((s1, s2, s3) -> {
                 if(s3) {
                     valitutPalvelut.add(checkbox.getText());
-                    palveluitaTaiLaitteitaMuutettu = true;
+                    palveluitaMuutettu = true;
                 } else {
                     valitutPalvelut.remove(checkbox.getText());
-                    palveluitaTaiLaitteitaMuutettu = true;
+                    palveluitaMuutettu = true;
                 }
             });
             
@@ -149,10 +152,10 @@ public class MuokkaaVaraustaController implements Initializable {
             checkbox.selectedProperty().addListener((s1, s2, s3) -> {
                 if(s3) {
                     valitutLaitteet.add(checkbox.getText());
-                    palveluitaTaiLaitteitaMuutettu = true;
+                    laitteitaMuutettu = true;
                 } else {
                     valitutLaitteet.remove(checkbox.getText());
-                    palveluitaTaiLaitteitaMuutettu = true;
+                    laitteitaMuutettu = true;
                 }
             });
         }
@@ -253,47 +256,119 @@ public class MuokkaaVaraustaController implements Initializable {
 
     @FXML
     private void btnPaivitaTiedotPainettu(ActionEvent event) {
-        
-        ObservableList<Varaus> v = tietokanta.haeAsiakkaanVaraukset(varaus.getAsiakasId());
-        
-        for(Varaus vv: v) {
 
-            System.out.println("Lista: " + vv);
+        Varaus paivitettyVaraus = null;
+        boolean paivitetty = false;
+        
+        LocalDate vuokraAlku = dpAloituspvm.getValue();
+        LocalDate vuokraLoppu = dpLopetuspvm.getValue();
+        int tilaId = varaus.getTilaId();
+        int asiakasId = varaus.getAsiakasId();
+        paivitettyVaraus = new Varaus(vuokraAlku, vuokraLoppu, tilaId, asiakasId, 0, 0); // Kaksi viimeistä nollaa palveluvarausId ja laitevarausId ja ne menee tietokantaan Null:ksi
+
+        if(varaus.equals(paivitettyVaraus) && !palveluitaMuutettu && !laitteitaMuutettu) {
+            heitaVirheNaytolle("Tietoja ei ole muutettu. Muuta ainakin yhtä tietoa päivittääksesti varaus.");
+            
+        } else {
+
+            tietojaMuutettu = true;
+            
+            
+            if(tietojaMuutettu) {
+                try {
+                    if(!paivitettyVaraus.equals(varaus)) {
+                        tietokanta.paivitaVaraus(paivitettyVaraus, varaus.getVarausId());                 
+                        paivitetty = true;
+                    }
+                    
+                    if(palveluitaMuutettu) {
+                        
+                        List<Palvelu> paivitetytPalvelut = paivitaVaratutPalvelut();
+                        tietokanta.paivitaVarauksenPalvelut(varaus, paivitetytPalvelut);
+                        paivitetty = true;
+                    }
+                    
+                    if(laitteitaMuutettu) {
+                        List<Laite> paivitetytLaitteet = paivitaVaratutLaitteet();
+                        tietokanta.paivitaVarauksenLaitteet(varaus, paivitetytLaitteet);
+                        paivitetty = true;
+                    }
+                    
+                } catch (SQLException ex) {
+                    paivitetty = false;
+                    Logger.getLogger(MuokkaaVaraustaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } 
+            
+            if(paivitetty) {
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Varauksen päivitys");
+                a.setHeaderText("Varaus päivitetty!");
+                a.showAndWait();
+                
+                siirryNakymaan(VarauksetController.fxmlString, "Varaukset", event);
+                
+                
+                
+            }
+        }
+    }
+    
+    public List paivitaVaratutPalvelut() {
+        
+        LinkedList<Palvelu> paivitettyLista = null; 
+        paivitettyLista = new LinkedList<>();
+        
+        for(Palvelu p: palvelut) {
+            for(String valittuPalvelu: valitutPalvelut) {
+                if(valittuPalvelu.equals(p.getKuvaus())) {
+                    paivitettyLista.add(p);
+                }
+            }
         }
         
-//        Varaus paivitettyVaraus = null;
-//            
-//        LocalDate vuokraAlku = dpAloituspvm.getValue();
-//        LocalDate vuokraLoppu = dpLopetuspvm.getValue();
-//        int tilaId = varaus.getTilaId();
-//        int asiakasId = varaus.getAsiakasId();
-//        paivitettyVaraus = new Varaus(vuokraAlku, vuokraLoppu, tilaId, asiakasId, 0, 0); // Kaksi viimeistä nollaa palveluvarausId ja laitevarausId ja ne menee tietokantaan Null:ksi
-//
-//        if(varaus.equals(paivitettyVaraus) && !palveluitaTaiLaitteitaMuutettu) {
-//            heitaVirheNaytolle("Tietoja ei ole muutettu. Muuta ainakin yhtä tietoa päivittääksesti varaus.");
-//            
-//        } else {
-//
-//            tietojaMuutettu = true;
-//            
-//            if(tietojaMuutettu || palveluitaTaiLaitteitaMuutettu) {
-//                
-//            }
-//        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        return paivitettyLista;
+  
     }
+    
+    public List paivitaVaratutLaitteet() {
+        
+        LinkedList<Laite> paivitettyLista = null; 
+        paivitettyLista = new LinkedList<>();
+        
+        for(Laite l: laitteet) {
+            for(String valittuLaite: valitutLaitteet) {
+                if(valittuLaite.equals(l.getKuvaus())) {
+                    paivitettyLista.add(l);
+                }
+            }
+        }
+        
+        return paivitettyLista;
+    }
+    
+    /**
+     * Muuttaa ikkunan näkymäksi valitun näkymän
+     * @param fxml fxml-tiedoston nimi
+     * @param title Ikkunan otsikko
+     * @param event Lähde mistä valinta tuli
+     */
+    private void siirryNakymaan(String fxml, String title, ActionEvent event) {
+        
+        Object controller = null; // Palautettava controller olio
+        
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
+            Parent vuoto = (Parent) fxmlLoader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle(title);
+            stage.setScene(new Scene(vuoto));
+        } catch (IOException ex) {
+            heitaVirheNaytolle("Virhe luotaessa näkymää " + title);
+            Logger.getLogger(MuokkaaVaraustaController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+   
+    } 
+ 
 }

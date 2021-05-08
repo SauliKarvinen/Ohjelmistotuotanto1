@@ -5,6 +5,8 @@
  */
 package vuoto.luokkafilet;
 
+import java.util.Objects;
+
 /**
  * Palvelu -luokka
  * @author sauli
@@ -65,4 +67,38 @@ public class Palvelu {
         return getKuvaus();
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + this.PalveluId;
+        hash = 53 * hash + this.hintaPvm;
+        hash = 53 * hash + Objects.hashCode(this.kuvaus);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Palvelu other = (Palvelu) obj;
+        if (this.PalveluId != other.PalveluId) {
+            return false;
+        }
+        if (this.hintaPvm != other.hintaPvm) {
+            return false;
+        }
+        if (!Objects.equals(this.kuvaus, other.kuvaus)) {
+            return false;
+        }
+        return true;
+    }
+
+    
 }

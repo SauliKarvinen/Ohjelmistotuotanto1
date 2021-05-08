@@ -79,7 +79,7 @@
       <Pane prefHeight="273.0" prefWidth="409.0" BorderPane.alignment="CENTER">
          <children>
             <Button layoutX="81.0" layoutY="201.0" mnemonicParsing="false" onAction="#btnTakaisinPainettu" text="Takaisin" />
-            <Button fx:id="btnPoistaLasku" layoutX="229.0" layoutY="201.0" mnemonicParsing="false" onAction="#btnLisaaPainettu" text="Lisää" textAlignment="CENTER" />
+            <Button layoutX="229.0" layoutY="201.0" mnemonicParsing="false" onAction="#btnLisaaPainettu" text="Lisää" textAlignment="CENTER" />
             <GridPane layoutX="14.0" prefHeight="174.0" prefWidth="359.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.0" minWidth="10.0" prefWidth="124.0" />
@@ -94,7 +94,7 @@
                   <Label prefHeight="21.0" prefWidth="75.0" text="Palvelu ID" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                   <Label prefHeight="21.0" prefWidth="75.0" text="Kuvaus" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                   <Label prefHeight="21.0" prefWidth="77.0" text="Hinta / vrk" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                  <TextField fx:id="txtPalveluID" prefWidth="262.0" GridPane.columnIndex="1" />
+                  <TextField fx:id="txtPalveluID" editable="false" prefWidth="262.0" GridPane.columnIndex="1" />
                   <TextField fx:id="txtKuvaus" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="txtHinta" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>

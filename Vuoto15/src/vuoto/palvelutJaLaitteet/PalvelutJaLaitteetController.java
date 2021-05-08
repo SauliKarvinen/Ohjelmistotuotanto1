@@ -86,6 +86,8 @@ public class PalvelutJaLaitteetController implements Initializable {
     private TableColumn<Laite, String> colLaiteKuvaus;
     @FXML
     private TableColumn<Laite, Integer> colLaiteHintaPvm;
+    private Palvelu valittuPalvelu;
+    private Laite valittuLaite;
 
     /**
      * Initializes the controller class.
@@ -113,6 +115,19 @@ public class PalvelutJaLaitteetController implements Initializable {
             }
         });
         
+        tbviewPalvelut.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                valittuPalvelu = s3;
+            }
+        });
+        
+        tbviewLaitteet.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                valittuLaite = s3;
+            }
+        });
 
     }
     
@@ -274,7 +289,14 @@ public class PalvelutJaLaitteetController implements Initializable {
     @FXML
     private void btnMuokkaaPalveluaPainettu(ActionEvent event) {
         
-        MuokkaaPalveluaController controller = (MuokkaaPalveluaController) avaaUusiIkkuna(MuokkaaPalveluaController.fxmlString, "Palvelun muokkaus");
+        if(valittuPalvelu == null) {
+            heitaVirheNaytolle("Valitse muokattava palvelu");
+        } else {
+            MuokkaaPalveluaController controller = (MuokkaaPalveluaController) avaaUusiIkkuna(MuokkaaPalveluaController.fxmlString, "Palvelun muokkaus");
+            controller.asetaToimitila(valittuToimitila);
+            controller.asetaPalvelu(valittuPalvelu);
+            controller.asetaController(this);
+        }
     }
 
     @FXML
@@ -289,7 +311,14 @@ public class PalvelutJaLaitteetController implements Initializable {
     @FXML
     private void btnMuokkaaLaitettaPainettu(ActionEvent event) {
         
-        MuokkaaLaitettaController controller = (MuokkaaLaitettaController) avaaUusiIkkuna(MuokkaaLaitettaController.fxmlString, "Laitteen muokkaus");
+        if(valittuLaite == null) {
+            heitaVirheNaytolle("Valitse muokattava laite");
+        } else {
+            MuokkaaLaitettaController controller = (MuokkaaLaitettaController) avaaUusiIkkuna(MuokkaaLaitettaController.fxmlString, "Laitteen muokkaus");
+            controller.asetaToimitila(valittuToimitila);
+            controller.asetaLaite(valittuLaite);
+            controller.asetaController(this);
+        }
     }
 
     @FXML

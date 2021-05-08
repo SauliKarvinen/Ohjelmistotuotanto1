@@ -138,6 +138,8 @@ public class VarauksetController implements Initializable {
             checkbox.setText(p);
             palvelutIkkuna.getChildren().add(checkbox);
             checkbox.setSelected(true);
+            checkbox.setStyle("-fx-opacity: 1"); // palvelutIkkuna on scenebuilderin päästä asetettu 'disabled'. Tämä palauttaa checkboxin tavallisen näköiseksi
+
         }
         
     }
@@ -154,6 +156,7 @@ public class VarauksetController implements Initializable {
             checkbox.setText(l);
             laitteetIkkuna.getChildren().add(checkbox);
             checkbox.setSelected(true);
+            checkbox.setStyle("-fx-opacity: 1"); // laitteetIkkuna on scenebuilderin päästä asetettu 'disabled'. Tämä palauttaa checkboxin tavallisen näköiseksi
         }
     }
 
@@ -179,7 +182,6 @@ public class VarauksetController implements Initializable {
     }
     
     public void paivitaTableview() {
-        
         //ObservableList<Varaus> varaukset = tietokanta.haeKaikkiVaraukset();
         if(toimipisteessaOnToimitiloja) {
         varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
@@ -342,7 +344,6 @@ public class VarauksetController implements Initializable {
         return a;
     }
 
-    @FXML
     private void btnHaeAjaltaPainettu(ActionEvent event) {
         
         System.out.println(varaukset.size());
@@ -371,7 +372,6 @@ public class VarauksetController implements Initializable {
         }
     }
 
-    @FXML
     private void btnPalautaPainettu(ActionEvent event) {
         
         tbvVaraukset.getItems().clear();

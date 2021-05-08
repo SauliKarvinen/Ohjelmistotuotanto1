@@ -5,6 +5,8 @@
  */
 package vuoto.luokkafilet;
 
+import java.util.Objects;
+
 /**
  * Laite -luokka
  * @author sauli
@@ -64,5 +66,40 @@ public class Laite {
     public String toString() {
         return getKuvaus();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + this.laiteId;
+        hash = 89 * hash + Objects.hashCode(this.kuvaus);
+        hash = 89 * hash + this.hintaPvm;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Laite other = (Laite) obj;
+        if (this.laiteId != other.laiteId) {
+            return false;
+        }
+        if (this.hintaPvm != other.hintaPvm) {
+            return false;
+        }
+        if (!Objects.equals(this.kuvaus, other.kuvaus)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
     
 }
