@@ -115,90 +115,28 @@ public class UusiVarausController implements Initializable {
                 System.out.println("laitteet: " + laitteet);
             }
         });
-        
-        //listaPalveluista();
-        
-        
-        // Hae palvelut HashMapiin, avain on Toimitilan nimi ja arvo on LinkedList toimitilan palveluista
-        // Nopeuttaa ohjelmaa kun ei aina tarvitse tehdä uutta tietokantahakua kun toimitila vaihdetaan
-        
-        
-        
     }    
-    
-    // Kokeilumetodi. Täytyy muuttaa lopulliseen versioon
-//    private List listaPalveluista() {
-//        
-//        palvelu = new Palvelu(1, 55, "Ruokailu");
-//        palvelut.add(palvelu);
-//        palvelu = new Palvelu(2, 250, "Konsultointi");
-//        palvelut.add(palvelu);
-//        palvelu = new Palvelu(3, 70, "Muut palvelut");
-//        palvelut.add(palvelu);
-//        
-//        
-//        for(Palvelu p: palvelut) {
-//            System.out.println("Tässä kohtaa toimitila on: " + valittuToimitila + " ja lisättävä palvelu on: " + p);
-//            //tietokanta.lisaaPalvelu(p);
-//            tietokanta.lisaaTilanPalvelu(p, valittuToimitila);
-//        }
-//        
-//        System.out.println("Palvelut lisätty");
-//        
-//        return palvelut;
-//    }
-//    
-//    private List listaLaitteista() {
-//        
-//        laite = new Laite(1, "Huono tietokone", 20);
-//        laitteet.add(laite);
-//        laite = new Laite(2, "Hyvä tietokone", 80);
-//        laitteet.add(laite);
-//        
-//        for(Laite l: laitteet) {
-//            //tietokanta.lisaaLaite(l);
-//            tietokanta.lisaaTilanLaite(l, valittuToimitila);
-//        }
-//        System.out.println("Laitteet lisätty");
-//        
-//        return laitteet;
-//    }
-    
-//    private Map toimitilanPalvelut(int toimitilaId, LinkedHashSet<Palvelu> paivitettyLista) {
-//
-//        
-//        
-//        palvelutMap.putIfAbsent(toimitilaId, new LinkedHashSet<>());
-//        LinkedHashSet<Palvelu> paivitettavaLista = palvelutMap.get(toimitilaId);
-//        paivitettavaLista.addAll(paivitettyLista);
-//        
-//        
-//        return palvelutMap;
-//        
-//        // Muistiinpanoja itselle:
-//        // Kun valitaan toimitila -> tehdään tietokantahaku (palvelut joissa toimipisteId == valitun toimipisteen Id)  
-//        // Hakutulokset (ObservableList) lisätään HashMapiin ja avaimeksi annetaan toimitilan Id. 
-//        // Toimitila ID:llä voi hakea nyt HashMapista ID:tä vastaavat palvelut
-//        // LinkedHashSet jotta uudet lisätyt palvelut on helppo päivittää listaan (poistaa automaattisesti duplikaatit)
-//    }
-    
+
     /**
      * Hakee palvelut valitusta toimitilasta ja luo niistä checkboxit Palvelut -ikkunaan
      */
     private void paivitaPalvelut() {
         
+        //Jos palvelut -listalla on dataa, lista tyhjennetään kun halutaan päivittää uudet tiedot
         if(palvelut != null) {
             palvelut.clear();
         }
         palvelut = tietokanta.haePalvelutToimitilasta(valittuToimitila);
-        //palvelut = listaPalveluista();
         
+        // Lisää checkboxeja ikkunaan jokaiselle laitteelle
         for(Palvelu p: palvelut) {
-            //valitutPalvelut.add(p);
             CheckBox checkbox = new CheckBox();
             checkbox.setText(p.getKuvaus());
             palvelutIkkuna.getChildren().add(checkbox);
             
+            // Pitää kirjaa valituista palveluista ja laitteista
+            // Lisää checkboxille listenerin. Jos checkbox valitaan, sisältö lisätään listaan
+            // Jos checkboxia painetaan uudestaan, sisältö poistuu listasta
             checkbox.selectedProperty().addListener((s1, s2, s3) -> {
                 
                 if(s3) {
@@ -217,18 +155,21 @@ public class UusiVarausController implements Initializable {
      */
     private void paivitaLaitteet() {
         
+        //Jos palvelut -listalla on dataa, lista tyhjennetään kun halutaan päivittää uudet tiedot
         if(laitteet != null) {
             laitteet.clear();
         }
         laitteet = tietokanta.haeLaitteetToimitilasta(valittuToimitila);
-        //laitteet = listaLaitteista();
         
+        // Lisää checkboxeja ikkunaan jokaiselle laitteelle
         for(Laite l: laitteet) {
-            //valitutLaitteet.add(l);
             CheckBox checkbox = new CheckBox();
             checkbox.setText(l.getKuvaus());
             laitteetIkkuna.getChildren().add(checkbox);
             
+            // Pitää kirjaa valituista palveluista ja laitteista
+            // Lisää checkboxille listenerin. Jos checkbox valitaan, sisältö lisätään listaan
+            // Jos checkboxia painetaan uudestaan, sisältö poistuu listasta
             checkbox.selectedProperty().addListener((s1, s2, s3) -> {
                 
                 if(s3) {
@@ -262,7 +203,10 @@ public class UusiVarausController implements Initializable {
         
     }
 
-
+    /**
+     * Palauttaa näkymän edelliseen näkymään
+     * @param event "Takaisin" -napin painallus
+     */
     @FXML
     private void btnTakaisinPainettu(ActionEvent event) {
         
@@ -291,6 +235,11 @@ public class UusiVarausController implements Initializable {
         a.showAndWait();
     }
     
+    /**
+     * Muotoilee ilmoitusta omilla css-määrityksillä
+     * @param a Muokattava ikkuna
+     * @return Muokattu ikkuna
+     */
     public Alert muotoileIlmoitus(Alert a) {
         
         String alert_css = getClass().getResource("/stylesheets/sauli_alert.css").toExternalForm();
@@ -302,6 +251,10 @@ public class UusiVarausController implements Initializable {
         return a;
     }
 
+    /**
+     * Avaa uuden ikkunan Toimitilan valintaa varten
+     * @param event "Hae toimitilaa" -napin painallus
+     */
     @FXML
     private void btnHaeToimitilaaPainettu(ActionEvent event) {
         
@@ -309,6 +262,10 @@ public class UusiVarausController implements Initializable {
         controller.setUusiVarausController(this);
     }
 
+    /**
+     * Avaa uuden ikkunan Asiakkaan valintaa varten
+     * @param event "Hae asiakasta" -napin painallus
+     */
     @FXML
     private void btnHaeAsiakastaPainettu(ActionEvent event) {
         
@@ -316,6 +273,7 @@ public class UusiVarausController implements Initializable {
         controller.setUusiVarausController(this);
     }
 
+    // TÄMÄ OMINAISUUS LISÄTÄÄN JOS AIKAA JÄÄ
     @FXML
     private void btnLisaaUusiAsiakasPainettu(ActionEvent event) {
         
@@ -348,12 +306,17 @@ public class UusiVarausController implements Initializable {
         return controller;
     }
 
+    // TÄMÄ OMINAISUUS LISÄTÄÄN JOS AIKAA JÄÄ
     @FXML
     private void btnLisaaToimitilaPainettu(ActionEvent event) {
         
         UusiKiinteistoController controller = (UusiKiinteistoController) avaaUusiIkkuna(UusiKiinteistoController.fxmlString, "Lisaa Toimitila");
     }
     
+    /**
+     * Asettaa varauksen toimitilan
+     * @param t Toimitila
+     */
     public void asetaToimitila(Toimitila t) {
         if(t != null) {
             valittuToimitila = t;
@@ -361,6 +324,10 @@ public class UusiVarausController implements Initializable {
         }
     }
     
+    /**
+     * Asettaa varauksen asiakkaan
+     * @param a Asiakas
+     */
     public void asetaAsiakas(Asiakas a) {
         if(a != null) {
             valittuAsiakas = a;
@@ -368,6 +335,10 @@ public class UusiVarausController implements Initializable {
         }
     }
 
+    /**
+     * Lisää uuden varauksen
+     * @param event "Luo varaus" -napin painallus
+     */
     @FXML
     private void btnLisaaVarausPainettu(ActionEvent event) {
         
@@ -389,13 +360,12 @@ public class UusiVarausController implements Initializable {
         
         int lisattyVarausId = 0;
         
+        // Varmistaa että kaikki kentät on täytetty
         if (txtToimitila.getText().isEmpty() || txtAsiakas.getText().isEmpty() || dpAloituspvm.getValue() == null || dpLopetuspvm.getValue() == null) {
             
             heitaVirheNaytolle("Täytä kaikki kentät!");
             
         } else {
-            System.out.println(varaus.getPalveluvarausId());
-            System.out.println(varaus.getLaitevarausId());
             tietokanta.lisaaVaraus(varaus);
             lisattyVarausId = tietokanta.haeLisattyVarausId(varaus);
 
@@ -403,7 +373,7 @@ public class UusiVarausController implements Initializable {
                 varaus.setPalveluvarausId(palveluvarausId);
                 lisaaPalvelut(lisattyVarausId);
             }
-            System.out.println("Valitut laitteet: " + valitutLaitteet);
+
             if (laiteCheckboxit.size() > 0) {
                 varaus.setLaitevarausId(laitevarausId);
                 lisaaLaitteet(lisattyVarausId);
@@ -416,6 +386,10 @@ public class UusiVarausController implements Initializable {
         }
     }
     
+    /**
+     * Lisää valitut palvelut varaukselle tietokantaan
+     * @param varausId Varauksen id
+     */
     public void lisaaPalvelut(int varausId) {
          
           for(String p: palveluCheckboxit) {
@@ -430,6 +404,10 @@ public class UusiVarausController implements Initializable {
           } 
     }
     
+    /**
+     * Lisää valitut laitteet varaukselle tietokantaan
+     * @param varausId Varauksen id
+     */
     public void lisaaLaitteet(int varausId) {
 
           for(String l: laiteCheckboxit) {
@@ -446,17 +424,4 @@ public class UusiVarausController implements Initializable {
     }
     
 }
-//
-//class LaskuTauluOlio {
-//    
-//    private int laskunNumero;
-//    private String asiakkaanNimi;
-//    private int varausNumero;
-//
-//    public LaskuTauluOlio(Lasku l, Asiakas a, Varaus v) {
-//        
-//        this.laskunNumero = l.getLaskuId();
-//        this.asiakkaanNimi = a.getEtunimi();
-//        this.varausNumero = v.getVarausId();
-//    }
-//}
+

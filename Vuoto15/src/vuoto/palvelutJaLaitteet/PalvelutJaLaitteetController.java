@@ -7,6 +7,7 @@ package vuoto.palvelutJaLaitteet;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -302,12 +303,30 @@ public class PalvelutJaLaitteetController implements Initializable {
     @FXML
     private void btnPoistaPalveluPainettu(ActionEvent event) {
         
-        boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko palvelu " + "*tähän palvelu*" + "?", "Palvelun poistaminen");
+        if(valittuPalvelu == null) {
+            heitaVirheNaytolle("Valitse poistettava palvelu");
         
-        // if(okPainettu) niin poista tiedot.........
-        
+        } else {
+            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko palvelu " + valittuPalvelu.getKuvaus() + "?", "Palvelun poistaminen");
+            
+            if(okPainettu) {
+                try {
+                    tietokanta.poistaPalvelu(valittuPalvelu.getPalveluId());
+                    heitaIlmoitusNaytolle("Palvelu poistettu", "Palvelun poistaminen");
+                    
+                    paivitaPalvelut();
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(PalvelutJaLaitteetController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }      
     }
 
+    /**
+     * Vaihtaa näkymän muokattavat laitteet -kikkunaan
+     * @param event "Muokkaa" -napin painallus
+     */
     @FXML
     private void btnMuokkaaLaitettaPainettu(ActionEvent event) {
         
@@ -321,11 +340,31 @@ public class PalvelutJaLaitteetController implements Initializable {
         }
     }
 
+    /**
+     * Poistaa listasta valitun laitteen
+     * @param event "Poista" -napin painallus
+     */
     @FXML
     private void btnPoistaLaitePainettu(ActionEvent event) {
         
-        boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko laite " + "*tähän laite*" + "?", "Laitteen poistaminen");
-        // if(okPainettu) niin poista tiedot.........
+        if(valittuLaite == null) {
+            heitaVirheNaytolle("Valitse poistettava laite");
+        
+        } else {
+            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko laite " + valittuLaite.getKuvaus() + "?", "Laitteen poistaminen");
+            
+            if(okPainettu) {
+                try {
+                    tietokanta.poistaLaite(valittuLaite.getLaiteId());
+                    heitaIlmoitusNaytolle("Laite poistettu", "Laitteen poistaminen");
+                    
+                    paivitaLaitteet();
+          
+                } catch (SQLException ex) {
+                    Logger.getLogger(PalvelutJaLaitteetController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }  
     }
     
     /**
@@ -374,6 +413,14 @@ public class PalvelutJaLaitteetController implements Initializable {
         ((Button)a.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("Takaisin");
         
         return a;
+    }
+    
+    public void heitaIlmoitusNaytolle(String teksti, String title) {
+        
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle(title);
+        a.setHeaderText(teksti);
+        a.showAndWait();
     }
     
 }

@@ -1486,6 +1486,31 @@ public class DBAccess {
     }
     
     /**
+     * Poistaa palvelun tietokannasta
+     * @param palveluId Poistettavan palvelun id
+     * @throws SQLException SQL_virhe
+     */
+    public void poistaPalvelu(int palveluId) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("DELETE FROM Palvelut WHERE palveluId = (?);");
+            ps.setInt(1, palveluId);
+            ps.execute();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe poistaessa palvelua");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+
+    }
+    
+    
+    /**
      * Päivittää palvelun
      * @param p Päivitettävä palvelu
      * @throws SQLException SQL-virhe
@@ -1567,6 +1592,30 @@ public class DBAccess {
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    /**
+     * Poistaa laitteen tietokannasta
+     * @param laiteId Poistettavan laitteen id
+     * @throws SQLException SQL_virhe
+     */
+    public void poistaLaite(int laiteId) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("DELETE FROM Laitteet WHERE laiteid = (?);");
+            ps.setInt(1, laiteId);
+            ps.execute();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe poistaessa laitetta");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+
     }
 
     /**
