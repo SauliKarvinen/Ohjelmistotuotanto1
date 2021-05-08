@@ -160,6 +160,9 @@ public class VarauksetController implements Initializable {
         }
     }
 
+    /**
+     * Päivittää toimitilat comboboxiin
+     */
     private void paivitaToimitilavalikko() {
         
         ObservableList<Toimitila> toimitilat = null;
@@ -181,6 +184,9 @@ public class VarauksetController implements Initializable {
         }
     }
     
+    /**
+     * Päivittää näkymän tableviewn
+     */
     public void paivitaTableview() {
         //ObservableList<Varaus> varaukset = tietokanta.haeKaikkiVaraukset();
         if(toimipisteessaOnToimitiloja) {
@@ -211,7 +217,11 @@ public class VarauksetController implements Initializable {
         a.showAndWait();
     }
 
-     @FXML
+    /**
+     * Palauttaa näkymän etusivulle
+     * @param event "Etusivulle" -napin painallus
+     */
+    @FXML
     private void btnEtusivullePainettu(ActionEvent event) {
         
         FXMLLoader loader = new FXMLLoader();
@@ -230,6 +240,10 @@ public class VarauksetController implements Initializable {
         
     }
 
+    /**
+     * Vaihtaa näkymäksi uuden varauksen luomisen
+     * @param event 
+     */
     @FXML
     private void btnUusiVarausPainettu(ActionEvent event) {
         
@@ -248,6 +262,10 @@ public class VarauksetController implements Initializable {
         stage.setScene(new Scene(root));
     }
 
+    /**
+     * Poistaa valitun varauksen
+     * @param event "Poista" -napin painallus
+     */
     @FXML
     private void btnPoistaVarausPainettu(ActionEvent event) {
         
@@ -280,6 +298,10 @@ public class VarauksetController implements Initializable {
         // if(okPainettu) niin poista tiedot.........
     }
 
+    /**
+     * Vaihtaa näkymäksi varauksen muokkaamisen näkymän
+     * @param event "Muokkaa" -napin painallus
+     */
     @FXML
     private void btnMuokkaaVaraustaPainettu(ActionEvent event) {
         
@@ -344,20 +366,18 @@ public class VarauksetController implements Initializable {
         return a;
     }
 
+    /**
+     * Hakee varauksen valitulta ajalta ja lisää ne tableviewiin
+     * @param event "Hae ajalta" -napin painallus
+     */
+    @FXML
     private void btnHaeAjaltaPainettu(ActionEvent event) {
-        
-        System.out.println(varaukset.size());
-        
+            
         if(varaukset.isEmpty()) {
             varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
         }
-        ObservableList<VarausOlio> varauksetAikavalilta = FXCollections.observableArrayList();
         
-//        System.out.println(dpAlkupaiva.getValue() + " - " + dpLoppupaiva.getValue());
-//        if(dpAlkupaiva.getValue() != null && dpLoppupaiva.getValue() != null) {
-//            varaukset = tietokanta.haeTiedotVarausIkkunaanAikavalilta(valittuToimipiste, dpAlkupaiva.getValue(), dpLoppupaiva.getValue());
-//        }
-
+        ObservableList<VarausOlio> varauksetAikavalilta = FXCollections.observableArrayList();
         
         for(VarausOlio varaus: varaukset) {
             if(varaus.getAlkupaiva().isAfter(dpAlkupaiva.getValue().minusDays(1)) && varaus.getLoppupaiva().isBefore(dpLoppupaiva.getValue().plusDays(1))) {
@@ -365,13 +385,17 @@ public class VarauksetController implements Initializable {
             }
         }
         
-        //System.out.println(varaukset.size());
         if(varaukset != null) {
             tbvVaraukset.getItems().clear();
             tbvVaraukset.setItems(varauksetAikavalilta);
         }
     }
 
+    /**
+     * Nollaa aikavälin valinnan ja palauttaa kaikki tiedot tableviewiin
+     * @param event "Palauta" -napin painallus
+     */
+    @FXML
     private void btnPalautaPainettu(ActionEvent event) {
         
         tbvVaraukset.getItems().clear();

@@ -74,7 +74,10 @@ public class MuokkaaLaitettaController implements Initializable {
         stage.close();
     }
 
-    
+    /**
+     * Päivittää laitteen
+     * @param event 
+     */
     @FXML
     private void btnLisaaPainettu(ActionEvent event) {
         
@@ -87,6 +90,7 @@ public class MuokkaaLaitettaController implements Initializable {
         
         paivitettavaLaite = new Laite(laiteId, kuvaus, hintaPvm);
         
+        // Jos tietoja ei ole muutettu, ilmoittaa ohjelma siitä
         if(paivitettavaLaite.equals(laite)) {
             heitaVirheNaytolle("Muuta tietoja päivittääksesi laite");
         } else {
@@ -106,6 +110,9 @@ public class MuokkaaLaitettaController implements Initializable {
         }
     }
     
+    /**
+     * Lisää muokattavan laitteen tiedot kenttiin
+     */
     public void asetaLaite(Laite l) {
         
         if(l != null) {
@@ -117,6 +124,7 @@ public class MuokkaaLaitettaController implements Initializable {
         }
     }
     
+    // Asettaa toimitilan
     public void asetaToimitila(Toimitila t) {
         
         if(toimitila != null) {
@@ -124,6 +132,10 @@ public class MuokkaaLaitettaController implements Initializable {
         }
     }
     
+    /**
+     * Asettaa PalvelutJaLaitteet -luokan controllerin
+     * @param c 
+     */
     public void asetaController(PalvelutJaLaitteetController c) {
         
         if(c != null) {
@@ -131,6 +143,10 @@ public class MuokkaaLaitettaController implements Initializable {
         }
     }
     
+    /**
+     * Heittää virheen näytölle
+     * @param virhe Virheilmoitus
+     */
     private void heitaVirheNaytolle(String virhe) {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Palvelut ja Laitteet");

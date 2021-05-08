@@ -23,7 +23,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -33,7 +32,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.laskutus.LaskutusController;
@@ -107,8 +105,7 @@ public class PalvelutJaLaitteetController implements Initializable {
         cbToimitilavalikko.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             if (s3 != s2) {
-//                laitteet.clear();
-//                palvelut.clear();
+
                 valittuToimitila = s3;
                 paivitaPalvelut();
                 paivitaLaitteet();
@@ -171,16 +168,7 @@ public class PalvelutJaLaitteetController implements Initializable {
      * Lisää toimitilat toimitilat-valikkoon
      */
     private void paivitaToimitilavalikko() {
-        
-//        ObservableList<Toimitila> toimitilat = null;
-//                
-//        if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
-//            toimitilat = tietokanta.haeKaikkiToimitilat();
-//            cbToimitilavalikko.setItems(toimitilat);
-//        } else {
-//            toimitilat = tietokanta.haeToimitilatToimipisteesta(valittuToimipiste);
-//            cbToimitilavalikko.setItems(toimitilat);
-//        }
+
         ObservableList<Toimitila> toimitilat = null;
 
         if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
@@ -300,6 +288,10 @@ public class PalvelutJaLaitteetController implements Initializable {
         }
     }
 
+    /**
+     * Poistaa listasta valitun palvelun
+     * @param event "Poista" -napin painallus
+     */
     @FXML
     private void btnPoistaPalveluPainettu(ActionEvent event) {
         
@@ -307,11 +299,13 @@ public class PalvelutJaLaitteetController implements Initializable {
             heitaVirheNaytolle("Valitse poistettava palvelu");
         
         } else {
+            // Kysyy vahvistuksen
             boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko palvelu " + valittuPalvelu.getKuvaus() + "?", "Palvelun poistaminen");
             
             if(okPainettu) {
                 try {
                     tietokanta.poistaPalvelu(valittuPalvelu.getPalveluId());
+                    // Ilmoittaa jos poistaminen onnistui
                     heitaIlmoitusNaytolle("Palvelu poistettu", "Palvelun poistaminen");
                     
                     paivitaPalvelut();
@@ -351,11 +345,13 @@ public class PalvelutJaLaitteetController implements Initializable {
             heitaVirheNaytolle("Valitse poistettava laite");
         
         } else {
+            // Kysyy vahvistuksen
             boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko laite " + valittuLaite.getKuvaus() + "?", "Laitteen poistaminen");
             
             if(okPainettu) {
                 try {
                     tietokanta.poistaLaite(valittuLaite.getLaiteId());
+                    //Ilmoittaa jos poisto onnistui
                     heitaIlmoitusNaytolle("Laite poistettu", "Laitteen poistaminen");
                     
                     paivitaLaitteet();
@@ -415,6 +411,11 @@ public class PalvelutJaLaitteetController implements Initializable {
         return a;
     }
     
+    /**
+     * Heittää ilmoituksen näytölle
+     * @param teksti Ilmoituksen teksti
+     * @param title Ilmoitus-ikkunan otsikko
+     */
     public void heitaIlmoitusNaytolle(String teksti, String title) {
         
         Alert a = new Alert(Alert.AlertType.INFORMATION);

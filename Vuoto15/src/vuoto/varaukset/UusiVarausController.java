@@ -395,7 +395,7 @@ public class UusiVarausController implements Initializable {
           for(String p: palveluCheckboxit) {
               for(Palvelu lisattava: palvelut) {
                   if(lisattava.getKuvaus().equals(p)) {
-                      System.out.println("Lisätään " + lisattava);
+              
                       tietokanta.yhdista();
                       tietokanta.lisaaVarauksenPalvelut(lisattava, varausId);
                       tietokanta.katkaiseYhteys();

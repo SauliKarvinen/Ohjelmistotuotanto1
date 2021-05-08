@@ -58,6 +58,10 @@ public class MuokkaaPalveluaController implements Initializable {
         txtToimipiste.setText(VuotoMainController.valittuToimipiste);
     }    
 
+    /**
+     * Palaa takaisin edelliseen näkymään
+     * @param event "Takaisin" -napin painallus
+     */
     @FXML
     private void btnTakaisinPainettu(ActionEvent event) {
         
@@ -65,6 +69,10 @@ public class MuokkaaPalveluaController implements Initializable {
         stage.close();
     }
 
+    /**
+     * Päivittää muokatut tiedot
+     * @param event 
+     */
     @FXML
     private void btnLisaaPainettu(ActionEvent event) {
         
@@ -76,6 +84,7 @@ public class MuokkaaPalveluaController implements Initializable {
         
         paivitettavaPalvelu = new Palvelu(palveluId, hintaPvm, kuvaus);
         
+        // Jos mitään tietoja ei ole muutettu, ilmoittaa ohjelma siitä
         if(paivitettavaPalvelu.equals(palvelu)) {
             heitaVirheNaytolle("Muuta tietoja päivittääksesi palvelu");
         } else {
@@ -95,6 +104,10 @@ public class MuokkaaPalveluaController implements Initializable {
         }
     }
     
+    /**
+     * Asettaa muokattavan palvlun tiedot
+     * @param p 
+     */
     public void asetaPalvelu(Palvelu p) {
         
         if(p != null) {
@@ -106,6 +119,10 @@ public class MuokkaaPalveluaController implements Initializable {
         }
     }
     
+    /**
+     * Asettaa toimitilan
+     * @param t Toimitila
+     */
     public void asetaToimitila(Toimitila t) {
         
         if(toimitila != null) {
@@ -113,6 +130,10 @@ public class MuokkaaPalveluaController implements Initializable {
         }
     }
     
+    /**
+     * Asettaa PalveluJaLaitteet -luokan controllerin
+     * @param c controller
+     */
     public void asetaController(PalvelutJaLaitteetController c) {
         
         if(c != null) {
