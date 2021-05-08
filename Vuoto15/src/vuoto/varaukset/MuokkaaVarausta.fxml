@@ -187,14 +187,14 @@
             <Label layoutX="378.0" layoutY="222.0" text="Valitse laitteet" />
             <Button layoutX="616.0" layoutY="635.0" maxHeight="0.0" minWidth="120.0" mnemonicParsing="false" onAction="#btnPaivitaTiedotPainettu" prefHeight="31.0" text="Päivitä tiedot" textAlignment="CENTER" />
             <Label layoutX="17.0" layoutY="574.0" text="Varauksen loppusumma:" visible="false" />
-            <TextField fx:id="txtLoppusumma" alignment="CENTER_RIGHT" layoutX="191.0" layoutY="569.0" prefHeight="31.0" prefWidth="184.0" stylesheets="@../stylesheets/sauli_textfield.css" text="0" visible="false" />
+            <TextField fx:id="txtLoppusumma" alignment="CENTER_RIGHT" layoutX="191.0" layoutY="569.0" prefHeight="31.0" prefWidth="184.0" stylesheets="@../../../../../OneDrive/Työpöytä/Kouluhommat/Ohjelmistotuotanto%201/backup/08052021/Vuoto15/src/vuoto/stylesheets/sauli_textfield.css" text="0" visible="false" />
             <Label layoutX="377.0" layoutY="577.0" text="€" visible="false" />
             <Button layoutX="14.0" layoutY="635.0" mnemonicParsing="false" onAction="#btnTakaisinPainettu" text="Takaisin" />
          </children>
       </Pane>
    </center>
    <stylesheets>
-      <URL value="@../stylesheets/sauli_button.css" />
-      <URL value="@../stylesheets/sauli_combobox.css" />
+      <URL value="@../../../../../OneDrive/Työpöytä/Kouluhommat/Ohjelmistotuotanto%201/backup/08052021/Vuoto15/src/vuoto/stylesheets/sauli_button.css" />
+      <URL value="@../../../../../OneDrive/Työpöytä/Kouluhommat/Ohjelmistotuotanto%201/backup/08052021/Vuoto15/src/vuoto/stylesheets/sauli_combobox.css" />
    </stylesheets>
 </BorderPane>
