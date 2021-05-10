@@ -249,8 +249,8 @@ public class UusiLaskuController implements Initializable {
         txfPalvelut.setText(palvelut);
         
         // Haetaan asiakkaan Laitteet
-        //String laitteet = tietokanta.haeAsiakkaanLaitteet(valittuAsiakas);
-        //txfLaitteet.setText(laitteet);
+        String laitteet = tietokanta.haeAsiakkaanLaitteet(valittuAsiakas);
+        txfLaitteet.setText(laitteet);
         
     }
     

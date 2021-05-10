@@ -50,6 +50,7 @@ public class DBAccess {
     //private String localUrl = "jdbc:mariadb://localhost:3306"; // Paikallisella koneella
     private String tilanNimi = ""; // Varatut tilat
     private String varatutPalvelut = ""; // Varatut palvelut
+    private String varatutLaitteet = ""; // Varatut laitteet
     
     
     /**
@@ -1862,6 +1863,12 @@ public class DBAccess {
         return tilanNimi;
     }
 
+    /**
+     * Haetaan asiakkaan varatut palvelut ja tulostetaan String muotoinen lista laskulle-
+     * 
+     * @param asiakas asiakkaan nimi 
+     * @return varatutPalvelut String
+     */
      public String haeAsiakkaanPalvelut(String asiakas){
           // String varatutPalvelut = ""; // Varatut palvelut
           results = null;
@@ -1871,6 +1878,61 @@ public class DBAccess {
             // SQL, haetaan asiakkaan id, id:n varaamat tilat
             ps = conn.prepareStatement("SELECT hintapvm, kuvaus FROM Palvelut WHERE palveluId IN " +
                                             "(SELECT palveluId FROM Varauspalvelut WHERE varausId IN " +
+                                                "(SELECT varausId FROM Varaus WHERE asiakasId = " +
+                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?))));");
+            ps.setString(1, asiakas);
+            
+            results = ps.executeQuery();
+            int counter = 0;
+            
+            // muokataan tulostusta jos useampi vuokrattuPalvelu kohde.
+            // hinta, kuvaus
+            while(results.next()){
+                if (counter > 0){
+                    System.out.println(results.getString(1));
+                    varatutPalvelut = varatutPalvelut + results.getString("hintaPvm");
+                    varatutPalvelut = varatutPalvelut + ", " + results.getString("kuvaus") + "\n";
+                    counter++;
+                } else{
+                    System.out.println(results.getString(1));
+                    varatutPalvelut = results.getString("hintaPvm");
+                    varatutPalvelut = varatutPalvelut + ", " + results.getString("kuvaus") + "\n";
+                    counter++;
+                }
+                System.out.println(varatutPalvelut);
+            }
+          } catch (SQLException ex) {
+            heitaVirhe("Virhe haettaessa varauksia");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+          } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanVaraukset)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
+        return varatutPalvelut;
+    }
+
+         /**
+     * Haetaan asiakkaan varatut palvelut ja tulostetaan String muotoinen lista laskulle-
+     * 
+     * @param asiakas asiakkaan nimi 
+     * @return varatutPalvelut String
+     */
+     public String haeAsiakkaanLaitteet(String asiakas){
+          // String varatutPalvelut = ""; // Varatut palvelut
+          results = null;
+          
+          try {
+            yhdista();
+            // SQL, haetaan asiakkaan id, id:n varaamat tilat
+            ps = conn.prepareStatement("SELECT hintapvm, kuvaus FROM Laitteet WHERE laiteId IN " +
+                                            "(SELECT laiteId FROM Varauslaitteet WHERE varausId IN " +
                                                 "(SELECT varausId FROM Varaus WHERE asiakasId = " +
                                                     "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?))));");
             ps.setString(1, asiakas);
