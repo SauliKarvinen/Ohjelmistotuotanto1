@@ -173,10 +173,10 @@ public class LaskutusController implements Initializable {
         
         // set propertyTab to TableView
        colLaskunNro.setCellValueFactory(new PropertyValueFactory<>("laskuNro"));
-       colVarausNro.setCellValueFactory(new PropertyValueFactory<>("laskuntyyppi"));
+       colVarausNro.setCellValueFactory(new PropertyValueFactory<>("varausId"));
        colAsiakas.setCellValueFactory(new PropertyValueFactory<>("yrityksenNimi"));
        colToimitila.setCellValueFactory(new PropertyValueFactory<>("tilanNimi"));
-       colTyyppi.setCellValueFactory(new PropertyValueFactory<>("varausId"));
+       colTyyppi.setCellValueFactory(new PropertyValueFactory<>("laskuntyyppi"));
        
        tblLaskut.setItems(listLaskut);
     }
@@ -200,7 +200,7 @@ public class LaskutusController implements Initializable {
         stage.setScene(new Scene(root));
     }
 
-       /** LISTA ASIAKKAISTA
+    /** LISTA ASIAKKAISTA
      * 
      * Hakee tietokannasta toimipisteet ja lisää ne cbValitseToimipiste -listaan
      */
@@ -214,10 +214,6 @@ public class LaskutusController implements Initializable {
         }
     }
    
-    /**
-     * TABLEVIEW A S I A K K A A N   L A S K U T
-     * 
-     */
     
     /**
      * Heittää virheilmoituksen näytölle

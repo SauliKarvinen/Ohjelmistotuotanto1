@@ -1814,7 +1814,7 @@ public class DBAccess {
         return varaukset;
     }
 
-    /** // K E S K E N //  Palauttaa vain viimeisen tilan, eli String ylikirjoittaa edellisen arvon!!!!!!!!
+    /** 
      * Hakee ValitunAsiakkaan nimella, vuokratut tilat
      * @param asiakas Sting
      * @return tilanNimi String
@@ -1841,11 +1841,11 @@ public class DBAccess {
                     tilanNimi = tilanNimi + ", " + results.getString("tilanNimi");
                     counter++;
                 } else{
-                    System.out.println(results.getString(1));
+                    // System.out.println(results.getString(1));
                     tilanNimi = results.getString("tilanNimi");
                     counter++;
                 }
-                System.out.println(tilanNimi);
+                // System.out.println(tilanNimi);
             }
           } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa varauksia");
@@ -1900,7 +1900,7 @@ public class DBAccess {
                     varatutPalvelut = varatutPalvelut + ", " + results.getString("kuvaus") + "\n";
                     counter++;
                 }
-                System.out.println(varatutPalvelut);
+                // System.out.println(varatutPalvelut);
             }
           } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa varauksia");
@@ -1955,7 +1955,7 @@ public class DBAccess {
                     varatutPalvelut = varatutPalvelut + ", " + results.getString("kuvaus") + "\n";
                     counter++;
                 }
-                System.out.println(varatutPalvelut);
+                // System.out.println(varatutPalvelut);
             }
           } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa varauksia");
@@ -2006,14 +2006,10 @@ public class DBAccess {
                 results = ps.executeQuery();
                 while(results.next()){
                     hintax = results.getInt("hintaPvm");
-                    
                 }
-                        
             }
             
             laskutettava = paivat * hintax;
-           
-            
             
           } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa päivämääriä");
@@ -2032,5 +2028,73 @@ public class DBAccess {
         return laskutettava;
     }
      
+// Laskutettavat palvelut::
+         /**
+     * Haetaan asiakkaan laskutettavat päivät
+     * 
+     * @param asiakas asiakkaan nimi 
+     * @return varatutPalvelut String
+     */
+     public int haeLaskutettavaPalvelut(String asiakas){
+         int AsID = 0;
+          // int laskutettavatPvt = "";
+          results = null;
+          int paivat = 0;
+          int hintax = 0;
+          
+          try {
+            yhdista();
+            // SQL, haetaan asiakkaan ID.
+            ps = conn.prepareStatement("SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?);");
+            ps.setString(1, asiakas);
+            results = ps.executeQuery();
+            
+            while(results.next()){
+                AsID = results.getInt("asiakasId");
+            }
+            results = null;
+            
+            // SQL, haetaan asiakkaan laskutettavat päivät
+            ps = conn.prepareStatement("SELECT DATEDIFF(vuokraloppu, vuokraAlku) pvm FROM Varaus WHERE varausId IN " +
+                                                "(SELECT varausId FROM Varaus WHERE asiakasId = (?));");
+            ps.setInt(1, AsID);
+            results = ps.executeQuery();
+            
+            while(results.next()){
+                // paivat
+                paivat = results.getInt("pvm");
+                results = null;
+                ps = conn.prepareStatement("SELECT SUM(hintaPvm) as hintaPvm FROM Palvelut WHERE palveluId IN "+
+                                            "(SELECT palveluId FROM Varauspalvelut WHERE varausId IN " +
+                                                "(SELECT varausId FROM Varaus WHERE asiakasId IN " +
+                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?))));");
+                ps.setInt(1, AsID);
+                results = ps.executeQuery();
+                while(results.next()){
+                    //Hinnat yht
+                    hintax = results.getInt("hintaPvm");
+                }
+            }
+            // Loppuhinta 
+            laskutettava = paivat * hintax;
+            
+          } catch (SQLException ex) {
+            heitaVirhe("Virhe haettaessa palveluiden hintoja...");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+          } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanVaraukset)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
+        return laskutettava;
+    }
+
+
      
 }

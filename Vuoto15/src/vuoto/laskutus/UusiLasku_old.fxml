@@ -2,13 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -20,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="813.0" prefWidth="770.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.laskutus.UusiLaskuController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1094.0" prefWidth="770.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.laskutus.UusiLaskuController">
    <top>
       <VBox prefHeight="274.0" prefWidth="754.0" BorderPane.alignment="CENTER">
          <children>
@@ -114,9 +115,9 @@
       <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
    </padding>
    <center>
-      <Pane maxHeight="538.0" prefHeight="538.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+      <Pane maxHeight="450.0" prefHeight="462.0" prefWidth="754.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox layoutX="175.0" layoutY="459.0" maxHeight="50.0" maxWidth="675.0" minHeight="50.0" minWidth="200.0" prefHeight="50.0" prefWidth="412.0">
+            <HBox layoutX="175.0" layoutY="396.0" maxHeight="50.0" maxWidth="675.0" minHeight="50.0" minWidth="200.0" prefHeight="50.0" prefWidth="412.0">
                <children>
                   <Button fx:id="btnTakaisin" mnemonicParsing="false" onAction="#btnTakaisinLaskutukseen" prefHeight="32.0" prefWidth="140.0" style="-fx-background-radius: 5px;" text="Takaisin" />
                   <Button fx:id="btnVahvistaLasku" mnemonicParsing="false" onAction="#VahvistaLaskuPainettu" style="-fx-background-radius: 5px;" text="Vahvista lasku" textAlignment="CENTER">
@@ -129,7 +130,7 @@
                   <Insets />
                </opaqueInsets>
             </HBox>
-            <GridPane layoutX="8.0" prefHeight="398.0" prefWidth="746.0">
+            <GridPane layoutX="8.0" prefHeight="396.0" prefWidth="746.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="368.4285888671875" minWidth="10.0" prefWidth="273.5714111328125" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="472.4285888671875" minWidth="10.0" prefWidth="472.4285888671875" />
@@ -181,10 +182,24 @@
                   <TextField fx:id="txtLasku" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
-            <CheckBox fx:id="cbEmail" layoutX="442.0" layoutY="413.0" mnemonicParsing="false" onAction="#cbEmailValittu" selected="true" text="Sähköpostilla" />
-            <CheckBox fx:id="cbPaperi" layoutX="569.0" layoutY="413.0" mnemonicParsing="false" onAction="#cbPaperiValittu" text="Paperilaskulla" />
-            <Label layoutX="326.0" layoutY="417.0" text="Laskut lähetetään - " />
          </children>
       </Pane>
    </center>
+   <bottom>
+      <Pane prefHeight="356.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+         <children>
+            <TableView fx:id="tblVaraukset" layoutX="5.0" prefHeight="356.0" prefWidth="748.0">
+              <columns>
+                <TableColumn fx:id="colVarausId" prefWidth="75.0" text="Varaus ID" />
+                <TableColumn fx:id="colVarausAlku" prefWidth="75.0" text="Varaus alku" />
+                  <TableColumn fx:id="colVarausLoppu" prefWidth="84.71429443359375" text="Varaus loppu" />
+                  <TableColumn fx:id="colVuokrattava" prefWidth="102.28570556640625" text="Varauksen kohde" />
+                  <TableColumn fx:id="colAsiakas" prefWidth="110.7142333984375" text="Asiakkaan ID" />
+                  <TableColumn fx:id="colPalvelut" prefWidth="166.28564453125" text="Palvelut" />
+                  <TableColumn fx:id="colLaitteet" prefWidth="131.0" text="Laitteet" />
+              </columns>
+            </TableView>
+         </children>
+      </Pane>
+   </bottom>
 </BorderPane>

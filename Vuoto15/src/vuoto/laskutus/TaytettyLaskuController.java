@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +24,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import vuoto.luokkafilet.Asiakas;
+import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.Lasku;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -29,7 +35,16 @@ import javafx.stage.Stage;
  * @author marko
  */
 public class TaytettyLaskuController implements Initializable {
-
+    /** fxml-tiedoston sijainti*/
+    public static final String fxmlString = "/vuoto/laskutus/TaytettyLaskuPohja.fxml";
+    // Tietokanta yht.
+    private final DBAccess tietokanta = new DBAccess();
+    private int asiakkaanID = 0;
+    private Toimitila toimitila;
+    private String valittuAsiakas;
+    
+    Lasku lasku = new Lasku();
+    
     @FXML
     private TextField txtPaivamaara;
     @FXML
@@ -54,8 +69,21 @@ public class TaytettyLaskuController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        ObservableList<Asiakas> asiakasL = FXCollections.observableArrayList();
+        asiakasL = tietokanta.haeAsiakas(valittuAsiakas);
+        int asId = 0;
         
-        // TODO
+        for(Asiakas a: asiakasL) {
+            txtYritysJaHenkilo.setText(
+                    a.getYrityksenNimi() + "\n" + 
+                    a.getEtunimi() + " " + a.getSukunimi() + "\n" +
+                    a.getLahiosoite() + " " + a.getPostinumero());
+                    asiakkaanID = a.getAsiakasId();
+                    asId =  a.getAsiakasId();
+            }
+        txtYritysJaHenkilo.setFocusTraversable(false);
+       
+        
     
         
     

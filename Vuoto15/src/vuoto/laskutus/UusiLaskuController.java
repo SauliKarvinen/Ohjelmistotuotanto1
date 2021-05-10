@@ -25,6 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -54,6 +55,11 @@ public class UusiLaskuController implements Initializable {
     
     private int asiakkaanID = 0;
     private Toimitila toimitila;
+    private int laskutettavaTotal = 0;     // Laskua YHTEENSÄ
+    private String tilat = "";
+    private String palvelut = "";
+    private String laitteet = "";
+
     
     //Listat tilatuista xxx, id:t, käytetään nimien selvitykseen.
     private List<Integer> ttilat = new LinkedList<Integer>();
@@ -73,7 +79,7 @@ public class UusiLaskuController implements Initializable {
     private Toimipiste toimipiste;
     @FXML
     private ComboBox<String> cbAsiakas;
-    @FXML
+    
     private String valittuAsiakas;
     @FXML
     private Button btnVahvistaLasku;
@@ -87,6 +93,14 @@ public class UusiLaskuController implements Initializable {
     private TextArea txfLaitteet;
     @FXML
     private TextField txtLasku;
+    @FXML
+    private CheckBox cbEmail;
+    @FXML
+    private CheckBox cbPaperi;
+    
+    private String laskunTyyppi = "email";
+    
+    Lasku lasku = new Lasku();
     
 
     /**
@@ -103,10 +117,6 @@ public class UusiLaskuController implements Initializable {
         txtToimipiste.setFocusTraversable(false);
         txtToimipiste.setText(valittuToimipiste);
         
-        // Lista KAIKISTA asiakkaista. 
-        
-        // ToDo - lista TP:n asiakkaista!!!!!!
-        
         paivitaAsiakasValikko();
         // Tämä asettaa aina cbValitseToimipiste -valikosta / comboboxista valitun asian muutujaan valittuToimipiste (String)
         cbAsiakas.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
@@ -115,15 +125,6 @@ public class UusiLaskuController implements Initializable {
         });
         
         
-        
-        // TABLEVIEW VARAUKSET aktivointi
-        try {
-            // Aktivoi TblView
-            populateTableViewVaraukset();
-        } catch (SQLException ex) {
-            heitaVirheNaytolle("TableView:n aktivoinnissa virhe (Toimipisteet).");
-            Logger.getLogger(UusiLaskuController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }    
     
     private void btnPoistaLaskuPainettu(ActionEvent event) {
@@ -149,6 +150,28 @@ public class UusiLaskuController implements Initializable {
         TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan("TaytettyLaskuPohja.fxml", "Laskutuksen hallinta", event);
     }
     
+    @FXML
+    private void cbEmailValittu(ActionEvent event) {
+        if (cbEmail.isSelected()){
+            cbPaperi.setSelected(false);
+            laskunTyyppi="email";
+            lasku.setLaskunTyyppi(laskunTyyppi);
+            
+            
+        }
+        
+    }
+
+    @FXML
+    private void cbPaperiValittu(ActionEvent event) {
+        if (cbPaperi.isSelected()){
+            cbEmail.setSelected(false);
+            laskunTyyppi = "paperi";
+            lasku.setLaskunTyyppi(laskunTyyppi);
+        }
+        
+    }
+    
     public void asetaToimipiste(Toimipiste toimipiste) {
         
         if (toimipiste != null) {
@@ -157,56 +180,7 @@ public class UusiLaskuController implements Initializable {
         }
     }
  
-    /*** TABLEVIEW **/   
-    private ObservableList<Varaus> listVaraukset;
-    
-    @FXML
-    private TableView<Varaus> tblVaraukset;
-    @FXML
-    private TableColumn<Varaus, String> colVarausId;
-    @FXML
-    private TableColumn<Varaus, String> colAsiakas;
-    @FXML
-    private TableColumn<Varaus, String> colVuokrattava;
-    @FXML
-    private TableColumn<Varaus, String> colVarausAlku;
-    @FXML
-    private TableColumn<Varaus, String> colVarausLoppu;
-    @FXML
-    private TableColumn<Varaus, String> colPalvelut;
-    @FXML
-    private TableColumn<Varaus, String> colLaitteet;
-    
-    
-    
-   /**
-     * Method to populate TableView: Varaukset
-     * Käytetään Varauksen (DBAccess) metodia, 
-     *  haeKaikkiVaraukset() 
-     *  Luetaan -> observableArrayList(listVaraus)
-     *  Alustetaan -> setCellValueFactory määritykset sarakkeille.
-     * 
-     * */
-    private void populateTableViewVaraukset() throws SQLException {
-        // alustetaan lista
-        listVaraukset = FXCollections.observableArrayList();
-       
-        // Haetaan asiakkaan Varaukset (Ei vielä, nyt KAIKKI varaukset)
-        listVaraukset = tietokanta.haeKaikkiVaraukset();
-        
-        
-        // set propertyTab to TableView
-       colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
-       colVarausAlku.setCellValueFactory(new PropertyValueFactory<>("vuokraAlku"));
-       colVarausLoppu.setCellValueFactory(new PropertyValueFactory<>("vuokraLoppu"));
-       colVuokrattava.setCellValueFactory(new PropertyValueFactory<>("tilaId"));
-       colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakasId"));
-       colPalvelut.setCellValueFactory(new PropertyValueFactory<>("palveluvarausId"));
-       colLaitteet.setCellValueFactory(new PropertyValueFactory<>("laitevarausId"));
-
-       tblVaraukset.setItems(listVaraukset);
-    }
-        
+           
     private void paivitaAsiakasKentat(){
         ObservableList<Asiakas> asiakasL = FXCollections.observableArrayList();
         int asId = 0;
@@ -223,7 +197,7 @@ public class UusiLaskuController implements Initializable {
      
     // hae asiakkaan vuokraamat kiinteistöt
     // hakee id:llä varukset, ja palauttaa nimet:
-        String tilat = tietokanta.haeAsiakkaanToimitilaVaraukset(valittuAsiakas);
+        tilat = tietokanta.haeAsiakkaanToimitilaVaraukset(valittuAsiakas);
         txfVuokKiinteisto.setText(String.valueOf(tilat));
         
     // Haetaan asiakkaan palvelut
@@ -233,14 +207,24 @@ public class UusiLaskuController implements Initializable {
     // Haetaan asiakkaan Laitteet
         String laitteet = tietokanta.haeAsiakkaanLaitteet(valittuAsiakas);
         txfLaitteet.setText(laitteet);
+        
     
+    ///////////// L A S K E T A A N   L O P P U S U M M A  ///////////////////
     // Lasketaan hinta
         int hintaTmp = 0;   // Välihinta
         int hintaFinal = 0; // Lopullinen hinta
-        int laskutettava = 0;     // Varauksen päivien lkm
-
+        int laskutettava = 0;     // LaskuaKiinteistöistä
+        int laskutettavaPalvelut = 0;     // Laskua Palveluista
+        int laskutettavaLaitteet = 0;     // Laskua Laitteista
+        
         laskutettava=tietokanta.haeLaskutettava(valittuAsiakas);
-        txtLasku.setText(String.valueOf(laskutettava));
+        laskutettavaPalvelut=tietokanta.haeLaskutettavaPalvelut(valittuAsiakas);
+        //laskutettavaLaitteet=tietokanta.haeLaskutettavaLaitteet(valittuAsiakas);
+        
+        // Lopullinen hinta:
+        laskutettavaTotal=laskutettava+laskutettavaPalvelut+laskutettavaLaitteet;
+        txtLasku.setText(String.valueOf(laskutettavaTotal));
+        lasku.setHinta(laskutettavaTotal);
     
     }
     
@@ -315,5 +299,7 @@ public class UusiLaskuController implements Initializable {
         return controller;
    
     } 
+
+    
          
 }
