@@ -194,7 +194,7 @@
       </Pane>
    </center>
    <stylesheets>
-      <URL value="@../../../../../OneDrive/Työpöytä/Kouluhommat/Ohjelmistotuotanto%201/backup/08052021/Vuoto15/src/vuoto/stylesheets/sauli_button.css" />
-      <URL value="@../../../../../OneDrive/Työpöytä/Kouluhommat/Ohjelmistotuotanto%201/backup/08052021/Vuoto15/src/vuoto/stylesheets/sauli_combobox.css" />
+      <URL value="@../stylesheets/sauli_button.css" />
+      <URL value="@../stylesheets/sauli_combobox.css" />
    </stylesheets>
 </BorderPane>

@@ -121,6 +121,7 @@ public class DBAccess {
      */
     private void kaytaTietokantaa() {
         try {
+            setAutocommit();
             stmt = conn.createStatement();
             stmt.executeQuery("USE Karelia_Ohjelmistotuotanto_R19");
             System.out.println("\t>>>Käytetään tietokantaa Karelia_Ohjelmistotuotanto_R19");
@@ -135,6 +136,26 @@ public class DBAccess {
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    /**
+     * Asettaa autocommitin arvoon 1
+     */
+    private void setAutocommit() {
+        
+        try {
+            stmt = conn.createStatement();
+            stmt.execute("SET autocommit = 1;");
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe asettaessa autocommitia");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
     }
 
     /** T O I M I P I S T E E T
@@ -1064,7 +1085,7 @@ public class DBAccess {
         
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT p.kuvaus FROM Palvelut p, Varauspalvelut vp WHERE p.palveluId = vp.palveluId AND vp.varausId = ?");
+            ps = conn.prepareStatement("SELECT DISTINCT(p.kuvaus) FROM Palvelut p, Varauspalvelut vp WHERE p.palveluId = vp.palveluId AND vp.varausId = ?");
                     
             ps.setInt(1, varausId);
             
@@ -1095,7 +1116,7 @@ public class DBAccess {
         
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT l.kuvaus FROM Laitteet l, Varauslaitteet vl WHERE l.laiteId = vl.laiteId AND vl.varausId = ?");
+            ps = conn.prepareStatement("SELECT DISTINCT(l.kuvaus) FROM Laitteet l, Varauslaitteet vl WHERE l.laiteId = vl.laiteId AND vl.varausId = ?");
                  
             ps.setInt(1, varausId);
             

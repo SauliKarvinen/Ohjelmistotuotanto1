@@ -3,7 +3,7 @@
 * VUOTO 
 * OHJELMISTOTUOTANTO 1
 * R19
-* VERSIONUMERO: v1.5 (päivitetty 8.5.2021)
+* VERSIONUMERO: v1.5 (päivitetty 10.5.2021)
 * Korvaa version v1.4.1!
 * 
 ********************************************************************************/
