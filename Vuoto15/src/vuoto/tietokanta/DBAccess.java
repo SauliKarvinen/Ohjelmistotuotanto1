@@ -48,7 +48,10 @@ public class DBAccess {
     private ResultSet res = null;
     private final String URL = "jdbc:mariadb://maria.westeurope.cloudapp.azure.com";
     //private String localUrl = "jdbc:mariadb://localhost:3306"; // Paikallisella koneella
-
+    private String tilanNimi = ""; // Varatut tilat
+    private String varatutPalvelut = ""; // Varatut palvelut
+    
+    
     /**
      * Parametriton konstruktori
      */
@@ -1815,21 +1818,31 @@ public class DBAccess {
      * @return tilanNimi String
      */
     public String haeAsiakkaanToimitilaVaraukset(String asiakas){
-          String tilanNimi = "";
+          // String tilanNimi = ""; // Varatut tilat
           results = null;
           
           try {
             yhdista();
+            // SQL, haetaan asiakkaan id, id:n varaamat tilat
             ps = conn.prepareStatement("SELECT tilanNimi FROM Tilat WHERE tilaId IN \n" +
                                             "(SELECT DISTINCT tilaId FROM Varaus WHERE asiakasId =\n" +
                                                     "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?)));");
             ps.setString(1, asiakas);
             
             results = ps.executeQuery();
+            int counter = 0;
             
+            // muokataan tulostusta jos useampi vuokra kohde.
             while(results.next()){
-                System.out.println(results.getString(1));
-                tilanNimi = results.getString("tilanNimi");
+                if (counter > 0){
+                    System.out.println(results.getString(1));
+                    tilanNimi = tilanNimi + ", " + results.getString("tilanNimi");
+                    counter++;
+                } else{
+                    System.out.println(results.getString(1));
+                    tilanNimi = results.getString("tilanNimi");
+                    counter++;
+                }
                 System.out.println(tilanNimi);
             }
           } catch (SQLException ex) {
@@ -1848,6 +1861,50 @@ public class DBAccess {
         
         return tilanNimi;
     }
-               
+
+     public String haeAsiakkaanPalvelut(String asiakas){
+          // String varatutPalvelut = ""; // Varatut palvelut
+          results = null;
+          
+          try {
+            yhdista();
+            // SQL, haetaan asiakkaan id, id:n varaamat tilat
+            ps = conn.prepareStatement("SELECT tilanNimi FROM Tilat WHERE tilaId IN \n" +
+                                            "(SELECT DISTINCT tilaId FROM Varaus WHERE asiakasId =\n" +
+                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?)));");
+            ps.setString(1, asiakas);
+            
+            results = ps.executeQuery();
+            int counter = 0;
+            
+            // muokataan tulostusta jos useampi vuokrattuPalvelu kohde.
+            while(results.next()){
+                if (counter > 0){
+                    System.out.println(results.getString(1));
+                    varatutPalvelut = varatutPalvelut + ", " + results.getString("tilanNimi");
+                    counter++;
+                } else{
+                    System.out.println(results.getString(1));
+                    varatutPalvelut = results.getString("tilanNimi");
+                    counter++;
+                }
+                System.out.println(tilanNimi);
+            }
+          } catch (SQLException ex) {
+            heitaVirhe("Virhe haettaessa varauksia");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+          } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanVaraukset)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
+        return tilanNimi;
+    }
 
 }
