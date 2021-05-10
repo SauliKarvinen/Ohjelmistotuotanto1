@@ -1869,26 +1869,30 @@ public class DBAccess {
           try {
             yhdista();
             // SQL, haetaan asiakkaan id, id:n varaamat tilat
-            ps = conn.prepareStatement("SELECT tilanNimi FROM Tilat WHERE tilaId IN \n" +
-                                            "(SELECT DISTINCT tilaId FROM Varaus WHERE asiakasId =\n" +
-                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?)));");
+            ps = conn.prepareStatement("SELECT hintapvm, kuvaus FROM Palvelut WHERE palveluId IN " +
+                                            "(SELECT palveluId FROM Varauspalvelut WHERE varausId IN " +
+                                                "(SELECT varausId FROM Varaus WHERE asiakasId = " +
+                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?))));");
             ps.setString(1, asiakas);
             
             results = ps.executeQuery();
             int counter = 0;
             
             // muokataan tulostusta jos useampi vuokrattuPalvelu kohde.
+            // hinta, kuvaus
             while(results.next()){
                 if (counter > 0){
                     System.out.println(results.getString(1));
-                    varatutPalvelut = varatutPalvelut + ", " + results.getString("tilanNimi");
+                    varatutPalvelut = varatutPalvelut + results.getString("hintaPvm");
+                    varatutPalvelut = varatutPalvelut + ", " + results.getString("kuvaus") + "\n";
                     counter++;
                 } else{
                     System.out.println(results.getString(1));
-                    varatutPalvelut = results.getString("tilanNimi");
+                    varatutPalvelut = results.getString("hintaPvm");
+                    varatutPalvelut = varatutPalvelut + ", " + results.getString("kuvaus") + "\n";
                     counter++;
                 }
-                System.out.println(tilanNimi);
+                System.out.println(varatutPalvelut);
             }
           } catch (SQLException ex) {
             heitaVirhe("Virhe haettaessa varauksia");
@@ -1904,7 +1908,7 @@ public class DBAccess {
                 }
             }
         
-        return tilanNimi;
+        return varatutPalvelut;
     }
 
 }
