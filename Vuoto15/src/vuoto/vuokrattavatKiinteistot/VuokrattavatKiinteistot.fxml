@@ -20,11 +20,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="954.0" prefWidth="827.0" style="-fx-background-color: lightblue;;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.vuokrattavatKiinteistot.VuokrattavatKiinteistotController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="954.0" prefWidth="991.0" style="-fx-background-color: lightblue;;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.vuokrattavatKiinteistot.VuokrattavatKiinteistotController">
 
    <top>
-      <VBox prefHeight="219.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="219.0" prefWidth="975.0" BorderPane.alignment="CENTER">
          <children>
             <MenuBar>
               <menus>
@@ -47,24 +46,24 @@
             </MenuBar>
             <VBox prefHeight="58.0" prefWidth="754.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="53.0" prefWidth="836.0" text="VuoTo - ToTiVaRa" textAlignment="CENTER">
+                  <Label alignment="CENTER" prefHeight="53.0" prefWidth="975.0" text="VuoTo - ToTiVaRa" textAlignment="CENTER">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
                </children>
             </VBox>
-            <GridPane alignment="CENTER" prefHeight="0.0" prefWidth="775.0">
+            <GridPane alignment="CENTER" maxWidth="979.0" prefHeight="0.0" prefWidth="775.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="367.4285888671875" minWidth="10.0" prefWidth="285.71429443359375" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.28570556640625" minWidth="10.0" prefWidth="457.28570556640625" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="10.0" prefWidth="457.28570556640625" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label fx:id="lblToimipisteValinta" alignment="CENTER" contentDisplay="RIGHT" maxWidth="150.0" prefHeight="30.0" prefWidth="268.0" style="-fx-font-size: 16;" text="Toimipiste:   " textAlignment="CENTER" GridPane.halignment="RIGHT" />
-                  <TextField fx:id="txtToimipiste" editable="false" text="Toimipiste" GridPane.columnIndex="1">
+                  <TextField fx:id="txtToimipiste" editable="false" maxWidth="700.0" prefHeight="31.0" prefWidth="549.0" text="Toimipiste" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="15.0" top="15.0" />
                      </GridPane.margin>
@@ -74,7 +73,7 @@
                   </TextField>
                </children>
             </GridPane>
-            <Label alignment="CENTER" prefHeight="55.0" prefWidth="810.0" style="-fx-font-size: 22; -fx-background-color: grey; -fx-text-fill: white; -fx-border-style: dotted; -fx-background-radius: 10px;" text="Vuokrattavat kiinteistöt" VBox.vgrow="SOMETIMES">
+            <Label alignment="CENTER" prefHeight="55.0" prefWidth="972.0" style="-fx-font-size: 22; -fx-background-color: grey; -fx-text-fill: white; -fx-border-style: dotted; -fx-background-radius: 10px;" text="Vuokrattavat kiinteistöt" VBox.vgrow="SOMETIMES">
                <opaqueInsets>
                   <Insets top="10.0" />
                </opaqueInsets>
@@ -94,30 +93,32 @@
       <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
    </padding>
    <center>
-      <Pane maxHeight="600.0" minHeight="500.0" prefHeight="569.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+      <Pane maxHeight="728.0" prefHeight="728.0" prefWidth="975.0" BorderPane.alignment="CENTER">
          <children>
              
 
-            <TableView fx:id="tbvToimitilat" layoutX="5.0" layoutY="17.0" prefHeight="473.0" prefWidth="800.0" style="-fx-background-color: white;">
+            <TableView fx:id="tbvToimitilat" layoutX="4.0" layoutY="44.0" prefHeight="498.0" prefWidth="968.0" style="-fx-background-color: white;">
 
                <columns>
-                  <TableColumn fx:id="tbcTilaId" prefWidth="78.0" text="Tila ID" />
-                  <TableColumn fx:id="tbcLahiosoite" prefWidth="127.0" text="Lähiosoite" />
-                  <TableColumn fx:id="tbcPostinumero" prefWidth="102.0" text="Postinumero" />
-                  <TableColumn fx:id="tbcHuonekoko" prefWidth="91.0" text="Huonekoko" />
-                  <TableColumn fx:id="tbcHintaPvm" prefWidth="106.0" text="Hinta/vrk" />
-                  <TableColumn fx:id="tbcKuvaus" prefWidth="145.0" text="Kuvaus" />
-                  <TableColumn fx:id="tbcToimitilaNimi" prefWidth="150.0" text="Toimitilan nimi" />
+                  <TableColumn fx:id="tbcTilaId" prefWidth="66.0" text="Tila ID" />
+                  <TableColumn fx:id="tbcLahiosoite" prefWidth="121.0" text="Lähiosoite" />
+                  <TableColumn fx:id="tbcPostinumero" prefWidth="120.0" text="Postinumero" />
+                  <TableColumn fx:id="tbcPostitoimipaikka" prefWidth="141.0" text="Postitoimipaikka" />
+                  <TableColumn fx:id="tbcHuonekoko" prefWidth="96.0" text="Huonekoko" />
+                  <TableColumn fx:id="tbcHintaPvm" prefWidth="104.0" text="Hinta/vrk" />
+                  <TableColumn fx:id="tbcKuvaus" prefWidth="152.0" text="Kuvaus" />
+                  <TableColumn fx:id="tbcToimitilaNimi" prefWidth="149.0" text="Toimitilan nimi" />
                </columns>
             </TableView>
-            <HBox layoutX="572.0" layoutY="499.0" prefHeight="38.0" prefWidth="225.0" spacing="10.0">
+            <HBox layoutX="686.0" layoutY="547.0" prefHeight="38.0" prefWidth="286.0" spacing="10.0">
                <children>
                   <Button fx:id="btnLisaaKiinteisto" mnemonicParsing="false" onAction="#btnLisaaKiinteistoPainettu" style="-fx-background-radius: 5px;" text="Lisää" />
                   <Button fx:id="btnPoistaKiinteisto" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnPoistaKiinteistoPainettu" style="-fx-background-radius: 5px;" text="Poista" />
                   <Button fx:id="btnMuokkaaKiinteisto" layoutX="75.0" layoutY="10.0" mnemonicParsing="false" onAction="#btnMuokkaaKiinteistoPainettu" style="-fx-background-radius: 5px;" text="Muokkaa" />
                </children>
             </HBox>
-            <Button fx:id="btnEtusivulle" layoutX="14.0" layoutY="502.0" mnemonicParsing="false" onAction="#btnEtusivullePainettu" style="-fx-background-radius: 5px;" text="Etusivulle" />
+            <Button fx:id="btnEtusivulle" layoutX="4.0" layoutY="551.0" mnemonicParsing="false" onAction="#btnEtusivullePainettu" style="-fx-background-radius: 5px;" text="Etusivulle" />
+            <Label layoutX="4.0" layoutY="23.0" text="Valitse kiinteistö" />
          </children>
       </Pane>
    </center>

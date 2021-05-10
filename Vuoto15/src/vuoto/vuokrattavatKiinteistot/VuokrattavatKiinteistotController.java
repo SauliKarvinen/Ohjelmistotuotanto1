@@ -65,6 +65,8 @@ public class VuokrattavatKiinteistotController implements Initializable {
     @FXML
     private TableColumn<Toimitila, String> tbcPostinumero;
     @FXML
+    private TableColumn<Toimitila, String> tbcPostitoimipaikka;
+    @FXML
     private TableColumn<Toimitila, Integer> tbcHuonekoko;
     @FXML
     private TableColumn<Toimitila, Integer> tbcHintaPvm;
@@ -72,6 +74,8 @@ public class VuokrattavatKiinteistotController implements Initializable {
     private TableColumn<Toimitila, String> tbcKuvaus;
     @FXML
     private TableColumn<Toimitila, String> tbcToimitilaNimi;
+    private Toimitila valittuToimitila;
+    
 
     /**
      * Initializes the controller class.
@@ -82,6 +86,13 @@ public class VuokrattavatKiinteistotController implements Initializable {
         maaritaToimipiste();
         paivitaTableview();
      
+        // Kuuntelee toimitilan valintaa ja määrittää listasta valitun toimitilan valituksi toimitilaksi
+        tbvToimitilat.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                valittuToimitila = s3;
+            }
+        });
     
     } 
     
@@ -128,6 +139,8 @@ public class VuokrattavatKiinteistotController implements Initializable {
         tbcLahiosoite.setCellValueFactory(new PropertyValueFactory<>("lahiosoite"));
         tbcPostinumero.setMinWidth(100);
         tbcPostinumero.setCellValueFactory(new PropertyValueFactory<>("postinumero"));
+        tbcPostitoimipaikka.setMinWidth(100);
+        tbcPostitoimipaikka.setCellValueFactory(new PropertyValueFactory<>("postitoimipaikka"));
         tbcHuonekoko.setMinWidth(100);
         tbcHuonekoko.setCellValueFactory(new PropertyValueFactory<>("huonekoko"));
         tbcHintaPvm.setMinWidth(100);
@@ -182,8 +195,14 @@ public class VuokrattavatKiinteistotController implements Initializable {
     @FXML
     private void btnMuokkaaKiinteistoPainettu(ActionEvent event) {
         // Opens panel - PalvelutJaLaitteet.
-        MuokkaaKiinteistoController controller = (MuokkaaKiinteistoController)siirryNakymaan(MuokkaaKiinteistoController.fxmlString, "Muokkaa Kiinteistöä", event);
-        //controller.asetaToimipiste(toimipiste);
+        
+        if(valittuToimitila == null) {
+            heitaVirheNaytolle("Valitse muokattava kiinteistö");
+        } else {
+            MuokkaaKiinteistoController controller = (MuokkaaKiinteistoController) siirryNakymaan(MuokkaaKiinteistoController.fxmlString, "Muokkaa Kiinteistöä", event);
+            controller.asetaToimitila(valittuToimitila);
+            controller.asetaController(this);
+        }
     }
     
     

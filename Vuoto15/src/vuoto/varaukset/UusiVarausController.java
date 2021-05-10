@@ -9,11 +9,13 @@ import vuoto.palvelutJaLaitteet.PalvelutJaLaitteetController;
 import vuoto.aloitus.VuotoMainController;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +31,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -36,12 +39,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import vuoto.asiakkuudet.LisaaUusiAsiakasController;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Laite;
 import vuoto.luokkafilet.Palvelu;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.VaratutPaivat;
 import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 import vuoto.vuokrattavatKiinteistot.UusiKiinteistoController;
@@ -104,15 +109,17 @@ public class UusiVarausController implements Initializable {
         // TODO
         maaritaToimipiste(); // Tämä metodi tossa heti alapuolella
         
+        // Kun toimitilaa muutetaan, suoritetaan listenerin sisällä olevat asiat
         txtToimitila.textProperty().addListener((s1, s2, s3) -> {
             
             if (s3 != s2) {
-                valitutLaitteet.clear();
-                valitutPalvelut.clear();
-                paivitaPalvelut();
-                paivitaLaitteet();
-                System.out.println("palvelut: " + palvelut);
-                System.out.println("laitteet: " + laitteet);
+                palvelutIkkuna.getChildren().clear(); // Poistaa palveluiden checkboxit ikkunasta
+                laitteetIkkuna.getChildren().clear(); // Poistaa laitteiden checkboxit ikkunasta
+                valitutLaitteet.clear(); // Tyhjentää valittujen laitteiden listan
+                valitutPalvelut.clear(); // Tyhjentää valittujen palveluiden listan
+                paivitaPalvelut(); // Päivittää uudet palvelut
+                paivitaLaitteet(); // Päivittää uudet laitteet
+                haeVaratutPaivat(); // Lisää varatut päivät kalenteriin
             }
         });
     }    
@@ -356,8 +363,6 @@ public class UusiVarausController implements Initializable {
         varaus.setVuokraAlku(dpAloituspvm.getValue());
         varaus.setVuokraLoppu(dpLopetuspvm.getValue());
 
-        
-        
         int lisattyVarausId = 0;
         
         // Varmistaa että kaikki kentät on täytetty
@@ -394,8 +399,7 @@ public class UusiVarausController implements Initializable {
          
           for(String p: palveluCheckboxit) {
               for(Palvelu lisattava: palvelut) {
-                  if(lisattava.getKuvaus().equals(p)) {
-              
+                  if(lisattava.getKuvaus().equals(p)) {            
                       tietokanta.yhdista();
                       tietokanta.lisaaVarauksenPalvelut(lisattava, varausId);
                       tietokanta.katkaiseYhteys();
@@ -414,7 +418,6 @@ public class UusiVarausController implements Initializable {
               
               for(Laite lisattava: laitteet) {
                   if(lisattava.getKuvaus().equals(l)) {
-                      System.out.println("Lisätään " + lisattava);
                       tietokanta.yhdista();
                       tietokanta.lisaaVarauksenLaitteet(lisattava, varausId);
                       tietokanta.katkaiseYhteys();
@@ -423,5 +426,55 @@ public class UusiVarausController implements Initializable {
           } 
     }
     
+    /**
+     * Haetaan varatut päivämäärät toimitilasta ja heitetään lista varaaPaivatKalenterista() metodille
+     */
+    public void haeVaratutPaivat() {
+        
+        LinkedList<VaratutPaivat> varatutpaivat = tietokanta.haeVaratutPaivatToimitilasta(valittuToimitila.getTilaId());
+        varaaPaivatKalenterista(varatutpaivat);
+
+    }
+    
+    /**
+     * Varaa päivät kalenterista ettei niitä voi valita
+     * @param list Lista varatuista päivistä
+     */
+    public void varaaPaivatKalenterista(LinkedList<VaratutPaivat> list) {
+        
+        // Datepickerin "solut"
+        final Callback<DatePicker, DateCell> dayCellFactory = 
+                // Palauttaa päivitetyt solut
+                new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate kalenterinPaiva, boolean empty) {
+                        super.updateItem(kalenterinPaiva, empty);
+                        
+                        // Listassa on päivämääräpareja. Kalenterista varataan päivät jotka ovat näillä väleillä.
+                        // Myös nykyistä päivämäärää edeltävät päivät varataan kalenterista ettei niitä voi varata
+                        for(VaratutPaivat d : list) {
+                            if(kalenterinPaiva.isAfter(d.getAloitusPvm().minusDays(1)) && kalenterinPaiva.isBefore(d.getLoppuPvm().plusDays(1)) || kalenterinPaiva.isBefore(LocalDate.now())) {
+                                setDisable(true);
+                                setStyle("-fx-background-color:#ff3333;"); // Vähän näkyvämpi väri kuin tuo perus 'disabled'
+                                
+                            }
+                        }
+                    }
+                };
+            }
+                    
+                };
+        
+        // Päivitetään näkymän datepickerit 
+        dpAloituspvm.setDayCellFactory(dayCellFactory);
+        dpLopetuspvm.setDayCellFactory(dayCellFactory);
+        
+    }
+    
 }
+
+
 

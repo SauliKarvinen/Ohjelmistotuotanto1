@@ -75,6 +75,9 @@ public class HaeAsiakastaController implements Initializable {
         });
     }    
     
+    /**
+     * Päivittää asiakkaat tableviewn
+     */
     public void paivitaAsiakasTableview() {
         
         ObservableList<Asiakas> asiakkaat = tietokanta.haeKaikkiAsiakkaat();
@@ -99,6 +102,10 @@ public class HaeAsiakastaController implements Initializable {
         tbvAsiakkaat.setItems(asiakkaat);
     }
 
+    /**
+     * Palauttaa näkymän takaisin edelliseen
+     * @param event 
+     */
     @FXML
     private void btnTakaisinPainettu(ActionEvent event) {
         
@@ -106,6 +113,10 @@ public class HaeAsiakastaController implements Initializable {
         stage.close();
     }
 
+    /**
+     * Valitsee listasta valitun asiakkaan ja lähettää sen UusiVaraus näkymään
+     * @param event 
+     */
     @FXML
     private void btnLisaaPainettu(ActionEvent event) {
         
@@ -116,6 +127,7 @@ public class HaeAsiakastaController implements Initializable {
         
     }
 
+    // Määrittää UusiVaraus näkymän kontrollerin
     public void setUusiVarausController(UusiVarausController controller) {
         
         if(controller != null) {

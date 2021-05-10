@@ -5,6 +5,8 @@
  */
 package vuoto.luokkafilet;
 
+import java.util.Objects;
+
 /**
  * Toimitila-luokka
  */
@@ -159,6 +161,73 @@ public class Toimitila {
     public String toString() {
         return this.getTilanNimi();
     }
+
+
+    /**
+     * Ylikirjoittaa Object-luokan hashCode() metodin
+     * @return hashCode
+     */
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + this.tilaId;
+        hash = 89 * hash + Objects.hashCode(this.lahiosoite);
+        hash = 89 * hash + Objects.hashCode(this.postinumero);
+        hash = 89 * hash + Objects.hashCode(this.postitoimipaikka);
+        hash = 89 * hash + this.huonekoko;
+        hash = 89 * hash + this.hintaPvm;
+        hash = 89 * hash + Objects.hashCode(this.kuvaus);
+        hash = 89 * hash + Objects.hashCode(this.tilanNimi);
+        hash = 89 * hash + this.toimipisteId;
+        return hash;
+    }
+
+    /**
+     * Ylikirjoittaa Object-luokanequals() metodin
+     * @return true / false
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Toimitila other = (Toimitila) obj;
+        if (this.tilaId != other.tilaId) {
+            return false;
+        }
+        if (this.huonekoko != other.huonekoko) {
+            return false;
+        }
+        if (this.hintaPvm != other.hintaPvm) {
+            return false;
+        }
+        if (this.toimipisteId != other.toimipisteId) {
+            return false;
+        }
+        if (!Objects.equals(this.lahiosoite, other.lahiosoite)) {
+            return false;
+        }
+        if (!Objects.equals(this.postinumero, other.postinumero)) {
+            return false;
+        }
+        if (!Objects.equals(this.postitoimipaikka, other.postitoimipaikka)) {
+            return false;
+        }
+        if (!Objects.equals(this.kuvaus, other.kuvaus)) {
+            return false;
+        }
+        if (!Objects.equals(this.tilanNimi, other.tilanNimi)) {
+            return false;
+        }
+        return true;
+    }
+    
     
     
     
