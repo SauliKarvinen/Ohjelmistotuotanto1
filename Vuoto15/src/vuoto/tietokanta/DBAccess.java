@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.ResultSetMetaData;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +29,7 @@ import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Palvelu;
 import vuoto.luokkafilet.LaskutTauluOlio;
 import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.VaratutPaivat;
 import vuoto.luokkafilet.Varaus;
 import vuoto.luokkafilet.VarausOlio;
 
@@ -402,14 +404,55 @@ public class DBAccess {
                 heitaVirhe("Virhe suljettaessa kyselyä (lisaaToimitila)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            
-            
+
         }
-        
-        
+
     }
     
+    /**
+     * Päivittää valitun Toimitilan
+     * @param t Toimitila päivitetyillä tiedoilla
+     */
+    public void paivitaToimitila(Toimitila t) throws SQLException {
+        
+        try {
+            
+            yhdista();
+            
+            ps = conn.prepareStatement("UPDATE Tilat "
+                    + "SET "
+                    + "lahiosoite = (?), "
+                    + "postinumero = (?), "
+                    + "postitoimipaikka = (?), "
+                    + "huonekoko = (?), "
+                    + "hintaPvm = (?), "
+                    + "huoneistonTila = (?), "
+                    + "kuvaus = (?), "
+                    + "tilanNimi = (?) "
+                    //+ "toimipisteId=(?) "
+                    + "WHERE tilaId=(?)");
+            
+            ps.setString(1, t.getLahiosoite());
+            ps.setString(2, t.getPostinumero());
+            ps.setString(3, t.getPostitoimipaikka());
+            ps.setInt(4, t.getHuonekoko());
+            ps.setInt(5, t.getHintaPvm());
+            ps.setInt(6, t.getHuoneistonTila());
+            ps.setString(7, t.getKuvaus());
+            ps.setString(8, t.getTilanNimi());
+            //ps.setInt(9, t.getToimipisteId());
+            ps.setInt(9, t.getTilaId());
+            
+            ps.execute();
+            ps.close();
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe päivittäessä toimitilaa");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            
+        }
+    }
     /**
      * Hakee kaikki toimitilat tietokannasta ja palauttaa ObservableList listan
      * @return ObservableList toimitiloista
@@ -1863,6 +1906,43 @@ public class DBAccess {
         
         return tilanNimi;
     }
+
+               
+    /**
+     * Hakee toimitilasta kaikki varatut päivät ja luo niistä päivämääräpareja (varausAlku ja varausLoppu) sisältävän listan
+     * @param toimitilaId Toimitilan ID mistä varauksia haetaan
+     * @return Lista varauksien päivämääristä
+     */
+    public LinkedList<VaratutPaivat> haeVaratutPaivatToimitilasta(int toimitilaId) {
+        
+        LinkedList<VaratutPaivat> varatutPaivat = new LinkedList<>();
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("SELECT vuokraAlku, vuokraLoppu FROM Varaus WHERE tilaId = (?);");
+            ps.setInt(1, toimitilaId);
+            
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                varatutPaivat.add(new VaratutPaivat(results.getDate("vuokraAlku").toLocalDate(), results.getDate("vuokraLoppu").toLocalDate()));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa varattuja päiviä toimitilasta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeVaratutPaivatToimitilasta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return varatutPaivat;
+    }
+
 
     /**
      * Haetaan asiakkaan varatut palvelut ja tulostetaan String muotoinen lista laskulle-

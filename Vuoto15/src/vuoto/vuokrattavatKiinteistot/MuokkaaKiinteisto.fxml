@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="613.0" prefWidth="639.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.vuokrattavatKiinteistot.MuokkaaKiinteistoController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="806.0" prefWidth="639.0" style="-fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vuoto.vuokrattavatKiinteistot.MuokkaaKiinteistoController">
    <top>
       <VBox prefHeight="219.0" prefWidth="754.0" BorderPane.alignment="CENTER">
          <children>
@@ -90,9 +90,11 @@
       <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
    </padding>
    <center>
-      <Pane maxHeight="400.0" prefHeight="436.0" prefWidth="754.0" BorderPane.alignment="CENTER">
+      <Pane maxHeight="597.0" prefHeight="597.0" prefWidth="623.0" BorderPane.alignment="CENTER">
          <children>
-            <GridPane layoutY="-2.0" maxHeight="302.0" prefHeight="302.0" prefWidth="612.0">
+            <Button fx:id="btnMuokkaaKiinteisto" layoutX="479.0" layoutY="506.0" mnemonicParsing="false" onAction="#btnMuokkaaKiinteistoPainettu" style="-fx-background-radius: 5px;" text="Muokkaa" textAlignment="CENTER" />
+            <Button fx:id="btnTakaisin" layoutX="50.0" layoutY="506.0" mnemonicParsing="false" onAction="#btnTakaisinKiinteistotSivulle" style="-fx-background-radius: 5px;" text="Takaisin" />
+            <GridPane layoutX="6.0" layoutY="14.0" maxHeight="387.0" prefHeight="387.0" prefWidth="612.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.4285888671875" minWidth="10.0" prefWidth="148.14288330078125" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="618.142822265625" minWidth="10.0" prefWidth="463.85711669921875" />
@@ -103,15 +105,18 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="40.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" prefHeight="18.0" prefWidth="150.0" text="Huoneiston koko:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                  <Label alignment="CENTER" maxWidth="150.0" minHeight="18.0" prefHeight="18.0" prefWidth="150.0" text="Kuvaus:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="TOP">
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" prefHeight="18.0" prefWidth="150.0" text="Huoneiston koko:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                  <Label alignment="CENTER" maxWidth="150.0" minHeight="18.0" prefHeight="18.0" prefWidth="150.0" text="Kuvaus:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets top="15.0" />
-                     </GridPane.margin></Label>
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+                     </GridPane.margin>
+                  </Label>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                      <padding>
                         <Insets bottom="5.0" top="5.0" />
                      </padding>
@@ -119,22 +124,24 @@
                         <Insets />
                      </GridPane.margin>
                      <children>
-                        <TextArea maxWidth="403.0" prefHeight="90.0" prefWidth="403.0" />
+                        <TextArea fx:id="txtKuvaus" maxWidth="403.0" prefHeight="90.0" prefWidth="403.0" />
                      </children>
                   </HBox>
-                  <Label alignment="CENTER" contentDisplay="CENTER" minWidth="150.0" text="Kiinteistön nimi:" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
-                  <Label alignment="CENTER" minWidth="150.0" text="Lähiosoite:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                  <Label alignment="CENTER" minWidth="150.0" text="Postinumero:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                  <Label alignment="CENTER" minWidth="150.0" text="Postitoimipaikka:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-                  <TextField maxWidth="400.0" GridPane.columnIndex="1" />
-                  <TextField maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" minWidth="150.0" text="Kiinteistön nimi:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Label alignment="CENTER" minWidth="150.0" text="Lähiosoite:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                  <Label alignment="CENTER" minWidth="150.0" text="Postinumero:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                  <Label alignment="CENTER" minWidth="150.0" text="Postitoimipaikka:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                  <TextField fx:id="txtTilanNimi" maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtLahiosoite" maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtPostinumero" maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtPostitoimipaikka" maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="txtHuoneistonKoko" maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="txtKiinteistoId" editable="false" maxWidth="400.0" prefHeight="31.0" prefWidth="400.0" GridPane.columnIndex="1" />
+                  <Label text="Kiinteistön ID" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label text="Hinta/vrk" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                  <TextField fx:id="txtHintaPvm" maxWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
             </GridPane>
-            <Button fx:id="btnMuokkaaKiinteisto" layoutX="443.0" layoutY="319.0" mnemonicParsing="false" onAction="#btnMuokkaaKiinteistoPainettu" style="-fx-background-radius: 5px;" text="Muokkaa" textAlignment="CENTER" />
-            <Button fx:id="btnTakaisin" layoutX="52.0" layoutY="319.0" mnemonicParsing="false" onAction="#btnTakaisinKiinteistotSivulle" style="-fx-background-radius: 5px;" text="Takaisin" />
          </children>
       </Pane>
    </center>

@@ -7,6 +7,7 @@ package vuoto.vuokrattavatKiinteistot;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +21,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import vuoto.aloitus.VuotoMainController;
+import vuoto.luokkafilet.Toimitila;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -42,6 +46,25 @@ public class MuokkaaKiinteistoController implements Initializable {
     private Button btnTakaisin;
     @FXML
     private Button btnMuokkaaKiinteisto;
+    private Toimitila toimitila;
+    private DBAccess tietokanta = new DBAccess();
+    private VuokrattavatKiinteistotController controller;
+    @FXML
+    private TextArea txtKuvaus;
+    @FXML
+    private TextField txtTilanNimi;
+    @FXML
+    private TextField txtLahiosoite;
+    @FXML
+    private TextField txtPostinumero;
+    @FXML
+    private TextField txtPostitoimipaikka;
+    @FXML
+    private TextField txtHuoneistonKoko;
+    @FXML
+    private TextField txtKiinteistoId;
+    @FXML
+    private TextField txtHintaPvm;
 
     /**
      * Initializes the controller class.
@@ -54,8 +77,8 @@ public class MuokkaaKiinteistoController implements Initializable {
     @FXML
     private void btnTakaisinKiinteistotSivulle(ActionEvent event) {
         // Opens panel - VuokrattavatKiinteistot.
-        VuokrattavatKiinteistotController controller = (VuokrattavatKiinteistotController)siirryNakymaan(VuokrattavatKiinteistotController.fxmlString, "Vuokrattavat Kiinteistot", event);
-        //controller.asetaToimipiste(toimipiste);
+        siirryNakymaan(VuokrattavatKiinteistotController.fxmlString, "Vuokrattavat Kiinteistot", event);
+        
     }
 
     /**
@@ -66,9 +89,41 @@ public class MuokkaaKiinteistoController implements Initializable {
      */
     @FXML
     private void btnMuokkaaKiinteistoPainettu(ActionEvent event) {
-        // Opens panel - VuokrattavatKiinteistot.
-        VuokrattavatKiinteistotController controller = (VuokrattavatKiinteistotController)siirryNakymaan(VuokrattavatKiinteistotController.fxmlString, "Vuokrattavat Kiinteistot", event);
-        //controller.asetaToimipiste(toimipiste);
+        
+        int tilaId = Integer.valueOf(txtKiinteistoId.getText());
+        String lahiosoite = txtLahiosoite.getText();
+        String postinumero = txtPostinumero.getText();
+        String postitoimipaikka = txtPostitoimipaikka.getText();
+        int huonekoko = Integer.valueOf(txtHuoneistonKoko.getText());
+        int hintaPvm = Integer.valueOf(txtHintaPvm.getText());
+        int huoneistonTila = 1; // Tämän määrittämiseen ei ole vielä ollut metodia tietokannassa
+        String kuvaus = txtKuvaus.getText();
+        String tilanNimi = txtTilanNimi.getText();
+        int toimipisteId = toimitila.getToimipisteId();
+
+        
+        Toimitila paivitettavaToimitila = new Toimitila(tilaId, lahiosoite, postinumero, postitoimipaikka, huonekoko, hintaPvm, huoneistonTila, kuvaus, tilanNimi, toimipisteId);
+
+        // Jos tietoja ei ole muutettu, ilmoittaa ohjelma siitä
+        if(paivitettavaToimitila.equals(toimitila)) {
+            heitaVirheNaytolle("Muuta tietoja päivittääksesi kiinteistö");
+        } else {
+            
+            try {
+                tietokanta.paivitaToimitila(paivitettavaToimitila);
+                
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Kiinteistön päivittäminen");
+                a.setHeaderText("Kiinteistö päivitetty!");
+                a.showAndWait();
+                // Opens panel - VuokrattavatKiinteistot.
+                siirryNakymaan(VuokrattavatKiinteistotController.fxmlString, "Vuokrattavat Kiinteistot", event);
+            } catch (SQLException ex) {
+                Logger.getLogger(MuokkaaKiinteistoController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        
     }
     
     @Override
@@ -117,4 +172,26 @@ public class MuokkaaKiinteistoController implements Initializable {
         return controller;
    
     } 
+    
+    public void asetaToimitila(Toimitila t) {
+        
+        if(t != null) {
+            toimitila = t;
+            txtKiinteistoId.setText(String.valueOf(t.getTilaId()));
+            txtTilanNimi.setText(t.getTilanNimi());
+            txtLahiosoite.setText(t.getLahiosoite());
+            txtPostinumero.setText(String.valueOf(t.getPostinumero()));
+            txtPostitoimipaikka.setText(t.getPostitoimipaikka());
+            txtHuoneistonKoko.setText(String.valueOf(t.getHuonekoko()));
+            txtHintaPvm.setText(String.valueOf(t.getHintaPvm()));
+            txtKuvaus.setText(t.getKuvaus());
+        }
+    }
+    
+    public void asetaController(VuokrattavatKiinteistotController c) {
+        
+        if(c != null) {
+            controller = c;
+        }
+    }
 }

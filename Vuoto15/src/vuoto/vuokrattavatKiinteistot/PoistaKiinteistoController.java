@@ -116,7 +116,7 @@ public class PoistaKiinteistoController implements Initializable {
     
     private void haeToimitilat() {
         
-        ObservableList<Toimitila> toimitilat = tietokanta.haeKaikkiToimitilat();
+        ObservableList<Toimitila> toimitilat = tietokanta.haeToimitilatToimipisteesta(txtToimipiste.getText());
         
         cbToimitilat.getItems().addAll(toimitilat);
     }

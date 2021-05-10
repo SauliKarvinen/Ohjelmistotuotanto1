@@ -84,6 +84,9 @@ public class HaeToimitilaaController implements Initializable {
         
     }    
     
+    /**
+     * Määrittää sivulla tarvittavan toimipisteen
+     */
     private void maaritaToimipiste() {
         
        
@@ -136,6 +139,10 @@ public class HaeToimitilaaController implements Initializable {
 
     }
 
+    /**
+     * Palauttaa näkymän takasin edelliseen
+     * @param event 
+     */
     @FXML
     private void btnTakaisinPainettu(ActionEvent event) {
         
@@ -143,6 +150,10 @@ public class HaeToimitilaaController implements Initializable {
         stage.close();
     }
 
+    /**
+     * Valitsee toimitilan ja lähettää sen UusiVarausController näkymään
+     * @param event 
+     */
     @FXML
     private void btnValitsePainettu(ActionEvent event) {
 
@@ -152,6 +163,10 @@ public class HaeToimitilaaController implements Initializable {
         stage.close();
     }
     
+    /**
+     * Määrittää UusiVaraus -näkymän controllerin
+     * @param controller 
+     */
     public void setUusiVarausController(UusiVarausController controller) {
         if(controller != null) {
             uusivarauscontroller = controller;

@@ -110,14 +110,13 @@ public class VarauksetController implements Initializable {
             
             if (s3 != s2) {
                 valittuToimitila = s3;
-                
+                paivitaTableview();
             }
         });
         
         tbvVaraukset.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             palvelutIkkuna.getChildren().clear();
             laitteetIkkuna.getChildren().clear();
-            System.out.println(s3.getVarausId());
             paivitaPalvelut(s3.getVarausId());
             paivitaLaitteet(s3.getVarausId());
             varausOlio = s3;
@@ -138,6 +137,7 @@ public class VarauksetController implements Initializable {
             checkbox.setText(p);
             palvelutIkkuna.getChildren().add(checkbox);
             checkbox.setSelected(true);
+            checkbox.setDisable(true);
             checkbox.setStyle("-fx-opacity: 1"); // palvelutIkkuna on scenebuilderin päästä asetettu 'disabled'. Tämä palauttaa checkboxin tavallisen näköiseksi
 
         }
@@ -156,6 +156,7 @@ public class VarauksetController implements Initializable {
             checkbox.setText(l);
             laitteetIkkuna.getChildren().add(checkbox);
             checkbox.setSelected(true);
+            checkbox.setDisable(true);
             checkbox.setStyle("-fx-opacity: 1"); // laitteetIkkuna on scenebuilderin päästä asetettu 'disabled'. Tämä palauttaa checkboxin tavallisen näköiseksi
         }
     }
@@ -189,6 +190,7 @@ public class VarauksetController implements Initializable {
      */
     public void paivitaTableview() {
         //ObservableList<Varaus> varaukset = tietokanta.haeKaikkiVaraukset();
+      
         if(toimipisteessaOnToimitiloja) {
         varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
 
