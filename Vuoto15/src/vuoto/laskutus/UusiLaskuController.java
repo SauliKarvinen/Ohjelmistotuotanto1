@@ -85,6 +85,8 @@ public class UusiLaskuController implements Initializable {
     private TextArea txfPalvelut;
     @FXML
     private TextArea txfLaitteet;
+    @FXML
+    private TextField txtLasku;
     
 
     /**
@@ -192,6 +194,7 @@ public class UusiLaskuController implements Initializable {
         // Haetaan asiakkaan Varaukset (Ei vielä, nyt KAIKKI varaukset)
         listVaraukset = tietokanta.haeKaikkiVaraukset();
         
+        
         // set propertyTab to TableView
        colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
        colVarausAlku.setCellValueFactory(new PropertyValueFactory<>("vuokraAlku"));
@@ -218,40 +221,27 @@ public class UusiLaskuController implements Initializable {
                     asId =  a.getAsiakasId();
             }
      
-        // hae asiakkaan vuokraamat kiinteistöt
-        ObservableList<Varaus> varaukset = FXCollections.observableArrayList();
-        List<Integer> listVaraukset = new ArrayList<Integer>();
-        
-    // Palauttaa vain ID:t
-        // varaukset = tietokanta.haeAsiakkaanVaraukset(asiakkaanID);
-        
-    // String versio: hakee id:llä varukset, ja palauttaa nimet:
+    // hae asiakkaan vuokraamat kiinteistöt
+    // hakee id:llä varukset, ja palauttaa nimet:
         String tilat = tietokanta.haeAsiakkaanToimitilaVaraukset(valittuAsiakas);
-        
-        for(Varaus v: varaukset){
-            // System.out.println(v.getVarausId());
-            // System.out.println("Varauksissa");
-            listVaraukset.add(v.getTilaId());
-            }
-        
-        /* Toimi, mutta vain ID:n palautus
-            for(Varaus v: listVaraukset){
-            ttilat.add(v.getTilaId());
-            tpalvelut.add(v.getPalveluvarausId());
-            tlaitteet.add(v.getLaitevarausId());
-            }   
-        */    
-                
         txfVuokKiinteisto.setText(String.valueOf(tilat));
         
-        // Haetaan asiakkaan palvelut
+    // Haetaan asiakkaan palvelut
         String palvelut = tietokanta.haeAsiakkaanPalvelut(valittuAsiakas);
         txfPalvelut.setText(palvelut);
         
-        // Haetaan asiakkaan Laitteet
+    // Haetaan asiakkaan Laitteet
         String laitteet = tietokanta.haeAsiakkaanLaitteet(valittuAsiakas);
         txfLaitteet.setText(laitteet);
-        
+    
+    // Lasketaan hinta
+        int hintaTmp = 0;   // Välihinta
+        int hintaFinal = 0; // Lopullinen hinta
+        int laskutettava = 0;     // Varauksen päivien lkm
+
+        laskutettava=tietokanta.haeLaskutettava(valittuAsiakas);
+        txtLasku.setText(String.valueOf(laskutettava));
+    
     }
     
     
@@ -269,26 +259,7 @@ public class UusiLaskuController implements Initializable {
         }
     }
     
-    /**  // KESKEN
-     * Asiakkaan vuokraamat tilat
-     * @param a asiakasId
-     * @return tilat String, lista tiloista
-     * 
-     */
-    private String haeVuokratutTilat(int a){
-       ObservableList<Varaus> kaikki = FXCollections.observableArrayList();
-       ObservableList<Varaus> vainIDt = FXCollections.observableArrayList();
-
-       kaikki = tietokanta.haeKaikkiVaraukset();
-        
-       for (Varaus va: kaikki){
-           // TODO
-           // vainIDt.add(va.getTilaId());            
-       }
-       String tmp = ""; 
-       return tmp; 
-    }
-    
+ 
     private void btnEtusivullePainettu(ActionEvent event) {
         
         FXMLLoader loader = new FXMLLoader();

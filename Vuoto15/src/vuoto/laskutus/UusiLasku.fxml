@@ -179,7 +179,7 @@
                      <GridPane.margin>
                         <Insets right="15.0" />
                      </GridPane.margin></TextArea>
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="txtLasku" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
             </GridPane>
          </children>
