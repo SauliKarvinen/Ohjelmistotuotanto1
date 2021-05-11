@@ -42,6 +42,7 @@ public class TaytettyLaskuController implements Initializable {
     private int asiakkaanID = 0;
     private Toimitila toimitila;
     private String valittuAsiakas;
+    private Asiakas asiakas = new Asiakas();
     
     Lasku lasku = new Lasku();
     
@@ -102,7 +103,7 @@ public class TaytettyLaskuController implements Initializable {
     @FXML
     private void butTakaisinPainettu(ActionEvent event) {
          // Opens panel - Laskutuksen hallinta.
-        LaskutusController controller = (LaskutusController) siirryNakymaan("Laskutus.fxml", "Laskutuksen hallinta", event);
+        UusiLaskuController controller = (UusiLaskuController) siirryNakymaan("UusiLasku.fxml", "Laskutuksen hallinta", event);
     }
     
         /**
@@ -142,6 +143,21 @@ public class TaytettyLaskuController implements Initializable {
         
         return controller;
    
-    } 
+    }
+
+    public void asetaAsiakas(Asiakas a) {
+        if(a != null) {
+            asiakas = a;
+            // txtYritysJaHenkilo.setText();
+        }
+    }
+    
+    public void lisaaLaskunTulostusController(UusiLaskuController controller) {
+        
+        if(controller != null) {
+           // this.controller = controller;
+        }
+    }    
+    
     
 }

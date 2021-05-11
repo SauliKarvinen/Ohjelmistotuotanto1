@@ -7,8 +7,6 @@ package vuoto.laskutus;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,19 +26,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import static javax.management.Query.value;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Toimitila;
-import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 
 
@@ -126,13 +119,13 @@ public class UusiLaskuController implements Initializable {
         
         
     }    
-    
+    @FXML
     private void btnPoistaLaskuPainettu(ActionEvent event) {
         // Open panel - PoistaLasku
         PoistaLaskuController controller = (PoistaLaskuController) siirryNakymaan("PoistaLasku.fxml", "Poista Lasku", event);
         //controller.asetaToimipiste(toimipiste);
     }
-
+    @FXML
     private void btnMuokkaaLaskuPainettu(ActionEvent event) {
         // Open panel - UusiLasku
         MuokkaaLaskuController controller = (MuokkaaLaskuController) siirryNakymaan("MuokkaaLasku.fxml", "Muokkaa Laskua", event);
@@ -147,7 +140,7 @@ public class UusiLaskuController implements Initializable {
     @FXML
     private void VahvistaLaskuPainettu(ActionEvent event) {
         // Opens panel - Laskun lähetys/tulostus.
-        TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan("TaytettyLaskuPohja.fxml", "Laskutuksen hallinta", event);
+        TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan("TaytettyLaskuPohja.fxml", "Lähetä Lasku", event);
     }
     
     @FXML
