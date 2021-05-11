@@ -43,6 +43,9 @@ import vuoto.tietokanta.DBAccess;
  * @author marko
  */
 public class UusiLaskuController implements Initializable {
+    // Jos muutat fxml-tiedoston sijaintia niin muuta tähän uusi sijainti!
+    /** fxml-tiedoston sijainti*/
+    public static final String fxmlString = "/vuoto/laskutus/UusiLasku.fxml";
     // Tietokanta yht.
     private final DBAccess tietokanta = new DBAccess();
     
@@ -60,9 +63,7 @@ public class UusiLaskuController implements Initializable {
     private List<Integer> tpalvelut = new LinkedList<Integer>();
     private List<Integer> tlaitteet = new LinkedList<Integer>();
 
-    // Jos muutat fxml-tiedoston sijaintia niin muuta tähän uusi sijainti!
-    /** fxml-tiedoston sijainti*/
-    public static final String fxmlString = "/vuoto/laskutus/UusiLasku.fxml";
+    
     @FXML
     private Label lblToimipisteValinta;
     @FXML

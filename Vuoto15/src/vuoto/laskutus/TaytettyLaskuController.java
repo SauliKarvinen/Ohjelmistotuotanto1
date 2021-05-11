@@ -150,11 +150,18 @@ public class TaytettyLaskuController implements Initializable {
 
     public void asetaKulutTxt() {
        StringBuilder pal_las = new StringBuilder("");
-       pal_las.append(this.PalvelutTxt);
-        System.out.println("PalvelutTxt"+PalvelutTxt);
-       pal_las.append(this.LaitteetTxt);
        
+       asetaPalvelutTxt(PalvelutTxt);
+       System.out.println("PalvelutTxt" + PalvelutTxt);
+       pal_las.append(PalvelutTxt);
+       
+       asetaLaitteetTxt(LaitteetTxt);
+       System.out.println("PalvelutTxt"+LaitteetTxt);
+       pal_las.append(LaitteetTxt);
+       
+       System.out.println("palvelutLaskut: " + pal_las);
        txtNotes.setText(pal_las.toString());
+        
     }
 
     public void asetaAsiakasTxt(String AsiakasTxt) {
@@ -197,10 +204,12 @@ public class TaytettyLaskuController implements Initializable {
         // Postitus osoite
         txtYritysJaHenkilo.setText(AsiakasTxt); // Toimii
         //Maksajan tiedot
+        System.out.println("asiakasTxt: " + AsiakasTxt);
         txtMaksajanTiedot.setText(AsiakasTxt);  // Ei toimi?!
         // Listaus palveluista ja laitteista
+        asetaKulutTxt(); 
         txtKuluErittely.setText(AsiaKulutTxt);  // Ei toimi?!
-        asetaKulutTxt();                        // Ei toimi?!
+                               // Ei toimi?!
         
         //Laskun päiväys
         txtPaivamaara.setText(now);             // Toimii
