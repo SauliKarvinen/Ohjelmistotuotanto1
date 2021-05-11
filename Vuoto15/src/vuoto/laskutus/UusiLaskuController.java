@@ -139,23 +139,26 @@ public class UusiLaskuController implements Initializable {
 
     @FXML
     private void VahvistaLaskuPainettu(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(TaytettyLaskuController.fxmlString));
-            Parent root = null;
-
-            try {
-                root = loader.load();
-            } catch (IOException ex) {
-                heitaVirheNaytolle("Virhe luotaessa näkymää MuokkaaVarausta.fxml");
-                Logger.getLogger(TaytettyLaskuController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//        FXMLLoader loader = new FXMLLoader();
+//            loader.setLocation(getClass().getResource(TaytettyLaskuController.fxmlString));
+//            Parent root = null;
+//
+//            try {
+//                root = loader.load();
+//            } catch (IOException ex) {
+//                heitaVirheNaytolle("Virhe luotaessa näkymää MuokkaaVarausta.fxml");
+//                Logger.getLogger(TaytettyLaskuController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         // Importing laskun muuttujat
         String AsiakasTxt = txfAsiakas.getText();
         String PalvelutTxt = txfPalvelut.getText();
         String LaitteetTxt = txfLaitteet.getText();
         String LoppuSummaTxt = txtLasku.getText();
         
-        TaytettyLaskuController controller = loader.getController();
+        // Lisäsin vain tän yhden rivin tähän alle joka hoitaa noi FXMLLoaderit sun muut ja palauttaa ton controllerin -Sauli
+        
+        //TaytettyLaskuController controller = loader.getController();
+        TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan(TaytettyLaskuController.fxmlString, "Täyetty lasku", event);
         controller.asetaAsiakasTxt(AsiakasTxt);
         controller.asetaPalvelutTxt(PalvelutTxt);
         controller.asetaLaitteetTxt(LaitteetTxt);

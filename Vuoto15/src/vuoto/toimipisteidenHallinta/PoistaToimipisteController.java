@@ -98,7 +98,7 @@ public class PoistaToimipisteController implements Initializable {
                     alert.setHeaderText("Toimipiste " + toimipiste.getToimipistenimi() + " poistettu");
                     alert.showAndWait();
                     ToimipisteetController controller = (ToimipisteetController) siirryNakymaan(ToimipisteetController.fxmlString, "Toimipisteiden hallinta", event);
-                    //controller.asetaToimipiste(toimipiste);
+
                 }
             }
             
