@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.sound.midi.ControllerEventListener;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Lasku;
@@ -43,6 +44,11 @@ public class TaytettyLaskuController implements Initializable {
     private Toimitila toimitila;
     private String valittuAsiakas;
     private Asiakas asiakas = new Asiakas();
+    
+    String AsiakasTxt = "";
+    String PalvelutTxt = "";
+    String LaitteetTxt = "";
+    String LoppuSummaTxt = "";
     
     Lasku lasku = new Lasku();
     
@@ -70,22 +76,8 @@ public class TaytettyLaskuController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<Asiakas> asiakasL = FXCollections.observableArrayList();
-        asiakasL = tietokanta.haeAsiakas(valittuAsiakas);
-        int asId = 0;
         
-        for(Asiakas a: asiakasL) {
-            txtYritysJaHenkilo.setText(
-                    a.getYrityksenNimi() + "\n" + 
-                    a.getEtunimi() + " " + a.getSukunimi() + "\n" +
-                    a.getLahiosoite() + " " + a.getPostinumero());
-                    asiakkaanID = a.getAsiakasId();
-                    asId =  a.getAsiakasId();
-            }
         txtYritysJaHenkilo.setFocusTraversable(false);
-       
-        
-    
         
     
     }    
@@ -145,13 +137,32 @@ public class TaytettyLaskuController implements Initializable {
    
     }
 
-    public void asetaAsiakas(Asiakas a) {
-        if(a != null) {
-            asiakas = a;
-            // txtYritysJaHenkilo.setText();
-        }
+    /*
+    asetaAsiakasTxt(AsiakasTxt);
+    asetaPalvelutTxt(PalvelutTxt);
+    asetaLaitteetTxt(LaitteetTxt);
+    asetaLoppuSummaTxt(LoppuSummaTxt);
+    
+    */
+    public void asetaAsiakasTxt(String AsiakasTxt) {
+        
+        this.AsiakasTxt = AsiakasTxt;
     }
     
+    public void asetaPalvelutTxt(String PalvelutTxt) {
+        
+        this.AsiakasTxt = AsiakasTxt;
+    }
+
+    public void asetaLaitteetTxt(String LaitteetTxt) {
+        
+        this.AsiakasTxt = AsiakasTxt;
+    }
+
+    public void asetaLoppuSummaTxt(String LoppuSummaTxt) {
+        
+        this.AsiakasTxt = AsiakasTxt;
+    }    
     public void lisaaLaskunTulostusController(UusiLaskuController controller) {
         
         if(controller != null) {
