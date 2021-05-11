@@ -26,16 +26,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import vuoto.aloitus.VuotoMainController;
 import vuoto.asiakkuudet.AsiakkuudetController;
 import vuoto.luokkafilet.Laite;
 import vuoto.luokkafilet.Palvelu;
 import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.VaratutPaivat;
 import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 import vuoto.vuokrattavatKiinteistot.UusiKiinteistoController;
@@ -82,6 +85,8 @@ public class MuokkaaVaraustaController implements Initializable {
     private boolean tietojaMuutettu = false;
     private boolean palveluitaMuutettu = false;
     private boolean laitteitaMuutettu = false;
+    private LocalDate varauksenAlkupaiva;
+    private LocalDate varauksenLoppupaiva;
     
 
     /**
@@ -226,6 +231,8 @@ public class MuokkaaVaraustaController implements Initializable {
             haeVarauksenLaitteet();
             paivitaPalvelut(varaus.getVarausId());
             paivitaLaitteet(varaus.getVarausId());
+            varauksenAlkupaiva = v.getVuokraAlku();
+            varauksenLoppupaiva = v.getVuokraLoppu();
             
         }
     }
@@ -234,6 +241,7 @@ public class MuokkaaVaraustaController implements Initializable {
         
         valittuToimitila = t;
         cbToimitilat.getSelectionModel().select(t.getTilanNimi());
+        haeVaratutPaivat();
     }
     
     public void asetaAsiakas(String asiakasNimi) {
@@ -370,6 +378,59 @@ public class MuokkaaVaraustaController implements Initializable {
 
    
     } 
+    
+    /**
+     * Haetaan varatut päivämäärät toimitilasta ja heitetään lista varaaPaivatKalenterista() metodille
+     */
+    public void haeVaratutPaivat() {
+        
+        LinkedList<VaratutPaivat> varatutpaivat = tietokanta.haeVaratutPaivatToimitilasta(valittuToimitila.getTilaId());
+        varaaPaivatKalenterista(varatutpaivat);
+
+    }
+    
+    /**
+     * Varaa päivät kalenterista ettei niitä voi valita
+     * @param list Lista varatuista päivistä
+     */
+    public void varaaPaivatKalenterista(LinkedList<VaratutPaivat> list) {
+        
+        // Datepickerin "solut"
+        final Callback<DatePicker, DateCell> dayCellFactory = 
+                // Palauttaa päivitetyt solut
+                new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate kalenterinPaiva, boolean empty) {
+                        super.updateItem(kalenterinPaiva, empty);
+                        
+                        // Listassa on päivämääräpareja. Kalenterista varataan päivät jotka ovat näillä väleillä.
+                        // Myös nykyistä päivämäärää edeltävät päivät varataan kalenterista ettei niitä voi varata
+                        for(VaratutPaivat d : list) {
+                            if(kalenterinPaiva.isAfter(d.getAloitusPvm().minusDays(1)) && kalenterinPaiva.isBefore(d.getLoppuPvm().plusDays(1)) || kalenterinPaiva.isBefore(LocalDate.now())) {
+                                setDisable(true);
+                                setStyle("-fx-background-color:#ff3333;"); // Vähän näkyvämpi väri kuin tuo perus 'disabled'
+                                
+                            } 
+                            if(kalenterinPaiva.isAfter(varauksenAlkupaiva.minusDays(1)) && kalenterinPaiva.isBefore(varauksenLoppupaiva.plusDays(1))) {
+                      
+                                setStyle("-fx-background-color:lightgrey; -fx-text-fill:black;");
+                                setDisable(false);
+                            }
+                        }
+                    }
+                };
+            }
+                    
+                };
+        
+        // Päivitetään näkymän datepickerit 
+        dpAloituspvm.setDayCellFactory(dayCellFactory);
+        dpLopetuspvm.setDayCellFactory(dayCellFactory);
+        
+    }
 
  
 }

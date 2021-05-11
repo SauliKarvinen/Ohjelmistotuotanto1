@@ -100,8 +100,6 @@ public class LisaaUusiLaiteController implements Initializable {
     
     public void asetaToimitila(Toimitila t) {
         
-        System.out.println("test");
-        System.out.println(t);
         if(t != null) {
             toimitila = t;
             txtToimitila.setText(t.getTilanNimi());
