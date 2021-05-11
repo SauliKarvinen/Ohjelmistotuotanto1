@@ -1,6 +1,8 @@
 
 package vuoto.luokkafilet;
 
+import java.util.Objects;
+
 /**
  * Toimipiste -luokka
  * @author sauli
@@ -109,4 +111,62 @@ public class Toimipiste {
         return getToimipistenimi();
     }
 
+//    @Override
+//    public String toString() {
+//        return "Toimipiste{" + "toimipisteID=" + toimipisteID + ", lahiosoite=" + lahiosoite + ", postinumero=" + postinumero + ", toimipistenimi=" + toimipistenimi + ", kuvaus=" + kuvaus + '}';
+//    }
+    
+    
+
+    /**
+     * Ylikirjoittaa Object-luokan hashCode() metodin
+     * @return hashCode
+     */ 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + this.toimipisteID;
+        hash = 41 * hash + Objects.hashCode(this.lahiosoite);
+        hash = 41 * hash + Objects.hashCode(this.postinumero);
+        hash = 41 * hash + Objects.hashCode(this.toimipistenimi);
+        hash = 41 * hash + Objects.hashCode(this.kuvaus);
+        return hash;
+    }
+
+    /**
+     * Ylikirjoittaa Object-luokan equals() metodin
+     * @param obj Verrattava objekti
+     * @return true / false
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Toimipiste other = (Toimipiste) obj;
+        if (this.toimipisteID != other.toimipisteID) {
+            return false;
+        }
+        if (!Objects.equals(this.lahiosoite, other.lahiosoite)) {
+            return false;
+        }
+        if (!Objects.equals(this.postinumero, other.postinumero)) {
+            return false;
+        }
+        if (!Objects.equals(this.toimipistenimi, other.toimipistenimi)) {
+            return false;
+        }
+        if (!Objects.equals(this.kuvaus, other.kuvaus)) {
+            return false;
+        }
+        return true;
+    }
+
+    
 }

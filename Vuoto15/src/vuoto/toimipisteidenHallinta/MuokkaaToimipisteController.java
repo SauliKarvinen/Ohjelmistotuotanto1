@@ -7,6 +7,7 @@ package vuoto.toimipisteidenHallinta;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +20,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import vuoto.luokkafilet.Toimipiste;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -35,6 +40,16 @@ public class MuokkaaToimipisteController implements Initializable {
     private Button btnTakaisin;
     @FXML
     private Button btnMuokkaaToimipiste;
+    @FXML
+    private TextArea txtKuvaus;
+    @FXML
+    private TextField txtToimipistenimi;
+    @FXML
+    private TextField txtLahiosoite;
+    @FXML
+    private TextField txtPostinumero;
+    private Toimipiste toimipiste;
+    private DBAccess tietokanta = new DBAccess();
 
     
     /**
@@ -46,9 +61,34 @@ public class MuokkaaToimipisteController implements Initializable {
      */
      @FXML
     private void LisaaMuokkaaToimipistePainettu(ActionEvent event) {
-        // Opens panel - Toimipisteiden hallinta.
-        ToimipisteetController controller = (ToimipisteetController) siirryNakymaan("Toimipisteet.fxml", "Toimipisteiden hallinta", event);
-        //controller.asetaToimipiste(toimipiste);
+        
+        Toimipiste muokattuToimipiste = null;
+        
+        int toimipisteId = toimipiste.getToimipisteID();
+        String lahiosoite = txtLahiosoite.getText();
+        String postinumero = txtPostinumero.getText();
+        String toimipisteNimi = txtToimipistenimi.getText();
+        String kuvaus = txtKuvaus.getText();
+        
+        muokattuToimipiste = new Toimipiste(toimipisteId, lahiosoite, postinumero, toimipisteNimi, kuvaus);
+        
+        if(muokattuToimipiste.equals(toimipiste)) {
+            heitaVirheNaytolle("Muuta tietoja päivittääksesi toimipiste");
+        } else {
+            
+            try {
+                tietokanta.paivitaToimipiste(muokattuToimipiste);
+                
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Toimipisteen muokkaus");
+                a.setHeaderText("Toimipiste päivitetty!");
+                a.showAndWait();
+                ToimipisteetController controller = (ToimipisteetController) siirryNakymaan("Toimipisteet.fxml", "Toimipisteiden hallinta", event);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(MuokkaaToimipisteController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
     }
 
@@ -113,6 +153,22 @@ public class MuokkaaToimipisteController implements Initializable {
         return controller;
    
     } 
+    
+    /**
+     * Asettaa muokattavan toimipisteen tiedot kenttiin
+     * @param t Muokattava toimipiste
+     */
+    public void asetaToimipiste(Toimipiste t) {
+        
+        if(t != null) {
+            toimipiste = t;
+            txtToimipistenimi.setText(t.getToimipistenimi());
+            txtLahiosoite.setText(t.getLahiosoite());
+            txtPostinumero.setText(t.getPostinumero());
+            txtKuvaus.setText(t.getKuvaus());
+            
+        }
+    }
 
    
    

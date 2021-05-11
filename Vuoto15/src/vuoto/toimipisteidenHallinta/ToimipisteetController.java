@@ -57,6 +57,7 @@ public class ToimipisteetController implements Initializable {
     private Button btnPoistaToimipiste;
     @FXML
     private Button btnMuokkaaToimipiste;
+    private Toimipiste muokattavaToimipiste;
 
      @FXML
     private void LisaaToimipistePainettu(ActionEvent event) {
@@ -72,7 +73,14 @@ public class ToimipisteetController implements Initializable {
 
     @FXML
     private void MuokkaaToimipistePainettu(ActionEvent event) {
-    MuokkaaToimipisteController controller = (MuokkaaToimipisteController)siirryNakymaan(MuokkaaToimipisteController.fxmlString, "Muokkaa Toimipiste", event);
+        
+        if(muokattavaToimipiste == null) {
+            heitaVirheNaytolle("Valitse muokattava toimipiste");
+        } else {
+            
+            MuokkaaToimipisteController controller = (MuokkaaToimipisteController) siirryNakymaan(MuokkaaToimipisteController.fxmlString, "Muokkaa Toimipiste", event);
+            controller.asetaToimipiste(muokattavaToimipiste);
+        }
     
     }
    
@@ -95,6 +103,13 @@ public class ToimipisteetController implements Initializable {
             heitaVirheNaytolle("TableView:n aktivoinnissa virhe (Toimipisteet).");
             Logger.getLogger(ToimipisteetController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        tblToimipisteet.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                muokattavaToimipiste = s3;
+            }
+        });
     } 
 
     

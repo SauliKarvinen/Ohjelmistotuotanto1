@@ -114,12 +114,18 @@ public class VarauksetController implements Initializable {
             }
         });
         
+        // Kuuntelee Varaukset tableviewin valintaa
+        // Tyhjentää checkbox ikkunat ja täyttää uusilla kun toinen varaus valitaan
         tbvVaraukset.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             palvelutIkkuna.getChildren().clear();
             laitteetIkkuna.getChildren().clear();
-            paivitaPalvelut(s3.getVarausId());
-            paivitaLaitteet(s3.getVarausId());
-            varausOlio = s3;
+            
+            // Tietojen poistamisen jälkeen uusin valinta on null. Tällä estetään se että yritettäisiin hakea palveluita ja laitteita joiden varaus on null       
+            if (s3 != null) {
+                paivitaPalvelut(s3.getVarausId());
+                paivitaLaitteet(s3.getVarausId());
+                varausOlio = s3;
+            }
         });
         
     }    
@@ -272,12 +278,15 @@ public class VarauksetController implements Initializable {
     private void btnPoistaVarausPainettu(ActionEvent event) {
         
         boolean varausPoistettu = true;
-        
-        if(varausOlio != null) {
-            
-            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko palvelu " + varausOlio.getVarausId() + "?", "Palvelun poistaminen");
-            
-            if(okPainettu) {
+
+        if (varausOlio == null) {
+
+            heitaVirheNaytolle("Valitse poistettava varaus");
+
+        } else {
+            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko varaus " + varausOlio.getVarausId() + "?", "Palvelun poistaminen");
+
+            if (okPainettu) {
                 try {
                     tietokanta.poistaVaraus(varausOlio.getVarausId());
                 } catch (SQLException ex) {
@@ -286,7 +295,7 @@ public class VarauksetController implements Initializable {
                     Logger.getLogger(VarauksetController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if(varausPoistettu) {
+            if (varausPoistettu) {
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Varauksen poistaminen");
                 a.setHeaderText("Varaus poistettu");
@@ -294,10 +303,6 @@ public class VarauksetController implements Initializable {
                 paivitaTableview();
             }
         }
-        
-        
-        
-        // if(okPainettu) niin poista tiedot.........
     }
 
     /**

@@ -95,16 +95,16 @@
                               <Insets />
                            </GridPane.margin>
                            <children>
-                              <TextArea prefHeight="94.0" prefWidth="397.0" />
+                              <TextArea fx:id="txtKuvaus" prefHeight="94.0" prefWidth="397.0" />
                            </children>
                         </HBox>
-                        <TextField maxWidth="350.0" minWidth="200.0" GridPane.columnIndex="1">
+                        <TextField fx:id="txtToimipistenimi" maxWidth="350.0" minWidth="200.0" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets right="30.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtLahiosoite" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtPostinumero" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                   <Button fx:id="btnMuokkaaToimipiste" layoutX="333.0" layoutY="311.0" mnemonicParsing="false" onAction="#LisaaMuokkaaToimipistePainettu" style="-fx-background-radius: 5px;" text="Lisää" textAlignment="CENTER" />

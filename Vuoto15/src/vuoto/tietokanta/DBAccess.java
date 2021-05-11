@@ -188,6 +188,37 @@ public class DBAccess {
             katkaiseYhteys();
         }
     }
+    
+    public void paivitaToimipiste(Toimipiste t) throws SQLException {
+        
+        try {
+            
+            yhdista();
+            
+            ps = conn.prepareStatement("UPDATE Toimipisteet "
+                    + "SET "
+                    + "lahiosoite = (?), "
+                    + "postinumero = (?), "
+                    + "toimipisteNimi = (?), "
+                    + "kuvaus = (?) "
+                    + "WHERE toimipisteId = (?);");
+            
+            ps.setString(1, t.getLahiosoite());
+            ps.setString(2, t.getPostinumero());
+            ps.setString(3, t.getToimipistenimi());
+            ps.setString(4, t.getKuvaus());
+            ps.setInt(5, t.getToimipisteID());
+            
+            ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe päivittäessä toimipistettä");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+    }
 
     /**
      * Palauttaa ObservableListin kaikista toimipisteistä
