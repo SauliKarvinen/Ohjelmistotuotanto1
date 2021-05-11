@@ -189,6 +189,11 @@ public class DBAccess {
         }
     }
     
+    /**
+     * Päivittää toimipisteen
+     * @param t Päivitetty toimipiste
+     * @throws SQLException SQL-virhe
+     */
     public void paivitaToimipiste(Toimipiste t) throws SQLException {
         
         try {
