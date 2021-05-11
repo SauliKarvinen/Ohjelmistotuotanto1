@@ -343,7 +343,54 @@ public class DBAccess {
         return varaukset;
     }
     
-    public ObservableList<VarausOlio> haeTiedotVarausIkkunaanAikavalilta(String tilanNimi, LocalDate alkuPaiva, LocalDate loppuPaiva) {
+    
+    public ObservableList<VarausOlio> haeKaikkiVarauksetVarausIkkunaan() {
+        
+        ObservableList<VarausOlio> varaukset = FXCollections.observableArrayList();
+        int id = 0;
+        LocalDate alku = null;
+        LocalDate loppu = null;
+        String asiakas = "";
+        String tila = "";
+        String toimipiste = "";
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("SELECT v.varausId, v.vuokraAlku, v.vuokraLoppu, a.etunimi, a.sukunimi, tt.tilanNimi, tp.toimipisteNimi " +
+                    "FROM Varaus v, Asiakas a, Tilat tt, Toimipisteet tp " +
+                    "WHERE v.tilaId = tt.tilaId AND tt.toimipisteId = tp.toimipisteId AND v.asiakasId = a.asiakasId;");
+            
+            
+            results = ps.executeQuery();
+            
+            while(results.next()) {
+                id = results.getInt("varausId");
+                alku = results.getDate("vuokraAlku").toLocalDate();
+                loppu = results.getDate("vuokraLoppu").toLocalDate();
+                asiakas = results.getString("etunimi") + " " + results.getString("sukunimi");
+                tila = results.getString("tilanNimi");
+                toimipiste = results.getString("toimipisteNimi");
+                varaukset.add(new VarausOlio(id, alku, loppu, asiakas, tila, toimipiste));
+                
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa tietoja varausikkunaan");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return varaukset;
+    }
+    
+    public ObservableList<VarausOlio> haeVarausIkkunaanAikavalilta(String tilanNimi, LocalDate alkuPaiva, LocalDate loppuPaiva) {
         
         ObservableList<VarausOlio> varaukset = FXCollections.observableArrayList();
         int id = 0;

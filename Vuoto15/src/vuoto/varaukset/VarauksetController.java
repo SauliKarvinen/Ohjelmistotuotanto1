@@ -98,11 +98,18 @@ public class VarauksetController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        System.out.println(valittuToimipiste);
+
         // Aktiivinen toimipiste (eli yksi keskuksista)
         txtToimipiste.setFocusTraversable(false);
         txtToimipiste.setText(valittuToimipiste);
         paivitaToimitilavalikko();
+        
+        if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
+            
+            cbToimitilavalikko.getSelectionModel().clearSelection();
+            valittuToimitila = null;
+        }
+        
         paivitaTableview();
         
         // Kuuntelee toimitilan valintaa, asettaa valitun toimitilan ja päivittää Palvelut ja Laitteet ikkunat
@@ -110,6 +117,7 @@ public class VarauksetController implements Initializable {
             
             if (s3 != s2) {
                 valittuToimitila = s3;
+
                 paivitaTableview();
             }
         });
@@ -175,6 +183,7 @@ public class VarauksetController implements Initializable {
         ObservableList<Toimitila> toimitilat = null;
                 
         if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
+
             toimitilat = tietokanta.haeKaikkiToimitilat();
             cbToimitilavalikko.setItems(toimitilat);
         } else {
@@ -182,10 +191,11 @@ public class VarauksetController implements Initializable {
             cbToimitilavalikko.setItems(toimitilat);
             if(toimitilat.size() > 0) {
                 toimipisteessaOnToimitiloja = true;
+                cbToimitilavalikko.getSelectionModel().selectFirst();
             }
         }
         
-        cbToimitilavalikko.getSelectionModel().selectFirst();
+        
         if(valittuToimitila == null) {
             valittuToimitila = cbToimitilavalikko.getSelectionModel().getSelectedItem();
         }
@@ -197,21 +207,33 @@ public class VarauksetController implements Initializable {
     public void paivitaTableview() {
         //ObservableList<Varaus> varaukset = tietokanta.haeKaikkiVaraukset();
       
-        if(toimipisteessaOnToimitiloja) {
-        varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
+        //varaukset = tietokanta.haeKaikkiVaraukset();
+        if (valittuToimitila != null) {
+            tbvVaraukset.getItems().clear();
+            varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
 
-    
-        
-        colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
-        colVarausalku.setCellValueFactory(new PropertyValueFactory<>("alkupaiva"));
-        colVarausloppu.setCellValueFactory(new PropertyValueFactory<>("loppupaiva"));
-        colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakas"));
-        colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
-        colToimipiste.setCellValueFactory(new PropertyValueFactory<>("toimipiste"));
-        
-        tbvVaraukset.setItems(varaukset);
+            colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
+            colVarausalku.setCellValueFactory(new PropertyValueFactory<>("alkupaiva"));
+            colVarausloppu.setCellValueFactory(new PropertyValueFactory<>("loppupaiva"));
+            colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakas"));
+            colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
+            colToimipiste.setCellValueFactory(new PropertyValueFactory<>("toimipiste"));
+
+            tbvVaraukset.setItems(varaukset);
+        } else {
+            
+            varaukset = tietokanta.haeKaikkiVarauksetVarausIkkunaan();
+            
+            colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
+            colVarausalku.setCellValueFactory(new PropertyValueFactory<>("alkupaiva"));
+            colVarausloppu.setCellValueFactory(new PropertyValueFactory<>("loppupaiva"));
+            colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakas"));
+            colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
+            colToimipiste.setCellValueFactory(new PropertyValueFactory<>("toimipiste"));
+
+            tbvVaraukset.setItems(varaukset);
         }
-        
+
     }
     
     /**

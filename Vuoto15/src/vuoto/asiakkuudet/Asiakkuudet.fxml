@@ -77,9 +77,9 @@
               </rowConstraints>
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 16;" text="Rajaa toimitilan mukaan:" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                  <ComboBox prefHeight="31.0" prefWidth="421.0" promptText="Valitse toimitila" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cbToimitila" prefHeight="31.0" prefWidth="421.0" promptText="Valitse toimitila" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Rajaa toimipaikan mukaan:" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <ComboBox prefHeight="31.0" prefWidth="421.0" promptText="Valitse toimipaikka" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="cbToimipiste" prefHeight="31.0" prefWidth="421.0" promptText="Valitse toimipaikka" GridPane.columnIndex="1" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />
@@ -94,16 +94,16 @@
    <center>
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView layoutX="3.0" layoutY="28.0" prefHeight="522.0" prefWidth="1020.0">
+            <TableView fx:id="tbvAsiakkaat" layoutX="3.0" layoutY="28.0" prefHeight="522.0" prefWidth="1020.0">
                <columns>
-                  <TableColumn prefWidth="87.0" text="Asiakas ID" />
-                  <TableColumn prefWidth="104.0" text="Yritys" />
-                  <TableColumn prefWidth="107.0" text="Etunimi" />
-                  <TableColumn prefWidth="127.0" text="Sukunimi" />
-                  <TableColumn prefWidth="122.0" text="Lähiosoite" />
-                  <TableColumn prefWidth="129.0" text="Postinumero" />
-                  <TableColumn prefWidth="154.0" text="Puhelinnumero" />
-                  <TableColumn minWidth="0.0" prefWidth="188.0" text="Sähköposti" />
+                  <TableColumn fx:id="colAsiakasId" prefWidth="87.0" text="Asiakas ID" />
+                  <TableColumn fx:id="colEtunimi" prefWidth="107.0" text="Etunimi" />
+                  <TableColumn fx:id="colSukunimi" prefWidth="127.0" text="Sukunimi" />
+                  <TableColumn fx:id="colLahiosoite" prefWidth="122.0" text="Lähiosoite" />
+                  <TableColumn fx:id="colPostinumero" prefWidth="129.0" text="Postinumero" />
+                  <TableColumn fx:id="colPuhelinnumero" prefWidth="154.0" text="Puhelinnumero" />
+                  <TableColumn fx:id="colSahkoposti" minWidth="0.0" prefWidth="188.0" text="Sähköposti" />
+                  <TableColumn fx:id="colYritys" prefWidth="104.0" text="Yritys" />
                </columns>
                <effect>
                   <InnerShadow blurType="ONE_PASS_BOX" color="#00000045" />

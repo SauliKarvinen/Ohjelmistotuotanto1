@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,10 +22,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import vuoto.aloitus.VuotoMainController;
+import vuoto.luokkafilet.Asiakas;
+import vuoto.luokkafilet.Toimipiste;
+import vuoto.luokkafilet.Toimitila;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -36,6 +45,31 @@ public class AsiakkuudetController implements Initializable {
     // Jos muutat fxml-tiedoston sijaintia niin muuta tähän uusi sijainti!
     /** fxml-tiedoston sijainti*/
     public static final String fxmlString = "/vuoto/asiakkuudet/Asiakkuudet.fxml";
+    @FXML
+    private TableView<Asiakas> tbvAsiakkaat;
+    @FXML
+    private TableColumn<Asiakas, Integer> colAsiakasId;
+    @FXML
+    private TableColumn<Asiakas, String> colEtunimi;
+    @FXML
+    private TableColumn<Asiakas, String> colSukunimi;
+    @FXML
+    private TableColumn<Asiakas, String> colLahiosoite;
+    @FXML
+    private TableColumn<Asiakas, String> colPostinumero;
+    @FXML
+    private TableColumn<Asiakas, String> colPuhelinnumero;
+    @FXML
+    private TableColumn<Asiakas, String> colSahkoposti;
+    @FXML
+    private TableColumn<Asiakas, String> colYritys;
+    private DBAccess tietokanta = new DBAccess();
+    private Toimipiste valittuToimipiste;
+    private Toimitila valittuToimitila;
+    @FXML
+    private ComboBox<Toimitila> cbToimitila;
+    @FXML
+    private ComboBox<String> cbToimipiste;
 
     /**
      * Initializes the controller class.
@@ -43,9 +77,34 @@ public class AsiakkuudetController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
     }    
 
 
+    private void paivitaTableview() {
+        
+        //ObservableList<Asiakas> asiakkaat = tietokanta.haeas
+        
+        colAsiakasId.setCellValueFactory(new PropertyValueFactory<>("asiakasId"));
+        colEtunimi.setCellValueFactory(new PropertyValueFactory<>("etunimi"));
+        colSukunimi.setCellValueFactory(new PropertyValueFactory<>("sukunimi"));
+        colLahiosoite.setCellValueFactory(new PropertyValueFactory<>("lahiosoite"));
+        colPostinumero.setCellValueFactory(new PropertyValueFactory<>("postinumero"));
+        colPuhelinnumero.setCellValueFactory(new PropertyValueFactory<>("puhelinnumero"));
+        colSahkoposti.setCellValueFactory(new PropertyValueFactory<>("sahkoposti"));
+        colYritys.setCellValueFactory(new PropertyValueFactory<>("yrityksenNimi"));
+        
+
+    }
+    
+    private void paivitaToimitilatValikko() {
+        
+        //ObservableList<Toimitila> toimitilat = tietokanta.
+    }
+    
+    private void paivitaToimipisteetValikko() {
+        
+    }
     
     private void heitaVirheNaytolle(String virhe) {
         Alert a = new Alert(Alert.AlertType.ERROR);
