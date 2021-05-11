@@ -7,6 +7,8 @@ package vuoto.laskutus;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,16 +43,26 @@ public class TaytettyLaskuController implements Initializable {
     // Tietokanta yht.
     private final DBAccess tietokanta = new DBAccess();
     private int asiakkaanID = 0;
-    private Toimitila toimitila;
-    private String valittuAsiakas;
     private Asiakas asiakas = new Asiakas();
     
-    String AsiakasTxt = "";
-    String PalvelutTxt = "";
-    String LaitteetTxt = "";
-    String LoppuSummaTxt = "";
+    private String AsiakasTxt = "";
+    private String PalvelutTxt = "";
+    private String LaitteetTxt = "";
+    private String LoppuSummaTxt = "";
+    private String LaskuTyyppi = "";
+    private String KulutTxt = "";
+    private String AsiaKulutTxt = "";
     
+    // Laskun päiväys
     Lasku lasku = new Lasku();
+    LocalDate day = LocalDate.now();
+    DateTimeFormatter muuta = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    String now = day.format(muuta);
+    // Laskun eräpäivä
+    LocalDate ep = LocalDate.now();
+    LocalDate ep2 = ep.plusDays(14);
+    String ePaiva = ep2.format(muuta);
+    
     
     @FXML
     private TextField txtPaivamaara;
@@ -76,16 +88,15 @@ public class TaytettyLaskuController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        paivitaKentat();
         
-        txtYritysJaHenkilo.setFocusTraversable(false);
-        
-    
     }    
 
     @FXML
     private void butSendPainettu(ActionEvent event) {
         // luetaan asiakkaan toive laskun tyypistä,
         // email, nappissa LÄHETÄ
+        
         // posti, napissa TULOSTA
         
         //TO DO
@@ -137,38 +148,63 @@ public class TaytettyLaskuController implements Initializable {
    
     }
 
-    /*
-    asetaAsiakasTxt(AsiakasTxt);
-    asetaPalvelutTxt(PalvelutTxt);
-    asetaLaitteetTxt(LaitteetTxt);
-    asetaLoppuSummaTxt(LoppuSummaTxt);
-    
-    */
+    public void asetaKulutTxt() {
+       StringBuilder pal_las = new StringBuilder("");
+       pal_las.append(this.PalvelutTxt);
+        System.out.println("PalvelutTxt"+PalvelutTxt);
+       pal_las.append(this.LaitteetTxt);
+       
+       txtNotes.setText(pal_las.toString());
+    }
+
     public void asetaAsiakasTxt(String AsiakasTxt) {
         
         this.AsiakasTxt = AsiakasTxt;
+        txtYritysJaHenkilo.setText(AsiakasTxt);
+        
     }
     
     public void asetaPalvelutTxt(String PalvelutTxt) {
         
-        this.AsiakasTxt = AsiakasTxt;
+        this.PalvelutTxt = PalvelutTxt;
     }
 
     public void asetaLaitteetTxt(String LaitteetTxt) {
         
-        this.AsiakasTxt = AsiakasTxt;
+        this.LaitteetTxt = LaitteetTxt;
     }
 
     public void asetaLoppuSummaTxt(String LoppuSummaTxt) {
         
-        this.AsiakasTxt = AsiakasTxt;
-    }    
+        this.LoppuSummaTxt = LoppuSummaTxt;
+        txtLoppuSumma.setText(LoppuSummaTxt);
+        
+    }
+
+    public void asetaLaskunTyyppi(String LaskuTyyppi) {
+        
+        this.LaskuTyyppi = LaskuTyyppi;
+    }  
+
     public void lisaaLaskunTulostusController(UusiLaskuController controller) {
         
         if(controller != null) {
            // this.controller = controller;
         }
     }    
-    
-    
+
+    public void paivitaKentat() {
+        // Postitus osoite
+        txtYritysJaHenkilo.setText(AsiakasTxt); // Toimii
+        //Maksajan tiedot
+        txtMaksajanTiedot.setText(AsiakasTxt);  // Ei toimi?!
+        // Listaus palveluista ja laitteista
+        txtKuluErittely.setText(AsiaKulutTxt);  // Ei toimi?!
+        asetaKulutTxt();                        // Ei toimi?!
+        
+        //Laskun päiväys
+        txtPaivamaara.setText(now);             // Toimii
+        //ERäpäivä
+        txtEraPvm.setText(ePaiva);              // Toimii
+    }
 }

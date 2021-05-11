@@ -52,6 +52,7 @@ public class UusiLaskuController implements Initializable {
     private String tilat = "";
     private String palvelut = "";
     private String laitteet = "";
+    private String AsiakasTxt = "";
 
     
     //Listat tilatuista xxx, id:t, käytetään nimien selvitykseen.
@@ -154,18 +155,16 @@ public class UusiLaskuController implements Initializable {
         String PalvelutTxt = txfPalvelut.getText();
         String LaitteetTxt = txfLaitteet.getText();
         String LoppuSummaTxt = txtLasku.getText();
-        
-        // Lisäsin vain tän yhden rivin tähän alle joka hoitaa noi FXMLLoaderit sun muut ja palauttaa ton controllerin -Sauli
+        String LaskunTyyppiTxt = laskunTyyppi;
         
         //TaytettyLaskuController controller = loader.getController();
-        TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan(TaytettyLaskuController.fxmlString, "Täyetty lasku", event);
+        TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan(TaytettyLaskuController.fxmlString, "Täytetty lasku", event);
+        
         controller.asetaAsiakasTxt(AsiakasTxt);
         controller.asetaPalvelutTxt(PalvelutTxt);
         controller.asetaLaitteetTxt(LaitteetTxt);
         controller.asetaLoppuSummaTxt(LoppuSummaTxt);
-        
-        // Opens panel - Laskun lähetys/tulostus.
-        // TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan("TaytettyLaskuPohja.fxml", "Lähetä Lasku", event);
+        controller.asetaLaskunTyyppi(LaskunTyyppiTxt);
         
     }
     
@@ -175,8 +174,7 @@ public class UusiLaskuController implements Initializable {
             cbPaperi.setSelected(false);
             laskunTyyppi="email";
             lasku.setLaskunTyyppi(laskunTyyppi);
-            
-            
+           
         }
         
     }
@@ -210,8 +208,9 @@ public class UusiLaskuController implements Initializable {
                     a.getYrityksenNimi() + "\n" + 
                     a.getEtunimi() + " " + a.getSukunimi() + "\n" +
                     a.getLahiosoite() + " " + a.getPostinumero());
-                    asiakkaanID = a.getAsiakasId();
-                    asId =  a.getAsiakasId();
+                asiakkaanID = a.getAsiakasId();
+                asId =  a.getAsiakasId();
+                AsiakasTxt = txfAsiakas.getText();
             }
      
     // hae asiakkaan vuokraamat kiinteistöt
