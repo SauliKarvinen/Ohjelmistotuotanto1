@@ -54,11 +54,14 @@ public class TaytettyLaskuController implements Initializable {
     private String AsiaKulutTxt = "";
     
     // Laskun päiväys
+    // muunto stringiksi
     Lasku lasku = new Lasku();
     LocalDate day = LocalDate.now();
     DateTimeFormatter muuta = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     String now = day.format(muuta);
-    // Laskun eräpäivä
+    
+    // Laskun eräpäivä = day + 14
+    // muunto stringiksi
     LocalDate ep = LocalDate.now();
     LocalDate ep2 = ep.plusDays(14);
     String ePaiva = ep2.format(muuta);
@@ -88,18 +91,21 @@ public class TaytettyLaskuController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+       
         paivitaKentat();
         
     }    
 
     @FXML
     private void butSendPainettu(ActionEvent event) {
-        // luetaan asiakkaan toive laskun tyypistä,
-        // email, nappissa LÄHETÄ
+        // jos tyyppi email 
+        // messageBox "email send"
+
+        // jos tyyppi paperi
+        // messageBox "Lähetty tulostimelle."
         
-        // posti, napissa TULOSTA
+        // add to DB
         
-        //TO DO
         
     }
 
@@ -148,49 +154,34 @@ public class TaytettyLaskuController implements Initializable {
    
     }
 
-    public void asetaKulutTxt() {
-       StringBuilder pal_las = new StringBuilder("");
-       
-       asetaPalvelutTxt(PalvelutTxt);
-       System.out.println("PalvelutTxt" + PalvelutTxt);
-       pal_las.append(PalvelutTxt);
-       
-       asetaLaitteetTxt(LaitteetTxt);
-       System.out.println("PalvelutTxt"+LaitteetTxt);
-       pal_las.append(LaitteetTxt);
-       
-       System.out.println("palvelutLaskut: " + pal_las);
-       txtNotes.setText(pal_las.toString());
-        
-    }
-
     public void asetaAsiakasTxt(String AsiakasTxt) {
         
         this.AsiakasTxt = AsiakasTxt;
         txtYritysJaHenkilo.setText(AsiakasTxt);
-        
+        txtMaksajanTiedot.setText(AsiakasTxt);  // Maksaja
     }
     
     public void asetaPalvelutTxt(String PalvelutTxt) {
         
         this.PalvelutTxt = PalvelutTxt;
+        txtKuluErittely.setText(PalvelutTxt);
     }
 
     public void asetaLaitteetTxt(String LaitteetTxt) {
         
         this.LaitteetTxt = LaitteetTxt;
+        txtKuluErittely.appendText(LaitteetTxt);
     }
 
     public void asetaLoppuSummaTxt(String LoppuSummaTxt) {
         
         this.LoppuSummaTxt = LoppuSummaTxt;
         txtLoppuSumma.setText(LoppuSummaTxt);
-        
     }
 
     public void asetaLaskunTyyppi(String LaskuTyyppi) {
-        
         this.LaskuTyyppi = LaskuTyyppi;
+        tarkistaTyyppi();
     }  
 
     public void lisaaLaskunTulostusController(UusiLaskuController controller) {
@@ -201,19 +192,44 @@ public class TaytettyLaskuController implements Initializable {
     }    
 
     public void paivitaKentat() {
+        // Paperi vai Emaili
+        // tarkistaTyyppi();
+        // Laitteet ja Palvelut, kuluerottelu
+        asetaPalvelutJaLaitteetTxt();
         // Postitus osoite
         txtYritysJaHenkilo.setText(AsiakasTxt); // Toimii
         //Maksajan tiedot
-        System.out.println("asiakasTxt: " + AsiakasTxt);
-        txtMaksajanTiedot.setText(AsiakasTxt);  // Ei toimi?!
-        // Listaus palveluista ja laitteista
-        asetaKulutTxt(); 
-        txtKuluErittely.setText(AsiaKulutTxt);  // Ei toimi?!
-                               // Ei toimi?!
+        
         
         //Laskun päiväys
         txtPaivamaara.setText(now);             // Toimii
         //ERäpäivä
         txtEraPvm.setText(ePaiva);              // Toimii
+    }
+
+    /**
+     * Luetaan asiakkaan toive laskun tyypistä,
+     * Jos: email, nappissa lukee LÄHETÄ
+     * tai: posti, napissa lukee TULOSTA
+     */
+    
+    public void tarkistaTyyppi(){
+         // luetaan asiakkaan toive laskun tyypistä,
+        // email, nappissa LÄHETÄ
+        System.out.println("Laskun tyyppi: " + LaskuTyyppi);
+        if (LaskuTyyppi.equalsIgnoreCase("email")){
+            butSend.setText("LÄHETÄ");
+            
+        }
+        // posti, napissa TULOSTA
+        if (LaskuTyyppi.equalsIgnoreCase("paperi")){
+            butSend.setText("TULOSTA");
+        }
+    }
+    
+    public void asetaPalvelutJaLaitteetTxt(){
+        asetaPalvelutTxt(PalvelutTxt);
+        asetaLaitteetTxt(LaitteetTxt);
+        
     }
 }
