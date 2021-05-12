@@ -329,6 +329,7 @@ public class DBAccess {
                 asiakas = results.getString("etunimi") + " " + results.getString("sukunimi");
                 tila = results.getString("tilanNimi");
                 toimipiste = results.getString("toimipisteNimi");
+                
                 varaukset.add(new VarausOlio(id, alku, loppu, asiakas, tila, toimipiste));
                 
             }
@@ -1969,7 +1970,12 @@ public class DBAccess {
             results = ps.executeQuery();
             
             while(results.next()) {
-                laskut.add(new Lasku(results.getInt("laiteId"), results.getString("laskuntyyppi"),results.getInt("hinta"),results.getInt("varausId")));
+                int laskuNro = results.getInt("laskuNro");
+                String laskuntyyppi = results.getString("laskuntyyppi");
+                int hinta = results.getInt("hinta");
+                int varausId = results.getInt("varausId");
+                
+                laskut.add(new Lasku(laskuNro, laskuntyyppi,hinta,varausId));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);

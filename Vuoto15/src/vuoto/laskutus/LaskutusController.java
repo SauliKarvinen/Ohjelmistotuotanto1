@@ -46,6 +46,7 @@ import vuoto.tietokanta.DBAccess;
 public class LaskutusController implements Initializable {
     // Tietokanta yht.
     private DBAccess tietokanta = new DBAccess();
+    private Asiakas asiakas;
     
     // Jos muutat fxml-tiedoston sijaintia niin muuta tähän uusi sijainti!
     /** fxml-tiedoston sijainti*/
@@ -64,7 +65,6 @@ public class LaskutusController implements Initializable {
     private Toimipiste toimipiste;
     @FXML
     private ComboBox<String> cbValitseAsiakas;
-    @FXML
     private String valittuAsiakas;
     @FXML
     private Button btnMuokkaaLasku;
@@ -140,19 +140,17 @@ public class LaskutusController implements Initializable {
 
      /*** TABLEVIEW **/   
     @FXML
-    private ObservableList<Lasku> listLaskut;
-    @FXML
     private TableView<Lasku> tblLaskut;
     @FXML
     private TableColumn<Lasku, Integer> colLaskunNro;
     @FXML
+    private TableColumn<Lasku, String> colTyyppi;
+    @FXML
+    private TableColumn<Lasku, Integer> colHinta;
+    @FXML
     private TableColumn<Lasku, Integer> colVarausNro;
     @FXML
-    private TableColumn<Lasku, Integer> colAsiakas;
-    @FXML
-    private TableColumn<Lasku, Integer> colToimitila;
-    @FXML
-    private TableColumn<Lasku, String> colTyyppi;
+    private ObservableList<Lasku> listLaskut;
     
     
     
@@ -165,18 +163,16 @@ public class LaskutusController implements Initializable {
      * 
      * */
     private void populateTableViewLaskut() throws SQLException {
-        // alustetaan lista
-        listLaskut = FXCollections.observableArrayList();
+       // alustetaan lista
+       listLaskut = FXCollections.observableArrayList();
        
-        // Haetaan asiakkaan Varaukset (Ei vielä, nyt KAIKKI varaukset)
-        listLaskut = tietokanta.haeKaikkiLaskut();
-        
+       // Haetaan asiakkaan Varaukset (Ei vielä, nyt KAIKKI varaukset)
+       listLaskut = tietokanta.haeKaikkiLaskut();
         // set propertyTab to TableView
        colLaskunNro.setCellValueFactory(new PropertyValueFactory<>("laskuNro"));
-       colVarausNro.setCellValueFactory(new PropertyValueFactory<>("varausId"));
-       colAsiakas.setCellValueFactory(new PropertyValueFactory<>("yrityksenNimi"));
-       colToimitila.setCellValueFactory(new PropertyValueFactory<>("tilanNimi"));
        colTyyppi.setCellValueFactory(new PropertyValueFactory<>("laskuntyyppi"));
+       colHinta.setCellValueFactory(new PropertyValueFactory<>("hinta"));
+       colVarausNro.setCellValueFactory(new PropertyValueFactory<>("varausId"));
        
        tblLaskut.setItems(listLaskut);
     }
