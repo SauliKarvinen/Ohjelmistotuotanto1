@@ -8,6 +8,7 @@ package vuoto.asiakkuudet;
 //import vuoto.palvelutJaLaitteet.PalvelutJaLaitteetController;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -245,9 +246,29 @@ public class AsiakkuudetController implements Initializable {
     @FXML
     private void btnPoistaAsiakasPainettu(ActionEvent event) {
         
-        boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko palvelu " + "*tähän asiakas*" + "?", "Palvelun poistaminen");
+        // Ilmoittaa jos asiakasta ei ole valittu
+        if(valittuAsiakas == null) {
+            heitaVirheNaytolle("Valitse poistettava asiakas");
+        } else {
+            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko asiakas " + valittuAsiakas.getAsiakasId() + "?", "Asiakkaan poistaminen");
+            
+            if(okPainettu) {
+                try {
+                    tietokanta.poistaAsiakas(valittuAsiakas.getAsiakasId());
+                    
+                    Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle("Asiakkaan poistaminen");
+                    a.setHeaderText("Asiakas poistettu!");
+                    a.showAndWait();
+                    
+                    paivitaTableview();
+                } catch (SQLException ex) {
+                    Logger.getLogger(AsiakkuudetController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
         
-        // if(okPainettu) niin poista tiedot.........
+       
     }
     
     /**

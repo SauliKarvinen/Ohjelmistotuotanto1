@@ -745,6 +745,28 @@ public class DBAccess {
         }
     }
     
+    /**
+     * Poistaa asiakkaan
+     * @param asiakasId Poistettavan asiakkaan ID
+     */
+    public void poistaAsiakas(int asiakasId) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("DELETE FROM Asiakas WHERE asiakasId = (?);");
+            ps.setInt(1, asiakasId);
+            ps.execute();
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe poistaessa asiakasta");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+        
+    }
      /**
      * Hakee KAIKKI ASIAKKAAT tietokannasta ja palauttaa ObservableList listan
      * @return ObservableList asiakkaista.
