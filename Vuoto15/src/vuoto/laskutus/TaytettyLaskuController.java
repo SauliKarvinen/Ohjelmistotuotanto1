@@ -30,6 +30,7 @@ import javax.sound.midi.ControllerEventListener;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Lasku;
+import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 
 /**
@@ -50,6 +51,8 @@ public class TaytettyLaskuController implements Initializable {
     private String LaitteetTxt = "";
     private String LoppuSummaTxt = "";
     private String LaskuTyyppi = "";
+    private int    VarausID = 0;
+    private int    hintaInt = 0;
     private String KulutTxt = "";
     private String AsiaKulutTxt = "";
     
@@ -120,7 +123,13 @@ public class TaytettyLaskuController implements Initializable {
                     siirryNakymaan(UusiLaskuController.fxmlString, "UusiLasku", event);
             }
         
-        // add to DB
+        /**
+         * Lähettämme laskun -> DB
+         * String LoppuSummaTxt -> int hintaInt
+         */
+        hintaInt = Integer.parseInt(LoppuSummaTxt);
+        Lasku lasku = new Lasku(LaskuTyyppi, hintaInt, VarausID);
+        tietokanta.lisaaUusiLasku(lasku);
         
         
     }
@@ -206,6 +215,11 @@ public class TaytettyLaskuController implements Initializable {
            // this.controller = controller;
         }
     }    
+    
+    public void asetaVarausId(int VarausID) {
+        
+        this.VarausID = VarausID;
+    }
 
     public void paivitaKentat() {
         // Paperi vai Emaili

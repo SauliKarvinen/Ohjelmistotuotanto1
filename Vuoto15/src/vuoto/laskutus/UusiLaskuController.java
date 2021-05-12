@@ -34,6 +34,7 @@ import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Toimitila;
+import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 
 
@@ -52,6 +53,7 @@ public class UusiLaskuController implements Initializable {
     private int asiakkaanID = 0;
     private Toimitila toimitila;
     private int laskutettavaTotal = 0;     // Laskua YHTEENSÄ
+    private int VarausID = 0;               // varattu Tila
     private String tilat = "";
     private String palvelut = "";
     private String laitteet = "";
@@ -93,7 +95,7 @@ public class UusiLaskuController implements Initializable {
     @FXML
     private CheckBox cbPaperi;
     
-    private String laskunTyyppi = "email";
+    private String laskunTyyppi = "email"; // Oletusarvo
     
     Lasku lasku = new Lasku();
     
@@ -141,22 +143,14 @@ public class UusiLaskuController implements Initializable {
 
     @FXML
     private void VahvistaLaskuPainettu(ActionEvent event) {
-//        FXMLLoader loader = new FXMLLoader();
-//            loader.setLocation(getClass().getResource(TaytettyLaskuController.fxmlString));
-//            Parent root = null;
-//
-//            try {
-//                root = loader.load();
-//            } catch (IOException ex) {
-//                heitaVirheNaytolle("Virhe luotaessa näkymää MuokkaaVarausta.fxml");
-//                Logger.getLogger(TaytettyLaskuController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+
         // Importing laskun muuttujat
         String AsiakasTxt = txfAsiakas.getText();
         String PalvelutTxt = txfPalvelut.getText();
         String LaitteetTxt = txfLaitteet.getText();
         String LoppuSummaTxt = txtLasku.getText();
         String LaskunTyyppiTxt = laskunTyyppi;
+        // mukaan VarausID
         
         //TaytettyLaskuController controller = loader.getController();
         TaytettyLaskuController controller = (TaytettyLaskuController) siirryNakymaan(TaytettyLaskuController.fxmlString, "Täytetty lasku", event);
@@ -166,7 +160,7 @@ public class UusiLaskuController implements Initializable {
         controller.asetaLaitteetTxt(LaitteetTxt);
         controller.asetaLoppuSummaTxt(LoppuSummaTxt);
         controller.asetaLaskunTyyppi(LaskunTyyppiTxt);
-        
+        controller.asetaVarausId(VarausID);
     }
     
     @FXML
@@ -226,8 +220,10 @@ public class UusiLaskuController implements Initializable {
     // Haetaan asiakkaan Laitteet
         String laitteet = tietokanta.haeAsiakkaanLaitteet(valittuAsiakas);
         txfLaitteet.setText(laitteet);
-        
-    
+    // hae asiakkaan varauksista varausId -> laskuun.
+        VarausID = tietokanta.haeAsiakkaanToimitilaVarauksenId(valittuAsiakas);
+       
+         
     ///////////// L A S K E T A A N   L O P P U S U M M A  ///////////////////
     // Lasketaan hinta
         int hintaTmp = 0;   // Välihinta
@@ -238,7 +234,7 @@ public class UusiLaskuController implements Initializable {
         
         laskutettava=tietokanta.haeLaskutettava(valittuAsiakas);
         laskutettavaPalvelut=tietokanta.haeLaskutettavaPalvelut(valittuAsiakas);
-        //laskutettavaLaitteet=tietokanta.haeLaskutettavaLaitteet(valittuAsiakas);
+        // laskutettavaLaitteet=tietokanta.haeLaskutettavaLaitteet(valittuAsiakas);
         
         // Lopullinen hinta:
         laskutettavaTotal=laskutettava+laskutettavaPalvelut+laskutettavaLaitteet;

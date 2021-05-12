@@ -998,7 +998,7 @@ public class DBAccess {
 
         try {
             yhdista();
-            ps = conn.prepareStatement("INSERT INTO Lasku (tyyppi, hinta, varausId) "
+            ps = conn.prepareStatement("INSERT INTO Lasku (laskuntyyppi, hinta, varausId) "
                     + "VALUES (? ,?, ?);");
             ps.setString(1, la.getLaskunTyyppi());
             ps.setInt(2, la.getHinta());
@@ -2190,7 +2190,7 @@ public class DBAccess {
                 ps.close();
                 results.close();
             } catch (SQLException ex) {
-                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanVaraukset)");
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanToimitilaVaraukset)");
                 Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -2466,6 +2466,44 @@ public class DBAccess {
         return laskutettava;
     }
 
+       /** 
+     * Hakee ValitunAsiakkaan nimella, vuokratut tilat
+     * @param asiakas Sting
+     * @return tilanNimi String
+     */
+    public int haeAsiakkaanToimitilaVarauksenId(String asiakas){
+          int laskunVarausId = 0; // varaus id
+          results = null;
+          
+          try {
+            yhdista();
+            // SQL, haetaan asiakkaan id:n varaamat tilat
+            ps = conn.prepareStatement("SELECT DISTINCT varausId FROM Varaus WHERE asiakasId =\n" +
+                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?));");
+            ps.setString(1, asiakas);
+            results = ps.executeQuery();
+            
+            // muokataan tulostusta jos useampi vuokra kohde.
+                while(results.next()){
+                    // System.out.println(results.getString(1));
+                    laskunVarausId = results.getInt("varausId");
+                }
+          } catch (SQLException ex) {
+            heitaVirhe("Virhe haettaessa varauksia");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+          } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaanToimitilaVaraukset)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
+        return laskunVarausId;
+    }
 
      
 }
