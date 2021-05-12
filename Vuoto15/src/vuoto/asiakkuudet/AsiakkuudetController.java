@@ -64,7 +64,7 @@ public class AsiakkuudetController implements Initializable {
     @FXML
     private TableColumn<Asiakas, String> colYritys;
     private DBAccess tietokanta = new DBAccess();
-    private Toimipiste valittuToimipiste;
+    private String valittuToimipiste;
     private Toimitila valittuToimitila;
     @FXML
     private ComboBox<Toimitila> cbToimitila;
@@ -78,12 +78,47 @@ public class AsiakkuudetController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         
+        paivitaToimipisteetValikko();
+        paivitaToimitilatValikko();
+        paivitaTableview();
+        
+        cbToimipiste.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                valittuToimipiste = s3;
+                cbToimitila.getItems().clear();
+                paivitaToimitilatValikko();
+                paivitaTableview();
+            }
+        });
+        
+        cbToimitila.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                valittuToimitila = s3;
+                paivitaTableview();
+            }
+        });
+        
+        
+        
     }    
 
 
     private void paivitaTableview() {
         
-        //ObservableList<Asiakas> asiakkaat = tietokanta.haeas
+        ObservableList<Asiakas> asiakkaat = null;
+        
+        if(valittuToimipiste.equals("Kaikki toimipisteet") && valittuToimitila == null) {
+            asiakkaat = tietokanta.haeKaikkiAsiakkaat();
+        } else {
+            if(valittuToimitila == null) {
+                asiakkaat = tietokanta.haeAsiakkaatToimipisteesta(valittuToimipiste);
+            } else {
+                asiakkaat = tietokanta.haeAsiakkaatToimitilasta(valittuToimitila.getTilaId());
+            }
+        }
+         
         
         colAsiakasId.setCellValueFactory(new PropertyValueFactory<>("asiakasId"));
         colEtunimi.setCellValueFactory(new PropertyValueFactory<>("etunimi"));
@@ -94,17 +129,38 @@ public class AsiakkuudetController implements Initializable {
         colSahkoposti.setCellValueFactory(new PropertyValueFactory<>("sahkoposti"));
         colYritys.setCellValueFactory(new PropertyValueFactory<>("yrityksenNimi"));
         
+        tbvAsiakkaat.setItems(asiakkaat);
 
     }
     
     private void paivitaToimitilatValikko() {
         
-        //ObservableList<Toimitila> toimitilat = tietokanta.
+        ObservableList<Toimitila> toimitilat = null;
+        
+        valittuToimipiste = cbToimipiste.getSelectionModel().getSelectedItem();
+        
+        if(valittuToimipiste.equals("Kaikki toimipisteet")) {
+            toimitilat = tietokanta.haeKaikkiToimitilat();
+        } else {
+            toimitilat = tietokanta.haeToimitilatToimipisteesta(valittuToimipiste);
+        }
+       
+        cbToimitila.getItems().addAll(toimitilat);
     }
     
     private void paivitaToimipisteetValikko() {
         
+        ObservableList<Toimipiste> toimipisteet = tietokanta.haeKaikkiToimipisteet();
+        
+        cbToimipiste.getItems().add("Kaikki toimipisteet");
+        
+        for(Toimipiste t: toimipisteet) {
+            cbToimipiste.getItems().add(t.getToimipistenimi());
+        }
+        
+        cbToimipiste.getSelectionModel().select(VuotoMainController.valittuToimipiste);
     }
+ 
     
     private void heitaVirheNaytolle(String virhe) {
         Alert a = new Alert(Alert.AlertType.ERROR);

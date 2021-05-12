@@ -797,6 +797,114 @@ public class DBAccess {
         return asiakas;
         
     }
+    
+    public ObservableList<Asiakas> haeAsiakkaatToimipisteesta(String toimipisteNimi) {
+        
+        ObservableList<Asiakas> asiakkaat = FXCollections.observableArrayList();
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("SELECT DISTINCT(a.asiakasId), a.etunimi, a.sukunimi, a.lahiosoite, a.postinumero, a.puhelinnumero, a.sahkoposti, a.yrityksenNimi "
+                    + "FROM Asiakas a, Varaus v, Tilat t, Toimipisteet tp "
+                    + "WHERE a.asiakasId = v.asiakasId AND v.tilaId = t.tilaId AND t.toimipisteId = tp.toimipisteId AND tp.toimipisteNimi = (?);");
+            
+            ps.setString(1, toimipisteNimi);
+            
+            results = ps.executeQuery();
+            
+            int asiakasId = 0;
+            String etunimi = "";
+            String sukunimi = "";
+            String lahiosoite = "";
+            String postinumero = "";
+            String puhelinnumero = "";
+            String sahkoposti = "";
+            String yrityksenNimi = "";
+            
+            while (results.next()) {
+
+                asiakasId = results.getInt("asiakasId");
+                etunimi = results.getString("etunimi");
+                sukunimi = results.getString("sukunimi");
+                lahiosoite = results.getString("lahiosoite");
+                postinumero = results.getString("postinumero");
+                puhelinnumero = results.getString("puhelinnumero");
+                sahkoposti = results.getString("sahkoposti");
+                yrityksenNimi = results.getString("yrityksenNimi");
+                
+                asiakkaat.add(new Asiakas(asiakasId, etunimi, sukunimi, lahiosoite, postinumero, puhelinnumero, sahkoposti, yrityksenNimi));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa asiakkaita toimipisteestä");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaatToimipisteesta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return asiakkaat;
+    }
+    
+    public ObservableList<Asiakas> haeAsiakkaatToimitilasta(int toimitilaId) {
+        
+        ObservableList<Asiakas> asiakkaat = FXCollections.observableArrayList();
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("SELECT DISTINCT(a.asiakasId), a.etunimi, a.sukunimi, a.lahiosoite, a.postinumero, a.puhelinnumero, a.sahkoposti, a.yrityksenNimi "
+                    + "FROM Asiakas a, Varaus v, Tilat t "
+                    + "WHERE a.asiakasId = v.asiakasId AND v.tilaId = (?);");
+            
+            ps.setInt(1, toimitilaId);
+            
+            results = ps.executeQuery();
+            
+            int asiakasId = 0;
+            String etunimi = "";
+            String sukunimi = "";
+            String lahiosoite = "";
+            String postinumero = "";
+            String puhelinnumero = "";
+            String sahkoposti = "";
+            String yrityksenNimi = "";
+            
+            while (results.next()) {
+
+                asiakasId = results.getInt("asiakasId");
+                etunimi = results.getString("etunimi");
+                sukunimi = results.getString("sukunimi");
+                lahiosoite = results.getString("lahiosoite");
+                postinumero = results.getString("postinumero");
+                puhelinnumero = results.getString("puhelinnumero");
+                sahkoposti = results.getString("sahkoposti");
+                yrityksenNimi = results.getString("yrityksenNimi");
+                
+                asiakkaat.add(new Asiakas(asiakasId, etunimi, sukunimi, lahiosoite, postinumero, puhelinnumero, sahkoposti, yrityksenNimi));
+            }
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe hakiessa asiakkaita toimitilasta");
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            katkaiseYhteys();
+            try {
+                ps.close();
+                results.close();
+            } catch (SQLException ex) {
+                heitaVirhe("Virhe suljettaessa kyselyä (haeAsiakkaatToimitilasta)");
+                Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return asiakkaat;
+    }
 
     /** L A S K U T U S * *
      **/

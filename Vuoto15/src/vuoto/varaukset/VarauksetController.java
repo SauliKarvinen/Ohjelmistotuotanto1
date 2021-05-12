@@ -39,10 +39,6 @@ import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.asiakkuudet.AsiakkuudetController;
 import vuoto.laskutus.LaskutusController;
-import vuoto.luokkafilet.Asiakas;
-import vuoto.luokkafilet.Laite;
-import vuoto.luokkafilet.Palvelu;
-import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Varaus;
 import vuoto.luokkafilet.VarausOlio;
@@ -208,31 +204,27 @@ public class VarauksetController implements Initializable {
         //ObservableList<Varaus> varaukset = tietokanta.haeKaikkiVaraukset();
       
         //varaukset = tietokanta.haeKaikkiVaraukset();
+        
+        // Jos valikosta ei ole valittu toimitilaa..
         if (valittuToimitila != null) {
             tbvVaraukset.getItems().clear();
             varaukset = tietokanta.haeTiedotVarausIkkunaan(valittuToimitila.getTilanNimi());
 
-            colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
-            colVarausalku.setCellValueFactory(new PropertyValueFactory<>("alkupaiva"));
-            colVarausloppu.setCellValueFactory(new PropertyValueFactory<>("loppupaiva"));
-            colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakas"));
-            colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
-            colToimipiste.setCellValueFactory(new PropertyValueFactory<>("toimipiste"));
-
-            tbvVaraukset.setItems(varaukset);
+        // Jos toimitila on valittu..
         } else {
             
             varaukset = tietokanta.haeKaikkiVarauksetVarausIkkunaan();
-            
-            colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
-            colVarausalku.setCellValueFactory(new PropertyValueFactory<>("alkupaiva"));
-            colVarausloppu.setCellValueFactory(new PropertyValueFactory<>("loppupaiva"));
-            colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakas"));
-            colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
-            colToimipiste.setCellValueFactory(new PropertyValueFactory<>("toimipiste"));
-
-            tbvVaraukset.setItems(varaukset);
+        
         }
+        
+        colVarausId.setCellValueFactory(new PropertyValueFactory<>("varausId"));
+        colVarausalku.setCellValueFactory(new PropertyValueFactory<>("alkupaiva"));
+        colVarausloppu.setCellValueFactory(new PropertyValueFactory<>("loppupaiva"));
+        colAsiakas.setCellValueFactory(new PropertyValueFactory<>("asiakas"));
+        colToimitila.setCellValueFactory(new PropertyValueFactory<>("toimitila"));
+        colToimipiste.setCellValueFactory(new PropertyValueFactory<>("toimipiste"));
+
+        tbvVaraukset.setItems(varaukset);
 
     }
     
