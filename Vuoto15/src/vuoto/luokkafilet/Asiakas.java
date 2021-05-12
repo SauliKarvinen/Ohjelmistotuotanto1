@@ -1,6 +1,7 @@
 
 package vuoto.luokkafilet;
 
+import java.util.Objects;
 import javafx.collections.ObservableList;
 
 /**
@@ -162,5 +163,69 @@ public class Asiakas {
     public void setYrityksenNimi(String yrityksenNimi) {
         this.yrityksenNimi = yrityksenNimi;
     }
+
+    /**
+     * Ylikirjoittaa Object-luokan hashCode() metodin
+     * @return hashCode
+     */
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 11 * hash + this.asiakasId;
+        hash = 11 * hash + Objects.hashCode(this.etunimi);
+        hash = 11 * hash + Objects.hashCode(this.sukunimi);
+        hash = 11 * hash + Objects.hashCode(this.lahiosoite);
+        hash = 11 * hash + Objects.hashCode(this.postinumero);
+        hash = 11 * hash + Objects.hashCode(this.puhelinnumero);
+        hash = 11 * hash + Objects.hashCode(this.sahkoposti);
+        hash = 11 * hash + Objects.hashCode(this.yrityksenNimi);
+        return hash;
+    }
+
+    /**
+     * Ylikirjoittaa Object-luokan equals() metodin
+     * @param obj verrattava objekti
+     * @return true / false
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Asiakas other = (Asiakas) obj;
+        if (this.asiakasId != other.asiakasId) {
+            return false;
+        }
+        if (!Objects.equals(this.etunimi, other.etunimi)) {
+            return false;
+        }
+        if (!Objects.equals(this.sukunimi, other.sukunimi)) {
+            return false;
+        }
+        if (!Objects.equals(this.lahiosoite, other.lahiosoite)) {
+            return false;
+        }
+        if (!Objects.equals(this.postinumero, other.postinumero)) {
+            return false;
+        }
+        if (!Objects.equals(this.puhelinnumero, other.puhelinnumero)) {
+            return false;
+        }
+        if (!Objects.equals(this.sahkoposti, other.sahkoposti)) {
+            return false;
+        }
+        if (!Objects.equals(this.yrityksenNimi, other.yrityksenNimi)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
    
 }

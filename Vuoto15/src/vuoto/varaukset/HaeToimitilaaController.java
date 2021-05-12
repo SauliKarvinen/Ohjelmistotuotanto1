@@ -73,15 +73,11 @@ public class HaeToimitilaaController implements Initializable {
         maaritaToimipiste();
         paivitaTableview();
         
-        
-        
         tbvToimitilat.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             toimitila = s3;
         });
-        
-        
-        
+
     }    
     
     /**

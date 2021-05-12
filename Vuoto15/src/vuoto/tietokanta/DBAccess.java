@@ -297,6 +297,11 @@ public class DBAccess {
         return t;
     }
 
+    /**
+     * Hakee tiedot Varaukset -näkymän tableviewiin
+     * @param tilanNimi Toimitila josta varaukset haetaan
+     * @return VarausOlio -luokan olioita sisältävä lista
+     */
     public ObservableList<VarausOlio> haeTiedotVarausIkkunaan(String tilanNimi) {
         
         ObservableList<VarausOlio> varaukset = FXCollections.observableArrayList();
@@ -698,6 +703,48 @@ public class DBAccess {
         }
     }
     
+    /**
+     * Muokkaa asiakasta
+     * @param a Muutettava asiakas
+     * @throws SQLException SQL-Virhe
+     */
+    public void muokkaaAsiakas(Asiakas a) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("UPDATE Asiakas "
+                    + "SET "
+                    + "etunimi=(?), "
+                    + "sukunimi=(?), "
+                    + "lahiosoite=(?), "
+                    + "postinumero=(?), "
+                    + "puhelinnumero=(?), "
+                    + "sahkoposti=(?), "
+                    + "yrityksenNimi=(?) "
+                    + "WHERE asiakasId = (?);");
+            
+            ps.setString(1, a.getEtunimi());
+            ps.setString(2, a.getSukunimi());
+            ps.setString(3, a.getLahiosoite());
+            ps.setString(4, a.getPostinumero());
+            ps.setString(5, a.getPuhelinnumero());
+            ps.setString(6, a.getSahkoposti());
+            ps.setString(7, a.getYrityksenNimi());
+            ps.setInt(8, a.getAsiakasId());
+            
+            ps.executeUpdate();
+            
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe muokatessa asiakasta");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+    }
+    
      /**
      * Hakee KAIKKI ASIAKKAAT tietokannasta ja palauttaa ObservableList listan
      * @return ObservableList asiakkaista.
@@ -798,6 +845,11 @@ public class DBAccess {
         
     }
     
+    /**
+     * Hakee kaikki asiakkaat toimipisteestä
+     * @param toimipisteNimi Toimipiste jonka asiakkaita haetaan
+     * @return Toimipisteen asiakkaat -lista
+     */
     public ObservableList<Asiakas> haeAsiakkaatToimipisteesta(String toimipisteNimi) {
         
         ObservableList<Asiakas> asiakkaat = FXCollections.observableArrayList();
@@ -852,6 +904,11 @@ public class DBAccess {
         return asiakkaat;
     }
     
+    /**
+     * Hakee asiakkaat toimitilasta
+     * @param toimitilaId Toimitila josta asiakkaita haetaan
+     * @return asiakkaat
+     */
     public ObservableList<Asiakas> haeAsiakkaatToimitilasta(int toimitilaId) {
         
         ObservableList<Asiakas> asiakkaat = FXCollections.observableArrayList();

@@ -375,8 +375,6 @@ public class MuokkaaVaraustaController implements Initializable {
             heitaVirheNaytolle("Virhe luotaessa näkymää " + title);
             Logger.getLogger(MuokkaaVaraustaController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-   
     } 
     
     /**

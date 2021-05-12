@@ -70,6 +70,7 @@ public class AsiakkuudetController implements Initializable {
     private ComboBox<Toimitila> cbToimitila;
     @FXML
     private ComboBox<String> cbToimipiste;
+    private Asiakas valittuAsiakas;
 
     /**
      * Initializes the controller class.
@@ -82,6 +83,7 @@ public class AsiakkuudetController implements Initializable {
         paivitaToimitilatValikko();
         paivitaTableview();
         
+        // Kuuntelee toimipisteen valintaa
         cbToimipiste.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             if(s3 != s2) {
@@ -92,6 +94,7 @@ public class AsiakkuudetController implements Initializable {
             }
         });
         
+        // Kuuntelee toimitilan valintaa
         cbToimitila.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             if(s3 != s2) {
@@ -100,12 +103,20 @@ public class AsiakkuudetController implements Initializable {
             }
         });
         
+        tbvAsiakkaat.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                valittuAsiakas = s3;
+            }
+        });
         
         
     }    
 
-
-    private void paivitaTableview() {
+    /**
+     * Päivittää tableviewn sen mukaan mitä comboboxeista on valittu
+     */
+    public void paivitaTableview() {
         
         ObservableList<Asiakas> asiakkaat = null;
         
@@ -133,6 +144,9 @@ public class AsiakkuudetController implements Initializable {
 
     }
     
+    /**
+     * Päivittää toimitilat -valikon sen mukaan mikä toimipiste on valittu
+     */
     private void paivitaToimitilatValikko() {
         
         ObservableList<Toimitila> toimitilat = null;
@@ -148,6 +162,9 @@ public class AsiakkuudetController implements Initializable {
         cbToimitila.getItems().addAll(toimitilat);
     }
     
+    /**
+     * Päivittää toimipiste -valikon
+     */
     private void paivitaToimipisteetValikko() {
         
         ObservableList<Toimipiste> toimipisteet = tietokanta.haeKaikkiToimipisteet();
@@ -161,7 +178,10 @@ public class AsiakkuudetController implements Initializable {
         cbToimipiste.getSelectionModel().select(VuotoMainController.valittuToimipiste);
     }
  
-    
+    /**
+     * Heittää virheen näytölle
+     * @param virhe Virheilmoitus
+     */
     private void heitaVirheNaytolle(String virhe) {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Asiakkuudet");
@@ -169,7 +189,10 @@ public class AsiakkuudetController implements Initializable {
         a.showAndWait();
     }
 
-
+    /**
+     * Palauttaa näkymän etusivulle
+     * @param event Etusivulle -napin painallus
+     */
     @FXML
     private void btnEtusivullePainettu(ActionEvent event) {
         
@@ -188,6 +211,10 @@ public class AsiakkuudetController implements Initializable {
         stage.setScene(new Scene(root));
     }
 
+    /**
+     * Lisää asiakkaan
+     * @param event Lisaa asiakas -napin painallus
+     */
     @FXML
     private void btnLisaaAsiakasPainettu(ActionEvent event) {
         
@@ -195,12 +222,26 @@ public class AsiakkuudetController implements Initializable {
         
     }
 
+    /**
+     * Muokkaa asiakasta
+     * @param event Muokkaa -napin painallus
+     */
     @FXML
     private void btnMuokkaaAsiakastaPainettu(ActionEvent event) {
         
-        MuokkaaAsiakastaController controller = (MuokkaaAsiakastaController) avaaUusiIkkuna(MuokkaaAsiakastaController.fxmlString, "Asiakkaan muokkaus");
+        if(valittuAsiakas == null) {
+            heitaVirheNaytolle("Valitse asiakas");
+        } else {
+            MuokkaaAsiakastaController controller = (MuokkaaAsiakastaController) avaaUusiIkkuna(MuokkaaAsiakastaController.fxmlString, "Asiakkaan muokkaus");
+            controller.taytaAsiakkaanTiedot(valittuAsiakas);
+            controller.asetaController(this);
+        }
     }
 
+    /**
+     * Poistaa asiakkaan
+     * @param event Poista -napin painallus
+     */
     @FXML
     private void btnPoistaAsiakasPainettu(ActionEvent event) {
         
