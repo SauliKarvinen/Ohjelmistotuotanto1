@@ -100,9 +100,25 @@ public class TaytettyLaskuController implements Initializable {
     private void butSendPainettu(ActionEvent event) {
         // jos tyyppi email 
         // messageBox "email send"
+        if (LaskuTyyppi.equalsIgnoreCase("email")){
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle("Lasku lähetetty");
+                    a.setHeaderText("Lasku lähetetty\n sähköpostilla!");
+                    a.showAndWait();
 
+                    siirryNakymaan(UusiLaskuController.fxmlString, "UusiLasku", event);
+            }
+        
         // jos tyyppi paperi
         // messageBox "Lähetty tulostimelle."
+        if (LaskuTyyppi.equalsIgnoreCase("paperi")){
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle("Lasku tulostettu");
+                    a.setHeaderText("Lasku lähetetty tulostimelle!");
+                    a.showAndWait();
+
+                    siirryNakymaan(UusiLaskuController.fxmlString, "UusiLasku", event);
+            }
         
         // add to DB
         
