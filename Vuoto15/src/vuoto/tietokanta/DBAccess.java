@@ -2005,13 +2005,19 @@ public class DBAccess {
             yhdista();
             
             
-            ps = conn.prepareStatement("SELECT l.laskuNro, l.varausId , a.yrityksenNimi, t.tilanNimi, l.laskuntyyppi FROM Lasku l, Asiakas a, Tilat t \n" +
-                                " WHERE a.yrityksenNimi= ? LIMIT 1;;");
+            ps = conn.prepareStatement("SELECT * FROM Lasku WHERE varausId IN " +
+                                                "(SELECT varausId FROM Varaus WHERE asiakasId = " +
+                                                    "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?)));");
             ps.setString(1, a.getYrityksenNimi());
             results = ps.executeQuery();
             
             while(results.next()) {
-                laskut.add(new Lasku(results.getInt("laiteId"), results.getString("laskuntyyppi"),results.getInt("hinta"),results.getInt("varausId")));
+                int laskuNro = results.getInt("laskuNro");
+                String laskuntyyppi = results.getString("laskuntyyppi");
+                int hinta = results.getInt("hinta");
+                int varausId = results.getInt("varausId");
+                
+                laskut.add(new Lasku(laskuNro, laskuntyyppi,hinta,varausId));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
@@ -2511,5 +2517,39 @@ public class DBAccess {
         return laskunVarausId;
     }
 
-     
+    /**
+     * Muokkaa LAS
+     * @param a Muutettava lasku
+     * @throws SQLException SQL-Virhe
+     */
+    public void muokkaaLasku(Lasku la) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("UPDATE Lasku "
+                    + "SET "
+                    + "laskuNro=(?), "
+                    + "tyyppi=(?), "
+                    + "hinta=(?), "
+                    + "varausNro=(?), "
+                    + "WHERE laskuNro = (?);");
+            
+            ps.setInt(1, la.getLaskunNro());
+            ps.setInt(2, la.getVarausId());
+            ps.setString(3, la.getLaskunTyyppi());
+            ps.setInt(4, la.getHinta());
+            ps.setInt(5, la.getLaskunNro());
+            
+            ps.executeUpdate();
+            
+            
+        } catch (SQLException ex) {
+            heitaVirhe("Virhe muokatessa laskua");
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+    }     
 }

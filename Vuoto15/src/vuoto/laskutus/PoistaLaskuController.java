@@ -19,11 +19,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import vuoto.aloitus.VuotoMainController;
+import vuoto.tietokanta.DBAccess;
 
 /**
  * FXML Controller class
@@ -31,6 +31,10 @@ import vuoto.aloitus.VuotoMainController;
  * @author marko
  */
 public class PoistaLaskuController implements Initializable {
+    
+    private DBAccess tietokanta = new DBAccess();
+    private LaskutusController controller;
+
 
     // Jos muutat fxml-tiedoston sijaintia niin muuta tähän uusi sijainti!
     /** fxml-tiedoston sijainti*/
@@ -40,11 +44,27 @@ public class PoistaLaskuController implements Initializable {
     @FXML
     private TextField txtToimipiste;
     @FXML
-    private ComboBox<?> cbRajaa;
+    private TextArea txtAsiakas;
     @FXML
-    private Button btnLisaaLasku;
+    private TextArea txtLaskunNro;
     @FXML
-    private Button btnPoistaLasku;
+    private TextArea txtVarausNro;
+    @FXML
+    private TextField txtSumma;
+    @FXML
+    private Button btTakaisin;
+    @FXML
+    private Button btPoistaLasku;
+
+    @FXML
+    private void btnTakaisinPainettu(ActionEvent event) {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void PoistaLaskuPainettu(ActionEvent event) {
+    }
 
     /**
      * Initializes the controller class.
@@ -53,38 +73,6 @@ public class PoistaLaskuController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
-
-    @FXML
-    private void LisaaToimipiste(ActionEvent event) {
-    }
-
-    @FXML
-    private void PoistaToimipiste(ActionEvent event) {
-    }
-
-    @FXML
-    private void MuokkaaToimipiste(ActionEvent event) {
-    }
-
-   
-    
-    @FXML
-    private void btnEtusivullePainettu(ActionEvent event) {
-        
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(VuotoMainController.fxmlString));
-        Parent root = null;
-        
-        try {
-            root = loader.load();
-        } catch (IOException ex) {
-            heitaVirheNaytolle("Virhe palatessa takaisin aloitusnäkymään");
-            Logger.getLogger(PoistaLaskuController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-    }
 
     /**
      * Heittää virheilmoituksen näytölle
@@ -123,7 +111,18 @@ public class PoistaLaskuController implements Initializable {
         
         return controller;
    
-    } 
-     
+    }
+    
+     /**
+     * Asettaa LaskutusController luokan controllerin
+     * @param c controller
+     */
+    public void asetaController(LaskutusController c) {
+       
+        if(c != null) {
+            controller = c;
+        }
+    }
+ 
 
 }

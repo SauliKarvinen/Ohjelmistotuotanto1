@@ -7,6 +7,7 @@ package vuoto.laskutus;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,8 +22,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
+import vuoto.tietokanta.DBAccess;
+import vuoto.luokkafilet.Lasku;
+import vuoto.luokkafilet.LaskuOlio;
+
 
 /**
  * FXML Controller class
@@ -30,6 +37,12 @@ import javafx.stage.Stage;
  * @author marko
  */
 public class MuokkaaLaskuController implements Initializable {
+    
+    private Lasku lasku;
+    private DBAccess tietokanta = new DBAccess();
+    private LaskutusController controller;
+    private String valittuAsiakas;
+    
 
     // Jos muutat fxml-tiedoston sijaintia niin muuta tähän uusi sijainti!
     /** fxml-tiedoston sijainti*/
@@ -38,38 +51,71 @@ public class MuokkaaLaskuController implements Initializable {
     private Label lblToimipisteValinta;
     @FXML
     private TextField txtToimipiste;
+    private TextArea txtAsiakas;
     @FXML
-    private ComboBox<?> cbRajaa;
+    private TextField txtSumma;
     @FXML
-    private Button btnPoistaLasku;
+    private TextArea txtLaskunNro;
+    @FXML
+    private TextArea txtVarausNro;
+    @FXML
+    private Button btTakaisin;
+    @FXML
+    private Button btMuokkaaLasku;
+    @FXML
+    private TextArea txtLaskTyyppi;
+
+    @FXML
+    private void btnTakaisinPainettu(ActionEvent event) {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void MuokkaaLaskuPainettu(ActionEvent event) {
+        Lasku updLasku = null;
+        
+        int laskuNro = lasku.getLaskunNro();
+        int varausNro = lasku.getVarausId();
+        String tyyppi = lasku.getLaskunTyyppi();
+        int hinta = lasku.getHinta();
+        
+        updLasku = new Lasku(laskuNro,tyyppi,hinta, varausNro);
+        // Tarkastaa että tietoja on muutettu
+        if(updLasku.equals(lasku)) {
+            heitaVirheNaytolle("Muuta tietoja päivittääksesi laskua");
+        } else {
+            try {
+                tietokanta.muokkaaLasku(updLasku);
+                
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Laskun päivitys");
+                a.setHeaderText("Lasku päivitetty!");
+                a.showAndWait();
+                
+                controller.populateTableViewLaskut(valittuAsiakas);
+                Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+                stage.close();
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(MuokkaaLaskuController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        txtToimipiste.setText(valittuToimipiste);
         // TODO
+        
     }    
 
-    @FXML
-    private void btnEtusivullePainettu(ActionEvent event) {
-    }
+    
+    
 
-    @FXML
-    private void MuokkaaToimipiste(ActionEvent event) {
-    }
-    
-    
-    /**
-     * Heittää virheilmoituksen näytölle
-     * @param virhe Virheilmoitus
-     */
-    private void heitaVirheNaytolle(String virhe) {
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setTitle("Vuokrattavat kiinteistöt");
-        a.setHeaderText(virhe);
-        a.showAndWait();
-    }
 
      /**
      * Muuttaa ikkunan näkymäksi aloitusikkunasta valitun näkymän
@@ -97,7 +143,47 @@ public class MuokkaaLaskuController implements Initializable {
         
         return controller;
    
-    } 
+    }
+    
+        public void taytaLaskunTiedot(Lasku la) {
+        
+        if(la != null) {
+            lasku = la;
+            txtToimipiste.setText(valittuToimipiste);
+            txtLaskTyyppi.setText(la.getLaskunTyyppi());
+            txtLaskunNro.setText(String.valueOf(la.getLaskunNro()));
+            txtVarausNro.setText(String.valueOf(la.getVarausId()));
+            txtSumma.setText(String.valueOf(la.getHinta()));
+            
+        }
+    }
      
+    /**
+     * Asettaa AsiakkuudetController luokan controllerin
+     * @param c controller
+     */
+    public void asetaController(LaskutusController c) {
+       
+        if(c != null) {
+            controller = c;
+        }
+    }
+    
+     public void asetaValittuAsiakas(String valittuAsiakas) {
+        
+        this.valittuAsiakas = valittuAsiakas;
+   
+    }
 
+    
+        /**
+     * Heittää virheilmoituksen näytölle
+     * @param virhe Virheilmoitus
+     */
+    private void heitaVirheNaytolle(String virhe) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setTitle("Laskun muokkaus");
+        a.setHeaderText(virhe);
+        a.showAndWait();
+    }
 }

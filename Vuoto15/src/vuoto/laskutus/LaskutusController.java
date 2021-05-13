@@ -28,11 +28,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import vuoto.aloitus.VuotoMainController;
 import static vuoto.aloitus.VuotoMainController.valittuToimipiste;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Lasku;
+import vuoto.luokkafilet.LaskuOlio;
 import vuoto.luokkafilet.Toimipiste;
 import vuoto.luokkafilet.LaskutTauluOlio;
 import vuoto.tietokanta.DBAccess;
@@ -69,7 +71,22 @@ public class LaskutusController implements Initializable {
     @FXML
     private Button btnMuokkaaLasku;
     
-    
+     /*** TABLEVIEW **/   
+    @FXML
+    private TableView<Lasku> tblLaskut;
+    @FXML
+    private TableColumn<Lasku, Integer> colLaskunNro;
+    @FXML
+    private TableColumn<Lasku, String> colTyyppi;
+    @FXML
+    private TableColumn<Lasku, Integer> colHinta;
+    @FXML
+    private TableColumn<Lasku, Integer> colVarausNro;
+    @FXML
+    private ObservableList<Lasku> listLaskut;
+    private LaskuOlio laskuOlio;
+    private ObservableList<LaskuOlio> laskut = null;
+    private Lasku valLasku;
     
      @FXML
     private void LisaaLaskuPainettu(ActionEvent event) {
@@ -90,8 +107,21 @@ public class LaskutusController implements Initializable {
     @FXML
     private void MuokkaaLaskuPainettu(ActionEvent event) {
         // Open panel - UusiLasku
-        MuokkaaLaskuController controller = (MuokkaaLaskuController) siirryNakymaan(MuokkaaLaskuController.fxmlString, "Muokkaa Lasku", event);
-        //controller.asetaToimipiste(toimipiste);
+        
+// OLD 
+        //MuokkaaLaskuController controller = (MuokkaaLaskuController) siirryNakymaan(MuokkaaLaskuController.fxmlString, "Muokkaa Lasku", event);
+        
+        
+        if(valLasku == null) {
+            heitaVirheNaytolle("Valitse lasku");
+        } else {
+            MuokkaaLaskuController controller = (MuokkaaLaskuController) avaaUusiIkkuna(MuokkaaLaskuController.fxmlString, "Laskun muokkaus");
+            controller.taytaLaskunTiedot(valLasku);
+            controller.asetaController(this);
+        }
+        
+        
+        
         
     }
     
@@ -123,7 +153,7 @@ public class LaskutusController implements Initializable {
             // TableView aktivointi
         try {
             // Aktivoi TblView
-            populateTableViewLaskut();
+            populateTableViewLaskut(valittuAsiakas);
             } catch (SQLException ex) {
                 heitaVirheNaytolle("TableView:n aktivoinnissa virhe (Laskut).");
                 Logger.getLogger(LaskutusController.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,43 +161,34 @@ public class LaskutusController implements Initializable {
             
         });
         
-        // Lista kaikista laskuista...
-        // ToDo
-        // By TP/All/Asiakas
+        tblLaskut.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
+            
+            if(s3 != s2) {
+                valLasku = s3;
+            }
+        });
         
         
     }    
 
-     /*** TABLEVIEW **/   
-    @FXML
-    private TableView<Lasku> tblLaskut;
-    @FXML
-    private TableColumn<Lasku, Integer> colLaskunNro;
-    @FXML
-    private TableColumn<Lasku, String> colTyyppi;
-    @FXML
-    private TableColumn<Lasku, Integer> colHinta;
-    @FXML
-    private TableColumn<Lasku, Integer> colVarausNro;
-    @FXML
-    private ObservableList<Lasku> listLaskut;
-    
     
     
     /**
      * Method to populate TableView: Laskut
      * Käytetään Laskun (DBAccess) metodia, 
-     *  haeKaikkiLaskut() 
+     *  haeAsiakkaanLaskut() 
      *  Luetaan -> observableArrayList(listLaskut)
      *  Alustetaan -> setCellValueFactory määritykset sarakkeille.
      * 
      * */
-    private void populateTableViewLaskut() throws SQLException {
+    void populateTableViewLaskut(String nimi) throws SQLException {
        // alustetaan lista
        listLaskut = FXCollections.observableArrayList();
        
        // Haetaan asiakkaan Varaukset (Ei vielä, nyt KAIKKI varaukset)
-       listLaskut = tietokanta.haeKaikkiLaskut();
+       Asiakas as = new Asiakas();
+       as.setYrityksenNimi(nimi);
+       listLaskut = tietokanta.haeAsiakkaanLaskut(as);
         // set propertyTab to TableView
        colLaskunNro.setCellValueFactory(new PropertyValueFactory<>("laskuNro"));
        colTyyppi.setCellValueFactory(new PropertyValueFactory<>("laskuntyyppi"));
@@ -250,5 +271,38 @@ public class LaskutusController implements Initializable {
    
     } 
 
+
+/**
+     * Näyttää uuden ikkunan
+     * @param fxml avattava .fxml tiedosto
+     * @param title uuden ikkunan otsikko
+     * @return avattavan .fxml näkymän Controller
+     */
+    private Object avaaUusiIkkuna(String fxml, String title) {
+        
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(fxml));  
+        Parent root = null;
+        Object controller = null;
+        
+        try {
+            root = loader.load();
+        } catch (IOException ex) {
+            heitaVirheNaytolle("Virhe luotaessa näkymää '" + title + "'");
+            Logger.getLogger(LaskutusController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        controller = loader.getController();
+        
+        Scene scene = new Scene(root);
+
+        Stage stage = new Stage();
+        stage.setTitle(title);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        stage.show();
+        
+        return controller;
+    }
+    
     
 }
