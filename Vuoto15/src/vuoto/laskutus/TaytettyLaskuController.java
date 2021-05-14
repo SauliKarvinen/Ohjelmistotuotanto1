@@ -12,8 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,11 +24,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javax.sound.midi.ControllerEventListener;
 import vuoto.luokkafilet.Asiakas;
-import vuoto.luokkafilet.Toimitila;
 import vuoto.luokkafilet.Lasku;
-import vuoto.luokkafilet.Varaus;
 import vuoto.tietokanta.DBAccess;
 
 /**
@@ -50,7 +45,7 @@ public class TaytettyLaskuController implements Initializable {
     private String PalvelutTxt = "";
     private String LaitteetTxt = "";
     private String LoppuSummaTxt = "";
-    private String LaskuTyyppi = "";
+    private String Laskutyyppi = "";
     private int    VarausID = 0;
     private int    hintaInt = 0;
     private String KulutTxt = "";
@@ -103,7 +98,7 @@ public class TaytettyLaskuController implements Initializable {
     private void butSendPainettu(ActionEvent event) {
         // jos tyyppi email 
         // messageBox "email send"
-        if (LaskuTyyppi.equalsIgnoreCase("email")){
+        if (Laskutyyppi.equalsIgnoreCase("email")){
             Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setTitle("Lasku lähetetty");
                     a.setHeaderText("Lasku lähetetty\n sähköpostilla!");
@@ -114,7 +109,7 @@ public class TaytettyLaskuController implements Initializable {
         
         // jos tyyppi paperi
         // messageBox "Lähetty tulostimelle."
-        if (LaskuTyyppi.equalsIgnoreCase("paperi")){
+        if (Laskutyyppi.equalsIgnoreCase("paperi")){
             Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setTitle("Lasku tulostettu");
                     a.setHeaderText("Lasku lähetetty tulostimelle!");
@@ -128,7 +123,7 @@ public class TaytettyLaskuController implements Initializable {
          * String LoppuSummaTxt -> int hintaInt
          */
         hintaInt = Integer.parseInt(LoppuSummaTxt);
-        Lasku lasku = new Lasku(LaskuTyyppi, hintaInt, VarausID);
+        Lasku lasku = new Lasku(Laskutyyppi, hintaInt, VarausID);
         tietokanta.lisaaUusiLasku(lasku);
         
         
@@ -204,8 +199,8 @@ public class TaytettyLaskuController implements Initializable {
         txtLoppuSumma.setText(LoppuSummaTxt);
     }
 
-    public void asetaLaskunTyyppi(String LaskuTyyppi) {
-        this.LaskuTyyppi = LaskuTyyppi;
+    public void asetaLaskuntyyppi(String Laskutyyppi) {
+        this.Laskutyyppi = Laskutyyppi;
         tarkistaTyyppi();
     }  
 
@@ -246,13 +241,13 @@ public class TaytettyLaskuController implements Initializable {
     public void tarkistaTyyppi(){
          // luetaan asiakkaan toive laskun tyypistä,
         // email, nappissa LÄHETÄ
-        System.out.println("Laskun tyyppi: " + LaskuTyyppi);
-        if (LaskuTyyppi.equalsIgnoreCase("email")){
+        System.out.println("Laskun tyyppi: " + Laskutyyppi);
+        if (Laskutyyppi.equalsIgnoreCase("email")){
             butSend.setText("LÄHETÄ");
             
         }
         // posti, napissa TULOSTA
-        if (LaskuTyyppi.equalsIgnoreCase("paperi")){
+        if (Laskutyyppi.equalsIgnoreCase("paperi")){
             butSend.setText("TULOSTA");
         }
     }

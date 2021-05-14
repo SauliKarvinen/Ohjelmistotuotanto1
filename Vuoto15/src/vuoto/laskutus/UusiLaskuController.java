@@ -149,7 +149,7 @@ public class UusiLaskuController implements Initializable {
         String PalvelutTxt = txfPalvelut.getText();
         String LaitteetTxt = txfLaitteet.getText();
         String LoppuSummaTxt = txtLasku.getText();
-        String LaskunTyyppiTxt = laskunTyyppi;
+        String LaskuntyyppiTxt = laskunTyyppi;
         // mukaan VarausID
         
         //TaytettyLaskuController controller = loader.getController();
@@ -159,7 +159,7 @@ public class UusiLaskuController implements Initializable {
         controller.asetaPalvelutTxt(PalvelutTxt);
         controller.asetaLaitteetTxt(LaitteetTxt);
         controller.asetaLoppuSummaTxt(LoppuSummaTxt);
-        controller.asetaLaskunTyyppi(LaskunTyyppiTxt);
+        controller.asetaLaskuntyyppi(LaskuntyyppiTxt);
         controller.asetaVarausId(VarausID);
     }
     
@@ -168,7 +168,7 @@ public class UusiLaskuController implements Initializable {
         if (cbEmail.isSelected()){
             cbPaperi.setSelected(false);
             laskunTyyppi="email";
-            lasku.setLaskunTyyppi(laskunTyyppi);
+            lasku.setLaskuntyyppi(laskunTyyppi);
            
         }
         
@@ -179,7 +179,7 @@ public class UusiLaskuController implements Initializable {
         if (cbPaperi.isSelected()){
             cbEmail.setSelected(false);
             laskunTyyppi = "paperi";
-            lasku.setLaskunTyyppi(laskunTyyppi);
+            lasku.setLaskuntyyppi(laskunTyyppi);
         }
         
     }
