@@ -105,23 +105,23 @@ public class LaskutusController implements Initializable {
             
         boolean laskuPoistettu = true;
 
-        if (laskuOlio == null) {
+        if (valLasku == null) {
 
             heitaVirheNaytolle("Valitse poistettava lasku");
 
         } else {
-            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko Lasku " + laskuOlio.getVarausId() + "?", "Laskun poistaminen");
+            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko Lasku " + valLasku.getLaskuNro() + "?", "Laskun poistaminen");
 
             if (okPainettu) {
                 try {
-                    tietokanta.poistaLasku(laskuOlio.getVarausId());
+                    tietokanta.poistaLasku(valLasku.getLaskuNro());
                 } catch (SQLException ex) {
                     laskuPoistettu = false;
                     heitaVirheNaytolle("Virhe poistettaessa laskua");
                     Logger.getLogger(LaskutusController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-            if (laskuPoistettu) {
+                
+                if (laskuPoistettu) {
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Laskun poistaminen");
                 a.setHeaderText("Lasku poistettu");
@@ -132,6 +132,8 @@ public class LaskutusController implements Initializable {
                     Logger.getLogger(LaskutusController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            }
+            
         }
     }
 
