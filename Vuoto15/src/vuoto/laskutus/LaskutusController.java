@@ -147,16 +147,10 @@ public class LaskutusController implements Initializable {
             controller.taytaLaskunTiedot(valLasku);
             controller.asetaController(this);
         }
-        
-        
-        
-        
     }
     
     @FXML
     private void cbValitseAsiakasValittu(ActionEvent event) {
-        // Hae asiakkaat TableViewhen
-        // Todo
     }
     
     
@@ -195,8 +189,6 @@ public class LaskutusController implements Initializable {
                 valLasku = s3;
             }
         });
-        
-        
     }    
 
     
