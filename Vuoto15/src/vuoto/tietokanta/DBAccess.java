@@ -1673,8 +1673,7 @@ public class DBAccess {
         ObservableList<Palvelu> palvelut = FXCollections.observableArrayList();
         try {
             yhdista();
-            ps = conn.prepareStatement("SELECT p.palveluId, p.hintaPvm, p.kuvaus FROM Palvelut p, Tilanpalvelut tp WHERE tp.tilaId = ? AND p.palveluId = tp.palveluId;");
-            ps.setInt(1, t.getTilaId());
+            ps = conn.prepareStatement("SELECT p.palveluId, p.hintaPvm, p.kuvaus FROM Palvelut p, Tilanpalvelut tp WHERE tp.tilaId = ? AND p.palveluId = tp.palveluId;");            ps.setInt(1, t.getTilaId());
             results = ps.executeQuery();
             
             while(results.next()) {

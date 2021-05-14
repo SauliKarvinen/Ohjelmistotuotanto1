@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import vuoto.aloitus.VuotoMainController;
 import vuoto.luokkafilet.Asiakas;
 import vuoto.tietokanta.DBAccess;
 
@@ -68,6 +69,7 @@ public class HaeAsiakastaController implements Initializable {
         // TODO
         
         paivitaAsiakasTableview();
+        txtToimipiste.setText(VuotoMainController.valittuToimipiste);
         
         // Kuunnellaan tableviewta asiakkaan valinnasta
         tbvAsiakkaat.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
