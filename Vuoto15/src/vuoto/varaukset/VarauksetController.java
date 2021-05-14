@@ -308,14 +308,16 @@ public class VarauksetController implements Initializable {
                     heitaVirheNaytolle("Virhe poistettaessa varausta");
                     Logger.getLogger(VarauksetController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-            if (varausPoistettu) {
+                
+                if (varausPoistettu) {
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Varauksen poistaminen");
                 a.setHeaderText("Varaus poistettu");
                 a.showAndWait();
                 paivitaTableview();
             }
+            }
+            
         }
     }
 
