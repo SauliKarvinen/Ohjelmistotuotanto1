@@ -22,7 +22,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -99,18 +101,44 @@ public class LaskutusController implements Initializable {
     @FXML
     private void PoistaLaskuPainettu(ActionEvent event) {
         // Open panel - UusiLasku
-        PoistaLaskuController controller = (PoistaLaskuController) siirryNakymaan(PoistaLaskuController.fxmlString, "Poista Lasku", event);
-        //controller.asetaToimipiste(toimipiste);
-        
+    //    PoistaLaskuController controller = (PoistaLaskuController) siirryNakymaan(PoistaLaskuController.fxmlString, "Poista Lasku", event);
+    
+            
+        boolean laskuPoistettu = true;
+
+        if (laskuOlio == null) {
+
+            heitaVirheNaytolle("Valitse poistettava lasku");
+
+        } else {
+            boolean okPainettu = heitaVahvistusNaytolle("Poistetaanko Lasku " + laskuOlio.getVarausId() + "?", "Laskun poistaminen");
+
+            if (okPainettu) {
+                try {
+                    tietokanta.poistaLasku(laskuOlio.getVarausId());
+                } catch (SQLException ex) {
+                    laskuPoistettu = false;
+                    heitaVirheNaytolle("Virhe poistettaessa laskua");
+                    Logger.getLogger(LaskutusController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (laskuPoistettu) {
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Laskun poistaminen");
+                a.setHeaderText("Lasku poistettu");
+                a.showAndWait();
+                try {
+                    populateTableViewLaskut(valittuAsiakas);
+                } catch (SQLException ex) {
+                    Logger.getLogger(LaskutusController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     @FXML
     private void MuokkaaLaskuPainettu(ActionEvent event) {
         // Open panel - UusiLasku
-        
-// OLD 
-        //MuokkaaLaskuController controller = (MuokkaaLaskuController) siirryNakymaan(MuokkaaLaskuController.fxmlString, "Muokkaa Lasku", event);
-        
         
         if(valLasku == null) {
             heitaVirheNaytolle("Valitse lasku");
@@ -303,6 +331,39 @@ public class LaskutusController implements Initializable {
         
         return controller;
     }
-    
-    
+
+    /**
+     * Heittää Confirmation -ikkunan näytölle
+     * @param viesti Ikkunan header-teksti
+     * @param title Ikkunan otsikko
+     * @return Jos painetaan OK = true, muuten false
+     */
+    private boolean heitaVahvistusNaytolle(String viesti, String title) {
+        
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle(title);
+        a.setHeaderText(viesti);
+        a = muotoileIlmoitus(a);
+        a.showAndWait();
+        if(a.getResult() == ButtonType.OK) {
+            return true;
+        }
+        return false;
+    }
+
+        /**
+     * Muotoilee ilmoituksen ikkunan
+     * @param a Alkuperäinen ilmoitus
+     * @return Palautetaan muotoiltu ilmoitus
+     */
+    public Alert muotoileIlmoitus(Alert a) {
+        
+        String alert_css = getClass().getResource("/vuoto/stylesheets/sauli_alert.css").toExternalForm();
+        DialogPane dialog = a.getDialogPane();
+        dialog.getStylesheets().add(alert_css);
+        dialog.getStyleClass().add("alert");
+        ((Button)a.getDialogPane().lookupButton(ButtonType.CANCEL)).setText("Takaisin");
+        
+        return a;
+    }
 }

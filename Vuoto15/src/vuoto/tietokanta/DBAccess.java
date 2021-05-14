@@ -2551,5 +2551,27 @@ public class DBAccess {
             katkaiseYhteys();
             ps.close();
         }
-    }     
+    }
+    
+    /**
+     * Poistaa ID-numeroa vastaavan LASKUN
+     * @param varausId VarausId
+     * @throws SQLException SQL-Virhe
+     */
+    public void poistaLasku(int laskuNro) throws SQLException {
+        
+        try {
+            yhdista();
+            
+            ps = conn.prepareStatement("DELETE FROM Lasku WHERE laskuNro = ?");
+            ps.setInt(1, laskuNro);
+            ps.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        } finally {
+            katkaiseYhteys();
+            ps.close();
+        }
+    }
 }
