@@ -75,9 +75,9 @@ public class MuokkaaLaskuController implements Initializable {
     private void MuokkaaLaskuPainettu(ActionEvent event) {
         Lasku updLasku = null;
         
-        int laskuNro = lasku.getLaskunNro();
+        int laskuNro = lasku.getLaskuNro();
         int varausNro = lasku.getVarausId();
-        String tyyppi = lasku.getLaskunTyyppi();
+        String tyyppi = lasku.getLaskuntyyppi();
         int hinta = lasku.getHinta();
         
         updLasku = new Lasku(laskuNro,tyyppi,hinta, varausNro);
@@ -113,10 +113,6 @@ public class MuokkaaLaskuController implements Initializable {
         
     }    
 
-    
-    
-
-
      /**
      * Muuttaa ikkunan näkymäksi aloitusikkunasta valitun näkymän
      * @param fxml fxml-tiedoston nimi
@@ -150,8 +146,8 @@ public class MuokkaaLaskuController implements Initializable {
         if(la != null) {
             lasku = la;
             txtToimipiste.setText(valittuToimipiste);
-            txtLaskTyyppi.setText(la.getLaskunTyyppi());
-            txtLaskunNro.setText(String.valueOf(la.getLaskunNro()));
+            txtLaskTyyppi.setText(la.getLaskuntyyppi());
+            txtLaskunNro.setText(String.valueOf(la.getLaskuNro()));
             txtVarausNro.setText(String.valueOf(la.getVarausId()));
             txtSumma.setText(String.valueOf(la.getHinta()));
             

@@ -70,20 +70,20 @@ public class Lasku {
      */
 
      // LaskuNro käsittely
-    public int getLaskunNro(){
+    public int getLaskuNro(){
         return laskuNro;
     }
     
-    public void setLaskunNro(int laskuNro){
+    public void setLaskuNro(int laskuNro){
         this.laskuNro = laskuNro;
     }
 
     // Laskun tyyppi
-    public String getLaskunTyyppi(){
+    public String getLaskuntyyppi(){
         return laskuntyyppi;
     }
     
-    public void setLaskunTyyppi(String laskuntyyppi){
+    public void setLaskuntyyppi(String laskuntyyppi){
         this.laskuntyyppi = laskuntyyppi;
     }
     
@@ -106,6 +106,6 @@ public class Lasku {
     }
     
     public String toString() {
-        return getLaskunTyyppi();
+        return getLaskuntyyppi();
     }
 }

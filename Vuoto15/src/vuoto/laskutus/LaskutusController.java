@@ -38,7 +38,6 @@ import vuoto.luokkafilet.Asiakas;
 import vuoto.luokkafilet.Lasku;
 import vuoto.luokkafilet.LaskuOlio;
 import vuoto.luokkafilet.Toimipiste;
-import vuoto.luokkafilet.LaskutTauluOlio;
 import vuoto.tietokanta.DBAccess;
 
 

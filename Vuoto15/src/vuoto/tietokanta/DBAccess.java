@@ -1001,7 +1001,7 @@ public class DBAccess {
             yhdista();
             ps = conn.prepareStatement("INSERT INTO Lasku (laskuntyyppi, hinta, varausId) "
                     + "VALUES (? ,?, ?);");
-            ps.setString(1, la.getLaskunTyyppi());
+            ps.setString(1, la.getLaskuntyyppi());
             ps.setInt(2, la.getHinta());
             ps.setInt(3, la.getVarausId());
             
@@ -2004,7 +2004,6 @@ public class DBAccess {
         try {
             yhdista();
             
-            
             ps = conn.prepareStatement("SELECT * FROM Lasku WHERE varausId IN " +
                                                 "(SELECT varausId FROM Varaus WHERE asiakasId = " +
                                                     "(SELECT asiakasId FROM Asiakas WHERE yrityksenNimi = (?)));");
@@ -2535,11 +2534,11 @@ public class DBAccess {
                     + "varausNro=(?), "
                     + "WHERE laskuNro = (?);");
             
-            ps.setInt(1, la.getLaskunNro());
-            ps.setInt(2, la.getVarausId());
-            ps.setString(3, la.getLaskunTyyppi());
+            ps.setInt(1, la.getLaskuNro());
+            ps.setString(2, la.getLaskuntyyppi());
+            ps.setInt(3, la.getVarausId());
             ps.setInt(4, la.getHinta());
-            ps.setInt(5, la.getLaskunNro());
+            ps.setInt(5, la.getLaskuNro());
             
             ps.executeUpdate();
             
