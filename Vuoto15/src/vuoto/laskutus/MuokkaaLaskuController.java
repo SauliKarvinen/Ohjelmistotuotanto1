@@ -141,7 +141,7 @@ public class MuokkaaLaskuController implements Initializable {
    
     }
     
-        public void taytaLaskunTiedot(Lasku la) {
+    public void taytaLaskunTiedot(Lasku la) {
         
         if(la != null) {
             lasku = la;

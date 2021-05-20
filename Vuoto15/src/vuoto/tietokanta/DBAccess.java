@@ -2517,7 +2517,7 @@ public class DBAccess {
     }
 
     /**
-     * Muokkaa LAS
+     * Muokkaa LASKUA
      * @param a Muutettava lasku
      * @throws SQLException SQL-Virhe
      */
