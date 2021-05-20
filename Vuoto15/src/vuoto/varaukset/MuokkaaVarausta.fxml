@@ -196,5 +196,6 @@
    <stylesheets>
       <URL value="@../stylesheets/sauli_button.css" />
       <URL value="@../stylesheets/sauli_combobox.css" />
+      <URL value="@../stylesheets/sauli_textfield.css" />
    </stylesheets>
 </BorderPane>

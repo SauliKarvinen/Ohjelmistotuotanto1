@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,6 +88,7 @@ public class VarauksetController implements Initializable {
     private boolean toimipisteessaOnToimitiloja = false;
     private ObservableList<VarausOlio> varaukset = null;
     private VarausOlio varausOlio;
+    private LinkedList<Toimitila> toimitilat;
 
     /**
      * Initializes the controller class.
@@ -103,6 +105,7 @@ public class VarauksetController implements Initializable {
         if (txtToimipiste.getText().equals("Kaikki toimipisteet")) {
             
             cbToimitilavalikko.getSelectionModel().clearSelection();
+            haeToimitilat(); // Jos kaikki toimipisteet on valittu, haetaan kaikki toimitilat
             valittuToimitila = null;
         }
         
@@ -112,6 +115,7 @@ public class VarauksetController implements Initializable {
         cbToimitilavalikko.getSelectionModel().selectedItemProperty().addListener((s1, s2, s3) -> {
             
             if (s3 != s2) {
+                // Jos toimitila valitaan comboboxista, on valittuToimitila se valittu toimitila
                 valittuToimitila = s3;
 
                 paivitaTableview();
@@ -129,10 +133,30 @@ public class VarauksetController implements Initializable {
                 paivitaPalvelut(s3.getVarausId());
                 paivitaLaitteet(s3.getVarausId());
                 varausOlio = s3;
+                
+                // Jos toimitilat lista on luotu (Kaikki toimipisteet valittu alussa ilman toimitilan valintaa), 
+                // on valittuToimitila käyttäjän tableviewista valitseman varauksen toimitila
+                if (toimitilat != null) {
+                    for (Toimitila t : toimitilat) {
+                        if (t.getTilanNimi().equals(s3.getToimitila())) {
+                            valittuToimitila = t;
+                            break;
+                        }
+                    }
+                }
             }
         });
         
     }    
+    
+    /**
+     * Hakee kaikki toimitilat ja luo niistä LinkedListin
+     */
+    public void haeToimitilat() {
+        
+        toimitilat = new LinkedList<>(tietokanta.haeKaikkiToimitilat());
+        
+    }
     
     /**
      * Hakee palvelut valitusta toimitilasta ja luo niistä checkboxit Palvelut -ikkunaan
@@ -308,14 +332,16 @@ public class VarauksetController implements Initializable {
                     heitaVirheNaytolle("Virhe poistettaessa varausta");
                     Logger.getLogger(VarauksetController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-            if (varausPoistettu) {
+                
+                if (varausPoistettu) {
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Varauksen poistaminen");
                 a.setHeaderText("Varaus poistettu");
                 a.showAndWait();
                 paivitaTableview();
             }
+            }
+            
         }
     }
 
@@ -326,6 +352,7 @@ public class VarauksetController implements Initializable {
     @FXML
     private void btnMuokkaaVaraustaPainettu(ActionEvent event) {
         
+        System.out.println(varausOlio);
         if (varausOlio != null) {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(MuokkaaVaraustaController.fxmlString));

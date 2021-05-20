@@ -229,8 +229,8 @@ public class MuokkaaVaraustaController implements Initializable {
             dpLopetuspvm.setValue(v.getVuokraLoppu());
             haeVarauksenPalvelut();
             haeVarauksenLaitteet();
-            paivitaPalvelut(varaus.getVarausId());
-            paivitaLaitteet(varaus.getVarausId());
+            paivitaPalvelut(v.getVarausId());
+            paivitaLaitteet(v.getVarausId());
             varauksenAlkupaiva = v.getVuokraAlku();
             varauksenLoppupaiva = v.getVuokraLoppu();
             
@@ -239,9 +239,11 @@ public class MuokkaaVaraustaController implements Initializable {
     
     public void asetaToimitila(Toimitila t) {
         
-        valittuToimitila = t;
-        cbToimitilat.getSelectionModel().select(t.getTilanNimi());
-        haeVaratutPaivat();
+        if (t != null) {
+            valittuToimitila = t;
+            cbToimitilat.getSelectionModel().select(t.getTilanNimi());
+            haeVaratutPaivat();
+        }
     }
     
     public void asetaAsiakas(String asiakasNimi) {
