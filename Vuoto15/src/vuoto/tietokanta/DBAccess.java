@@ -2519,25 +2519,31 @@ public class DBAccess {
      * Muokkaa LASKUA
      * @param a Muutettava lasku
      * @throws SQLException SQL-Virhe
+     * // SQL komento in Heidi toimii
+     * UPDATE Lasku SET 
+     *          laskuNro=100014,
+     *          laskuntyyppi='paperi',
+     *          hinta=140,
+     *          varausId=40
+     *          WHERE laskuNro = 100014;
      */
     public void muokkaaLasku(Lasku la) throws SQLException {
         
         try {
             yhdista();
             
-            ps = conn.prepareStatement("UPDATE Lasku "
-                    + "SET "
-                    + "laskuNro=(?), "
-                    + "tyyppi=(?), "
-                    + "hinta=(?), "
-                    + "varausNro=(?), "
-                    + "WHERE laskuNro = (?);");
+            ps = conn.prepareStatement("UPDATE Lasku SET "
+                    // + "laskuNro=(?), "
+                    + "laskuntyyppi=(?), "
+                    + "hinta=(?) "
+                    //+ "varausId=(?) "
+                + "WHERE laskuNro = (?);");
             
-            ps.setInt(1, la.getLaskuNro());
-            ps.setString(2, la.getLaskuntyyppi());
-            ps.setInt(3, la.getVarausId());
-            ps.setInt(4, la.getHinta());
-            ps.setInt(5, la.getLaskuNro());
+            // ps.setInt(1, la.getLaskuNro());
+            ps.setString(1, la.getLaskuntyyppi());
+            // ps.setInt(3, la.getVarausId());
+            ps.setInt(2, la.getHinta());
+            ps.setInt(3, la.getLaskuNro());
             
             ps.executeUpdate();
             

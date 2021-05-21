@@ -77,10 +77,10 @@ public class MuokkaaLaskuController implements Initializable {
         
         int laskuNro = lasku.getLaskuNro();
         int varausNro = lasku.getVarausId();
-        String tyyppi = lasku.getLaskuntyyppi();
+        String laskuntyyppi = lasku.getLaskuntyyppi();
         int hinta = lasku.getHinta();
         
-        updLasku = new Lasku(laskuNro,tyyppi,hinta, varausNro);
+        updLasku = new Lasku(laskuNro,laskuntyyppi,hinta, varausNro);
         // Tarkastaa että tietoja on muutettu
         if(updLasku.equals(lasku)) {
             heitaVirheNaytolle("Muuta tietoja päivittääksesi laskua");
